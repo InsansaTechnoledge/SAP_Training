@@ -2,27 +2,34 @@
 
 /* Define color variables for light and dark themes */
 :root {
-  --color-primary: #0077ff;
+  --color-primary: #1447e6;
   --color-background: #f9f9f9;
-  --color-secondary: #6678a1;
+  --color-background-secondary: #b6b6b6;
+  --color-secondary: #1e2939;
 
-  --color-gradient-start: #1447e6;
-  --color-gradient-mid: ;
-  --color-gradient-end: #1c398e;
+  --color-gradient-nav-start: #1447e6;
+  --color-gradient-nav-end: #1c398e;
+  --color-gradient-start: #eff6ff;
+  --color-gradient-end: oklch(0.962 0.018 272.314);
 }
 
 .dark {
-  --color-primary: #4caf50;
+  --color-primary: #ffffff;
   --color-background: #121212;
-  --color-secondary: #851792;
+  --color-background-secondary: #364153;
+  --color-secondary: #d1d5dc;
 
-  --color-gradient-start: #1447e6;
-  --color-gradient-mid: ;
-  --color-gradient-end: #1c398e;
+  --color-gradient-nav-start: #1e2939;
+  --color-gradient-nav-end: #101828;
+  --color-gradient-start: #1e2939;
+  --color-gradient-end: #101828;
 }
 
 .bg-primary {
-  background-color: var(--color-primary);
+  background-color: var(--color-background);
+}
+.bg-secondary {
+  background-color: var(--color-background-secondary);
 }
 
 .text-primary {
@@ -37,6 +44,13 @@
   background-color: var(--color-background);
 }
 
+.nav-theme-gradient {
+  background: linear-gradient(to right, var(--color-gradient-nav-start), var(--color-gradient-nav-end));
+}
+
+.bg-theme-gradient {
+  background: linear-gradient(to right, var(--color-gradient-start), var(--color-gradient-end));
+}
 
 .text-mask {
   background: url("your-video.mp4");

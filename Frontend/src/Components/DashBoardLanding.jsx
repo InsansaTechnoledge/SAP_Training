@@ -23,17 +23,17 @@ const DashboardBanner = () => {
     ];
 
     return (
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 py-16">
+        <div className="bg-theme-gradient py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col lg:flex-row items-center gap-12">
                     {/* Left side - Content */}
                     <div className="lg:w-1/2 space-y-6">
-                        <h2 className="text-3xl font-bold text-gray-900">
+                        <h2 className="text-3xl font-bold text-primary">
                             Accelerate Your Learning with Our
-                            <span className="text-blue-600"> Intelligent Dashboard</span>
+                            <span className="text-primary"> Intelligent Dashboard</span>
                         </h2>
 
-                        <p className="text-lg text-gray-600">
+                        <p className="text-lg text-secondary">
                             Stay on top of your ABAP learning journey with our intuitive dashboard.
                             Track progress, analyze performance, and achieve your goals faster.
                         </p>
@@ -44,7 +44,7 @@ const DashboardBanner = () => {
                                     <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                                         <feature.icon className="h-4 w-4 text-blue-600" />
                                     </div>
-                                    <span className="text-sm text-gray-700">{feature.text}</span>
+                                    <span className="text-sm text-secondary">{feature.text}</span>
                                 </div>
                             ))}
                         </div>

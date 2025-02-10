@@ -114,7 +114,7 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
     };
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="relative min-h-screen bg-theme-gradient">
             <Navigation
                 cart={cart}
                 wishlist={wishlist}
@@ -142,7 +142,7 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                             placeholder="Search courses..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-700 text-secondary focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                         />
                     </div>
 
