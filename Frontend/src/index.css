@@ -4,14 +4,20 @@
 :root {
   --color-primary: #1447e6;
   --color-background: #f9f9f9;
-  --color-background-secondary: #e4e8ef;
+  --color-background-secondary: #ced5df;
   --color-background-theme:#1447e6; 
   --color-secondary: #1e2939;
 
   --color-gradient-nav-start: #1447e6;
   --color-gradient-nav-end: #1c398e;
+  --color-card-gradient-start: #1447e6;
+  --color-card-gradient-end: #1c398e;
   --color-gradient-start: #eff6ff;
   --color-gradient-end: oklch(0.962 0.018 272.314);
+
+  --color-text-gradient-start: #eff6ff ;
+  --color-text-gradient-mid: oklch(0.962 0.018 272.314) ;
+  --color-text-gradient-end: #ffffff;
 }
 
 .dark {
@@ -26,6 +32,12 @@
   --color-gradient-nav-end: #101828;
   --color-gradient-start: #1e2939;
   --color-gradient-end: #101828;
+  --color-text-gradient-start: #101828;
+  --color-text-gradient-mid: #1e1a4d;
+  --color-text-gradient-end: #000000;
+
+  --color-card-gradient-start:#364153;
+  --color-card-gradient-end:#172135;
 }
 
 .bg-primary {
@@ -37,6 +49,14 @@
 
 .bg-theme {
   background-color: var(--color-background-theme);
+}
+
+.bg-background {
+  background-color: var(--color-background);
+}
+
+.bg-contrast {
+  background-color: var(--color-secondary);
 }
 
 .text-primary {
@@ -51,13 +71,6 @@
   color: var(--color-background);
 }
 
-.bg-background {
-  background-color: var(--color-background);
-}
-
-.bg-contrast {
-  background-color: var(--color-secondary);
-}
 
 .nav-theme-gradient {
   background: linear-gradient(to right, var(--color-gradient-nav-start), var(--color-gradient-nav-end));
@@ -65,6 +78,14 @@
 
 .bg-theme-gradient {
   background: linear-gradient(to right, var(--color-gradient-start), var(--color-gradient-end));
+}
+
+.card-theme-gradient {
+  background: linear-gradient(to right, var(--color-card-gradient-start), var(--color-card-gradient-end));
+}
+
+.text-theme-gradient {
+  background: linear-gradient(to bottom right, var(--color-text-gradient-start), var(--color-text-gradient-mid), var(--color-text-gradient-end));
 }
 
 .text-mask {

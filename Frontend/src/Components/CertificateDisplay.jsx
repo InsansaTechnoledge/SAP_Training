@@ -40,7 +40,7 @@ function CertificateSection() {
     };
 
     return (
-        <div className="relative min-h-screen py-24 px-6 bg-gradient-to-br from-blue-50 via-indigo-50 to-white dark:from-gray-900 dark:via-indigo-950 dark:to-black overflow-hidden">
+        <div className="relative min-h-screen py-24 px-6 text-theme-gradient overflow-hidden">
             {/* Animated background particles */}
             <div className="absolute inset-0 overflow-hidden">
                 {[...Array(20)].map((_, i) => (
@@ -81,16 +81,16 @@ function CertificateSection() {
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/50 mb-6"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-theme mb-6"
                     >
-                        <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                        <span className="text-blue-700 dark:text-blue-300 font-medium">Unlock Your Potential</span>
+                        <Sparkles className="w-5 h-5 text-contrast" />
+                        <span className="text-contrast font-medium">Unlock Your Potential</span>
                     </motion.div>
 
-                    <h2 className="text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 dark:from-blue-400 dark:via-indigo-300 dark:to-blue-200">
+                    <h2 className="text-6xl font-bold mb-6 bg-clip-text text-transparent text-primary">
                         Earn Your Professional Certificate
                     </h2>
-                    <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+                    <p className="text-xl text-primary max-w-3xl mx-auto">
                         Join our community of certified professionals and take your career to new heights
                     </p>
                 </motion.div>
@@ -109,7 +109,7 @@ function CertificateSection() {
                             className="relative group"
                         >
                             <motion.div
-                                className="h-full p-8 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border border-blue-100 dark:border-blue-900 shadow-lg"
+                                className="h-full p-8 rounded-2xl bg-primary backdrop-blur-lg shadow-lg"
                                 animate={{
                                     boxShadow: hoveredFeature === index
                                         ? "0 20px 40px rgba(0,0,0,0.2)"
@@ -117,7 +117,7 @@ function CertificateSection() {
                                 }}
                             >
                                 <motion.div
-                                    className="text-blue-500 dark:text-blue-400 mb-4"
+                                    className="text-primary mb-4"
                                     animate={{
                                         rotate: hoveredFeature === index ? 360 : 0
                                     }}
@@ -125,10 +125,10 @@ function CertificateSection() {
                                 >
                                     {feature.icon}
                                 </motion.div>
-                                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                                <h3 className="text-xl font-semibold text-primary mb-2">
                                     {feature.text}
                                 </h3>
-                                <p className="text-gray-600 dark:text-gray-400">
+                                <p className="text-secondary">
                                     {feature.description}
                                 </p>
                             </motion.div>
@@ -145,7 +145,7 @@ function CertificateSection() {
                 >
                     <div className="relative rounded-3xl overflow-hidden">
                         <motion.div
-                            className="relative h-80 bg-gradient-to-br from-white via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-blue-950 dark:to-indigo-950"
+                            className="relative h-80 nav-theme-gradient"
                             animate={{
                                 scale: isPreviewHovered ? 1.02 : 1
                             }}

@@ -145,13 +145,13 @@ export default function LearningExperience() {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
-                    <span className="inline-block px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 font-medium mb-4">
+                    <span className="inline-block px-4 py-2 rounded-full bg-theme text-contrast font-medium mb-4">
                         Why Choose Us
                     </span>
-                    <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent text-primary">
                         Transform Your Learning Experience
                     </h2>
-                    <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    <p className="text-xl text-secondary max-w-3xl mx-auto">
                         Experience a revolutionary approach to learning that combines cutting-edge technology with expert guidance
                     </p>
                 </motion.div>
@@ -170,21 +170,21 @@ export default function LearningExperience() {
                                 onClick={() => setActiveFeature(index)}
                                 className={`cursor-pointer p-6 rounded-xl transition-all duration-300 ${activeFeature === index
                                         ? 'bg-blue-600 text-white shadow-lg'
-                                        : 'bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700'
+                                        : 'bg-secondary hover:bg-blue-50 dark:hover:bg-gray-700'
                                     }`}
                             >
                                 <div className="flex items-start gap-4">
                                     <div className={`p-3 rounded-lg ${activeFeature === index
                                             ? 'bg-blue-500'
-                                            : 'bg-blue-100 dark:bg-gray-700'
+                                            : 'bg-blue-100'
                                         }`}>
                                         {feature.icon}
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                                        <h3 className={`text-lg font-semibold mb-2 ${activeFeature === index ? 'text-white' : 'text-secondary'}`}>{feature.title}</h3>
                                         <p className={`text-sm ${activeFeature === index
                                                 ? 'text-blue-100'
-                                                : 'text-gray-600 dark:text-gray-300'
+                                                : 'text-secondary'
                                             }`}>
                                             {feature.description}
                                         </p>
@@ -204,7 +204,7 @@ export default function LearningExperience() {
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.6, delay: 0.4 }}
-                        className="relative h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900"
+                        className="relative h-96 rounded-2xl overflow-hidden card-theme-gradient"
                     >
                         <div className="absolute inset-0 flex items-center justify-center">
                             <AnimatePresence mode="wait">
@@ -232,15 +232,15 @@ export default function LearningExperience() {
                         <motion.div
                             key={index}
                             whileHover={{ y: -5 }}
-                            className="p-8 rounded-xl bg-white dark:bg-gray-800 shadow-lg border border-gray-100 dark:border-gray-700"
+                            className="p-8 rounded-xl bg-secondary shadow-lg"
                         >
-                            <div className="text-blue-500 dark:text-blue-400 mb-4">
+                            <div className="text-blue-500 mb-4">
                                 {benefit.icon}
                             </div>
-                            <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                            <h3 className="text-xl font-semibold mb-3 text-secondary">
                                 {benefit.title}
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-300">
+                            <p className="text-secondary">
                                 {benefit.description}
                             </p>
                         </motion.div>
