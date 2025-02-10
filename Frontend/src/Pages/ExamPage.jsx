@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Lock, Unlock, Play, Trophy, Star, CheckCircle, Clock, ChevronRight, CreditCard, Zap, Users, Book, Code, Award, BarChart, Lightbulb } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 
 const ExamPage = () => {
+    const navigate = useNavigate();
     const [activeModule, setActiveModule] = useState(null);
     const [unlockedModules, setUnlockedModules] = useState([1]);
 
@@ -66,6 +69,12 @@ const ExamPage = () => {
     const handleUnlockModule = (moduleId) => {
         alert(`Processing payment for module ${moduleId}`);
         setUnlockedModules([...unlockedModules, moduleId]);
+    };
+
+    const handleVideoClick = (moduleId, subModuleId) => {
+        if (isModuleUnlocked(moduleId)) {
+            navigate(`/video`);
+        }
     };
 
     return (
@@ -193,6 +202,7 @@ const ExamPage = () => {
                                     {module.subModules.map((sub, i) => (
                                         <div
                                             key={i}
+                                            onClick={() => handleVideoClick(module.id, sub.id)}
                                             className={`
                                                 p-6 rounded-xl border group
                                                 ${isModuleUnlocked(module.id)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     BookOpen,
     Play,
@@ -20,8 +20,15 @@ import {
     Calendar,
     Send,
     ThumbsUp,
-    Reply
+    Reply,
+    Maximize2,
+    Minimize2,
+    Volume2,
+    VolumeX,
+    Settings
 } from 'lucide-react';
+
+import Video1 from '../assets/Video1.mp4'
 
 const VideoPage = () => {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -30,14 +37,83 @@ const VideoPage = () => {
     const [newNote, setNewNote] = useState('');
     const [newComment, setNewComment] = useState('');
     const [showCallForm, setShowCallForm] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [showSpeedMenu, setShowSpeedMenu] = useState(false);
+    const [playbackSpeed, setPlaybackSpeed] = useState(1);
+    const [isMuted, setIsMuted] = useState(false);
+    const [volume, setVolume] = useState(1);
+    const videoRef = useRef(null);
+    const videoContainerRef = useRef(null);
+
 
     // Sample video data
     const currentVideo = {
         title: "Introduction to ABAP",
         duration: "10:00",
         progress: 40,
-        module: "ABAP Fundamentals"
+        module: "ABAP Fundamentals",
+        src: Video1
     };
+
+    const playbackSpeeds = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
+    const handlePlayPause = () => {
+        if (videoRef.current) {
+            if (isPlaying) {
+                videoRef.current.pause();
+            } else {
+                videoRef.current.play();
+            }
+            setIsPlaying(!isPlaying);
+        }
+    };
+
+    const handleTimeUpdate = () => {
+        if (videoRef.current) {
+            setCurrentTime(videoRef.current.currentTime);
+        }
+    };
+
+    const handleFullscreen = () => {
+        if (!document.fullscreenElement) {
+            videoContainerRef.current.requestFullscreen();
+            setIsFullscreen(true);
+        } else {
+            document.exitFullscreen();
+            setIsFullscreen(false);
+        }
+    };
+
+    const handleSpeedChange = (speed) => {
+        if (videoRef.current) {
+            videoRef.current.playbackRate = speed;
+            setPlaybackSpeed(speed);
+            setShowSpeedMenu(false);
+        }
+    };
+
+    const handleVolumeChange = (e) => {
+        const newVolume = parseFloat(e.target.value);
+        setVolume(newVolume);
+        if (videoRef.current) {
+            videoRef.current.volume = newVolume;
+            setIsMuted(newVolume === 0);
+        }
+    };
+
+    const toggleMute = () => {
+        if (videoRef.current) {
+            videoRef.current.muted = !isMuted;
+            setIsMuted(!isMuted);
+            if (!isMuted) {
+                setVolume(0);
+            } else {
+                setVolume(1);
+                videoRef.current.volume = 1;
+            }
+        }
+    };
+
 
     const moduleVideos = [
         { id: 1, title: "Introduction to ABAP", duration: "10:00", completed: true },
@@ -132,25 +208,118 @@ const VideoPage = () => {
                     {/* Video Player Section */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Video Player */}
-                        <div className="relative bg-gray-900 rounded-xl aspect-video overflow-hidden">
+                        <div ref={videoContainerRef} className="relative bg-gray-900 rounded-xl aspect-video overflow-hidden">
+                            <video
+                                ref={videoRef}
+                                className="w-full h-full"
+                                src={currentVideo.src}
+                                onTimeUpdate={handleTimeUpdate}
+                                onPlay={() => setIsPlaying(true)}
+                                onPause={() => setIsPlaying(false)}
+                            />
+
+                            {/* Play Button Overlay */}
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <button
-                                    onClick={() => setIsPlaying(!isPlaying)}
-                                    className="p-4 rounded-full bg-blue-600 text-white hover:bg-blue-500 transition-colors"
-                                >
-                                    {isPlaying ?
-                                        <Pause className="h-6 w-6" /> :
+                                {!isPlaying && (
+                                    <button
+                                        onClick={handlePlayPause}
+                                        className="p-4 rounded-full bg-blue-600 text-white hover:bg-blue-500 transition-colors"
+                                    >
                                         <Play className="h-6 w-6" />
-                                    }
-                                </button>
+                                    </button>
+                                )}
                             </div>
 
-                            {/* Progress Bar */}
-                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-800">
-                                <div
-                                    className="h-full bg-blue-600"
-                                    style={{ width: `${currentVideo.progress}%` }}
-                                />
+                            {/* Video Controls */}
+                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                                {/* Progress Bar */}
+                                <div className="flex-1 h-1 bg-gray-600 rounded-full mb-4">
+                                    <div
+                                        className="h-full bg-blue-600 rounded-full"
+                                        style={{ width: `${(currentTime / (videoRef.current?.duration || 1)) * 100}%` }}
+                                    />
+                                </div>
+
+                                {/* Control Buttons */}
+                                <div className="flex items-center gap-4">
+                                    {/* Play/Pause */}
+                                    <button
+                                        onClick={handlePlayPause}
+                                        className="text-white hover:text-blue-400 transition-colors"
+                                    >
+                                        {isPlaying ? (
+                                            <Pause className="h-5 w-5" />
+                                        ) : (
+                                            <Play className="h-5 w-5" />
+                                        )}
+                                    </button>
+
+                                    {/* Volume Controls */}
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={toggleMute}
+                                            className="text-white hover:text-blue-400 transition-colors"
+                                        >
+                                            {isMuted ? (
+                                                <VolumeX className="h-5 w-5" />
+                                            ) : (
+                                                <Volume2 className="h-5 w-5" />
+                                            )}
+                                        </button>
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="1"
+                                            step="0.1"
+                                            value={volume}
+                                            onChange={handleVolumeChange}
+                                            className="w-20"
+                                        />
+                                    </div>
+
+                                    {/* Time Display */}
+                                    <div className="text-white text-sm">
+                                        {formatTime(currentTime)} / {formatTime(videoRef.current?.duration || 0)}
+                                    </div>
+
+                                    {/* Playback Speed */}
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => setShowSpeedMenu(!showSpeedMenu)}
+                                            className="text-white hover:text-blue-400 transition-colors flex items-center gap-1"
+                                        >
+                                            <Settings className="h-5 w-5" />
+                                            {playbackSpeed}x
+                                        </button>
+
+                                        {showSpeedMenu && (
+                                            <div className="absolute bottom-full mb-2 right-0 bg-gray-900 rounded-lg shadow-lg p-2">
+                                                {playbackSpeeds.map((speed) => (
+                                                    <button
+                                                        key={speed}
+                                                        onClick={() => handleSpeedChange(speed)}
+                                                        className={`block w-full text-left px-4 py-1 text-sm ${playbackSpeed === speed ? 'text-blue-400' : 'text-white'
+                                                            } hover:bg-gray-800 rounded`}
+                                                    >
+                                                        {speed}x
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Fullscreen */}
+                                    <button
+                                        onClick={handleFullscreen}
+                                        className="text-white hover:text-blue-400 transition-colors ml-auto"
+                                    >
+                                        {isFullscreen ? (
+                                            <Minimize2 className="h-5 w-5" />
+                                        ) : (
+                                            <Maximize2 className="h-5 w-5" />
+                                        )}
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -215,7 +384,7 @@ const VideoPage = () => {
                         </div>
                     </div>
 
-                   
+
 
                     {/* Sidebar */}
                     <div className="space-y-6">
@@ -316,7 +485,7 @@ const VideoPage = () => {
                         </div>
                     </div>
 
-                  
+
 
                     {/* Community Discussion Section */}
                     <div className="bg-white rounded-xl p-6 shadow-sm mt-6">
