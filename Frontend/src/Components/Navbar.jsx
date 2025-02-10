@@ -9,7 +9,7 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('darkTheme'));
 
     useEffect(() => {
         const handleScroll = () => {
@@ -17,10 +17,14 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
             setScrolled(isScrolled);
         };
 
-        setIsDarkMode(localStorage.getItem('darkTheme'));
+        // Dark mode not working on reload
 
+        const dark = localStorage.getItem('darkTheme');
+        dark ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
+        
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
+
     }, []);
 
     useEffect(() => {
@@ -43,13 +47,13 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isUserMenuOpen]);
 
-    useEffect(() => {
-        if (isDarkMode) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    }, [isDarkMode]);
+    // useEffect(() => {
+    //     if (isDarkMode) {
+    //         document.documentElement.classList.add('dark');
+    //     } else {
+    //         document.documentElement.classList.remove('dark');
+    //     }
+    // }, [isDarkMode]);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -69,8 +73,10 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
     };
 
     const toggleTheme = () => {
+        localStorage.setItem('darkTheme', !isDarkMode);
         setIsDarkMode(!isDarkMode);
-        localStorage.setItem('darkTheme',!isDarkMode)
+        document.documentElement.classList.toggle('dark');
+
     };
 
     return (
@@ -141,8 +147,8 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
                             <button
                                 onClick={() => setIsSearchOpen(true)}
                                 className={`hidden md:flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${scrolled
-                                        ? 'bg-blue-800 hover:bg-blue-700'
-                                        : 'bg-white/10 hover:bg-white/20'
+                                    ? 'bg-blue-800 hover:bg-blue-700'
+                                    : 'bg-white/10 hover:bg-white/20'
                                     }`}
                             >
                                 <Search className="w-4 h-4 text-white" />
@@ -155,8 +161,8 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
                                 onClick={() => setIsWishlistOpen(true)}
                             >
                                 <div className={`p-2 rounded-full transition-all duration-300 ${scrolled
-                                        ? 'bg-blue-800 hover:bg-blue-700'
-                                        : 'bg-white/10 hover:bg-white/20'
+                                    ? 'bg-blue-800 hover:bg-blue-700'
+                                    : 'bg-white/10 hover:bg-white/20'
                                     }`}>
                                     <Heart className="w-6 h-6 text-white group-hover:scale-110 transform transition-transform" />
                                 </div>
@@ -173,8 +179,8 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
                                 onClick={() => setIsCartOpen(true)}
                             >
                                 <div className={`p-2 rounded-full transition-all duration-300 ${scrolled
-                                        ? 'bg-blue-800 hover:bg-blue-700'
-                                        : 'bg-white/10 hover:bg-white/20'
+                                    ? 'bg-blue-800 hover:bg-blue-700'
+                                    : 'bg-white/10 hover:bg-white/20'
                                     }`}>
                                     <ShoppingCart className="w-6 h-6 text-white group-hover:scale-110 transform transition-transform" />
                                 </div>
@@ -190,8 +196,8 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
                                 <button
                                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                                     className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${scrolled
-                                            ? 'bg-blue-800 hover:bg-blue-700'
-                                            : 'bg-white/10 hover:bg-white/20'
+                                        ? 'bg-blue-800 hover:bg-blue-700'
+                                        : 'bg-white/10 hover:bg-white/20'
                                         }`}
                                 >
                                     {isAuthenticated ? (
@@ -252,8 +258,8 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
                             <button
                                 onClick={() => setIsMenuOpen(true)}
                                 className={`md:hidden p-2 rounded-full transition-all duration-300 ${scrolled
-                                        ? 'bg-blue-800 hover:bg-blue-700'
-                                        : 'bg-white/10 hover:bg-white/20'
+                                    ? 'bg-blue-800 hover:bg-blue-700'
+                                    : 'bg-white/10 hover:bg-white/20'
                                     }`}
                             >
                                 <Menu className="w-6 h-6 text-white" />

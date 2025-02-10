@@ -142,7 +142,7 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                             placeholder="Search courses..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-700 text-secondary focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-secondary text-secondary focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                         />
                     </div>
 
@@ -152,8 +152,8 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                                 key={category.id}
                                 onClick={() => setActiveTab(category.id)}
                                 className={`px-6 py-3 rounded-xl font-medium whitespace-nowrap transition-all ${activeTab === category.id
-                                        ? 'bg-blue-600 text-white shadow-lg'
-                                        : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700'
+                                        ? 'bg-theme text-contrast shadow-lg'
+                                        : 'bg-secondary text-secondary hover:bg-blue-50 dark:hover:bg-gray-700'
                                     }`}
                             >
                                 {category.label}
@@ -175,7 +175,7 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                             variants={courseVariants}
                             onHoverStart={() => setHoveredCourse(course.title)}
                             onHoverEnd={() => setHoveredCourse(null)}
-                            className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                            className="bg-secondary rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
                         >
                             <div className="relative">
                                 <img
@@ -188,9 +188,9 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.9 }}
                                     onClick={() => addToWishlist(course)}
-                                    className="absolute top-4 right-4 p-2 bg-white/90 rounded-full shadow-lg backdrop-blur-sm"
+                                    className="absolute top-4 right-4 p-2 bg-transparent"
                                 >
-                                    <Heart className={`w-5 h-5 ${isInWishlist(course.title) ? 'text-red-500 fill-current' : 'text-gray-600'}`} />
+                                    <Heart className={`w-5 h-5 ${isInWishlist(course.title) ? 'text-red-500 fill-current' : 'text-secondary'}`} />
                                 </motion.button>
                                 <div className="absolute bottom-4 left-4 flex items-center space-x-2">
                                     <div className="p-2 bg-white/90 rounded-lg backdrop-blur-sm">
@@ -203,8 +203,8 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                             </div>
 
                             <div className="p-6">
-                                <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-white">{course.title}</h3>
-                                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                                <h3 className="text-xl font-bold mb-2 text-secondary">{course.title}</h3>
+                                <p className="text-secondary text-sm mb-4">
                                     {course.description}
                                 </p>
 
@@ -212,7 +212,7 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                                     {course.features.map((feature, index) => (
                                         <span
                                             key={index}
-                                            className="text-xs px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full"
+                                            className="text-xs px-3 py-1 bg-primary text-primary rounded-full"
                                         >
                                             {feature}
                                         </span>
@@ -222,15 +222,15 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                                 <div className="flex items-center justify-between mb-4 text-sm">
                                     <div className="flex items-center space-x-1">
                                         <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                                        <span className="font-medium">{course.rating}</span>
+                                        <span className="font-medium text-primary">{course.rating}</span>
                                     </div>
                                     <div className="flex items-center space-x-1">
                                         <Users className="w-5 h-5 text-gray-400" />
-                                        <span>{course.students.toLocaleString()}</span>
+                                        <span className='text-primary'>{course.students.toLocaleString()}</span>
                                     </div>
                                     <div className="flex items-center space-x-1">
                                         <Clock className="w-5 h-5 text-gray-400" />
-                                        <span>{course.duration}</span>
+                                        <span className='text-primary'>{course.duration}</span>
                                     </div>
                                 </div>
 

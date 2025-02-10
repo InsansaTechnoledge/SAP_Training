@@ -137,7 +137,7 @@ export default function LearningExperience() {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 py-24 px-6">
+        <div className="min-h-screen bg-gradient-to-br bg-theme-gradient py-24 px-6">
             <div className="max-w-7xl mx-auto mb-20">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
