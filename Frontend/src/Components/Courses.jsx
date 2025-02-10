@@ -128,7 +128,7 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                     <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
                         Explore Our Courses
                     </h1>
-                    <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+                    <p className="text-primary text-lg max-w-2xl mx-auto">
                         Level up your skills with our industry-leading courses taught by expert instructors
                     </p>
                 </div>
