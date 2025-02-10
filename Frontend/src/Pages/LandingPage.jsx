@@ -43,19 +43,6 @@ const LandingPage = () => {
 
             <CertificateSection />
 
-            {/* CTA Section */}
-            <div className="bg-gray-900 text-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-                    <h2 className="text-3xl font-bold mb-4">Ready to Start Learning?</h2>
-                    <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-                        Join thousands of students who are already advancing their careers with TechLearn Pro
-                    </p>
-                    <button className="bg-blue-600 text-white px-8 py-3 rounded-md font-semibold hover:bg-blue-700">
-                        Get Started Now
-                    </button>
-                </div>
-            </div>
-
             <AnimatedFooter />
         </div>
 
