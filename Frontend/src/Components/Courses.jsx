@@ -152,8 +152,8 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                                 key={category.id}
                                 onClick={() => setActiveTab(category.id)}
                                 className={`px-6 py-3 rounded-xl font-medium whitespace-nowrap transition-all ${activeTab === category.id
-                                        ? 'bg-blue-600 text-white shadow-lg'
-                                        : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700'
+                                    ? 'bg-blue-600 text-white shadow-lg'
+                                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700'
                                     }`}
                             >
                                 {category.label}
@@ -234,22 +234,33 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                                     </div>
                                 </div>
 
-                                <div className="flex justify-between items-center">
-                                    <div className="flex flex-col">
-                                        <span className="text-sm text-gray-500 dark:text-gray-400">Price</span>
-                                        <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                                            ${course.price}
-                                        </span>
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex flex-col">
+                                            <span className="text-sm text-gray-500 dark:text-gray-400">Price</span>
+                                            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                                                ${course.price}
+                                            </span>
+                                        </div>
+                                        <motion.button
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            onClick={() => addToCart(course)}
+                                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center space-x-2 shadow-lg"
+                                        >
+                                            <span>Enroll Now</span>
+                                            <ArrowRight className="w-4 h-4" />
+                                        </motion.button>
                                     </div>
-                                    <motion.button
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        onClick={() => addToCart(course)}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center space-x-2 shadow-lg"
+                                    <motion.a
+                                        href="/course"
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className="w-full text-center bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-6 py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors duration-200"
                                     >
-                                        <span>Enroll Now</span>
-                                        <ArrowRight className="w-4 h-4" />
-                                    </motion.button>
+                                        <span>Explore for Free</span>
+                                        <BookOpen className="w-4 h-4" />
+                                    </motion.a>
                                 </div>
                             </div>
                         </motion.div>

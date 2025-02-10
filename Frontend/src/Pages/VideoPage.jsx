@@ -215,7 +215,7 @@ const VideoPage = () => {
                         </div>
                     </div>
 
-                   
+
 
                     {/* Sidebar */}
                     <div className="space-y-6">
@@ -316,7 +316,7 @@ const VideoPage = () => {
                         </div>
                     </div>
 
-                  
+
 
                     {/* Community Discussion Section */}
                     <div className="bg-white rounded-xl p-6 shadow-sm mt-6">
