@@ -5,6 +5,10 @@
   --color-primary: #0077ff;
   --color-background: #f9f9f9;
   --color-secondary: #6678a1;
+
+  --color-gradient-start: #1447e6;
+  --color-gradient-mid: ;
+  --color-gradient-end: #1c398e;
 }
 
 .dark {
@@ -12,6 +16,9 @@
   --color-background: #121212;
   --color-secondary: #851792;
 
+  --color-gradient-start: #1447e6;
+  --color-gradient-mid: ;
+  --color-gradient-end: #1c398e;
 }
 
 .bg-primary {
