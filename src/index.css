@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+.text-mask {
+  background: url("your-video.mp4");
+  background-size: cover;
+  background-position: center;
+  -webkit-background-clip: text;
+  color: transparent;
+}
