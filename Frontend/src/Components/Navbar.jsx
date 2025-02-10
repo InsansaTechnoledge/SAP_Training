@@ -17,6 +17,8 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
             setScrolled(isScrolled);
         };
 
+        setIsDarkMode(localStorage.getItem('darkTheme'));
+
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
@@ -68,15 +70,14 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
 
     const toggleTheme = () => {
         setIsDarkMode(!isDarkMode);
+        localStorage.setItem('darkTheme',!isDarkMode)
     };
 
     return (
         <>
             <nav className={`fixed top-0 left-0 right-0 transition-all duration-300 z-50 
                 ${scrolled
-                    ? isDarkMode
-                        ? 'bg-gradient-to-r from-gray-900 to-gray-800 shadow-lg'
-                        : 'bg-gradient-to-r from-blue-700 to-blue-900 shadow-lg'
+                    ? 'nav-theme-gradient shadow-lg'
                     : 'bg-transparent'}`}>
                 <div className="max-w-7xl mx-auto px-6 py-4">
                     <div className="flex justify-between items-center">
