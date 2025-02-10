@@ -10,12 +10,9 @@ import DashboardBanner from '../Components/DashBoardLanding';
 import AnimatedFooter from '../Components/Footer';
 
 const LandingPage = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const navigate = useNavigate();
-    const [cart, setCart] = useState([]);
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const [wishlist, setWishlist] = useState([]); 
-    const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+    // const [isMenuOpen, setIsMenuOpen] = useState(false);
+    // const navigate = useNavigate();
+    
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -26,16 +23,7 @@ const LandingPage = () => {
             <DashboardBanner />
 
             {/* Courses Grid */}
-            <Courses
-                cart={cart}
-                setCart={setCart}
-                isCartOpen={isCartOpen}
-                setIsCartOpen={setIsCartOpen}
-                wishlist={wishlist}
-                setWishlist={setWishlist}
-                isWishlistOpen={isWishlistOpen}
-                setIsWishlistOpen={setIsWishlistOpen}
-            />
+            <Courses/>
 
             <LearningExp />
 

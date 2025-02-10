@@ -5,19 +5,27 @@ import ExamPage from './Pages/ExamPage';
 import UserDashboard from './Pages/ProfileDashboard';
 import Wishlist from './Components/Wishlist';
 import VideoPage from './Pages/VideoPage';
+import Navigation from './Components/Navbar';
+import { useWishlist } from './Context/WishlistContext';
+import { useCart } from './Context/CartContext';
 
 const PageLinks = () => {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/course" element={<ExamPage />} />
-                <Route path="/wishlist" element={<Wishlist />} />
-                <Route path="/video" element={<VideoPage />} />
+    
 
-                <Route path="/dashboard" element={<UserDashboard/>} />
-            </Routes>
-        </Router>
+    return (
+        <>
+            <Navigation />
+            <Router>
+                <Routes>
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/course" element={<ExamPage />} />
+                    <Route path="/wishlist" element={<Wishlist />} />
+                    <Route path="/video" element={<VideoPage />} />
+
+                    <Route path="/dashboard" element={<UserDashboard />} />
+                </Routes>
+            </Router>
+        </>
     );
 };
 

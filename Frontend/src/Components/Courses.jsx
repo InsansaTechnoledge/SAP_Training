@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
     Cloud, Code, Database, Brain, ShoppingCart, Heart, Star,
     Users, Clock, ArrowRight, GraduationCap, Search, Filter,
     BookOpen, Activity
 } from 'lucide-react';
-import Wishlist from "./Wishlist";
-import Cart from './Cart';
-import Navigation from './Navbar';
+import { useCart } from '../Context/CartContext';
+import { useWishlist } from '../Context/WishlistContext';
 
-const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishlist, isWishlistOpen, setIsWishlistOpen }) => {
+const Courses = () => {
     const [activeTab, setActiveTab] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [hoveredCourse, setHoveredCourse] = useState(null);
+    const {addToCart} = useCart();
+    const {wishlist,addToWishlist} = useWishlist();
 
     const categories = [
         { id: 'all', label: 'All Courses' },
@@ -73,22 +74,12 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
         }
     ];
 
-    const addToCart = (course) => {
-        setCart((prevCart) => {
-            const existingItem = prevCart.find((item) => item.title === course.title);
-            if (existingItem) {
-                return prevCart.map((item) =>
-                    item.title === course.title ? { ...item, quantity: item.quantity + 1 } : item
-                );
-            }
-            return [...prevCart, { ...course, quantity: 1 }];
-        });
+    const addInCart = (course) => {
+        addToCart(course);
     };
 
-    const addToWishlist = (course) => {
-        if (!wishlist.some((item) => item.title === course.title)) {
-            setWishlist([...wishlist, course]);
-        }
+    const addInWishlist = (course) => {
+        addToWishlist(course);
     };
 
     const isInWishlist = (courseTitle) => wishlist.some(item => item.title === courseTitle);
@@ -115,13 +106,7 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
 
     return (
         <div className="relative min-h-screen bg-theme-gradient">
-            <Navigation
-                cart={cart}
-                wishlist={wishlist}
-                setIsCartOpen={setIsCartOpen}
-                setIsWishlistOpen={setIsWishlistOpen}
-            />
-
+            
             <div className="max-w-7xl mx-auto px-4 py-16">
                 {/* Header Section */}
                 <div className="text-center mb-12">
@@ -187,7 +172,7 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.9 }}
-                                    onClick={() => addToWishlist(course)}
+                                    onClick={() => addInWishlist(course)}
                                     className="absolute top-4 right-4 p-2 bg-transparent"
                                 >
                                     <Heart className={`w-5 h-5 ${isInWishlist(course.title) ? 'text-red-500 fill-current' : 'text-secondary'}`} />
@@ -245,7 +230,7 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                                         <motion.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
-                                            onClick={() => addToCart(course)}
+                                            onClick={() => addInCart(course)}
                                             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center space-x-2 shadow-lg"
                                         >
                                             <span>Enroll Now</span>
@@ -268,8 +253,7 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                 </motion.div>
             </div>
 
-            {isWishlistOpen && <Wishlist wishlist={wishlist} setWishlist={setWishlist} setIsWishlistOpen={setIsWishlistOpen} />}
-            {isCartOpen && <Cart cart={cart} setCart={setCart} setIsCartOpen={setIsCartOpen} />}
+            
         </div>
     );
 };

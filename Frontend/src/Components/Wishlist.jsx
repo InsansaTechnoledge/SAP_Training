@@ -1,11 +1,12 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, X, ShoppingCart, Sparkles, ArrowRight } from 'lucide-react';
+import { useWishlist } from '../Context/WishlistContext';
+import { useCart } from '../Context/CartContext';
 
-const Wishlist = ({ wishlist, setWishlist, setIsWishlistOpen, addToCart }) => {
-    const removeFromWishlist = (courseTitle) => {
-        setWishlist((prevWishlist) => prevWishlist.filter(item => item.title !== courseTitle));
-    };
+const Wishlist = () => {
+    const {wishlist, setIsWishlistOpen, removeFromWishlist} = useWishlist();
+    const {addToCart} = useCart();
 
     return (
         <motion.div

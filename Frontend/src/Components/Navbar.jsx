@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Heart, GraduationCap, Search, Menu, X, ChevronRight, User, LogIn, UserPlus, ChevronDown, Settings, LogOut, Sun, Moon } from 'lucide-react';
 import SearchOverlay from './SearchOverlay';
+import { useCart } from '../Context/CartContext';
+import { useWishlist } from '../Context/WishlistContext';
+import Wishlist from './Wishlist';
+import Cart from './Cart';
 
-const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
+const Navigation = () => {
     const [scrolled, setScrolled] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,6 +14,11 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('darkTheme'));
+
+    // const [cart, setCart] = useState([]);
+    const { cart, setIsCartOpen, isCartOpen } = useCart()
+    // const [wishlist, setWishlist] = useState([]); 
+    const { wishlist, setIsWishlistOpen, isWishlistOpen } = useWishlist();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -21,7 +30,7 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
 
         const dark = localStorage.getItem('darkTheme');
         dark ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
-        
+
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
 
@@ -317,6 +326,9 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
                     </div>
                 </div>
             )}
+
+            {isWishlistOpen && <Wishlist />}
+            {isCartOpen && <Cart />}
         </>
     );
 };

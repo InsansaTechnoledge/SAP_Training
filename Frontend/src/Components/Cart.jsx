@@ -1,26 +1,10 @@
 import React from 'react';
 import { X, Minus, Plus, ShoppingBag, CreditCard, Package2, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '../Context/CartContext';
 
-const Cart = ({ cart, setCart, setIsCartOpen }) => {
-    const removeFromCart = (title) => {
-        setCart((prevCart) => {
-            return prevCart
-                .map(item =>
-                    item.title === title ? { ...item, quantity: item.quantity - 1 } : item
-                )
-                .filter(item => item.quantity > 0);
-        });
-    };
-
-    const addToCart = (title) => {
-        setCart((prevCart) => {
-            return prevCart.map(item =>
-                item.title === title ? { ...item, quantity: item.quantity + 1 } : item
-            );
-        });
-    };
-
+const Cart = () => {
+    const {cart, setIsCartOpen, addToCart, removeFromCart} = useCart();
     const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     return (
@@ -133,7 +117,7 @@ const Cart = ({ cart, setCart, setIsCartOpen }) => {
                                                 <motion.button
                                                     whileHover={{ scale: 1.1 }}
                                                     whileTap={{ scale: 0.9 }}
-                                                    onClick={() => addToCart(item.title)}
+                                                    onClick={() => addToCart(item)}
                                                     className="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                                                 >
                                                     <Plus className="w-4 h-4" />
