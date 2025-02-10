@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     BookOpen,
     Play,
@@ -25,10 +25,12 @@ import {
     Minimize2,
     Volume2,
     VolumeX,
-    Settings
+    Settings,
+    RotateCcw,
+    RotateCw
 } from 'lucide-react';
 
-import Video1 from '../assets/Video1.mp4'
+import Video2 from '../assets/Video2.mp4'
 
 const VideoPage = () => {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -42,8 +44,15 @@ const VideoPage = () => {
     const [playbackSpeed, setPlaybackSpeed] = useState(1);
     const [isMuted, setIsMuted] = useState(false);
     const [volume, setVolume] = useState(1);
+    const [duration, setDuration] = useState(0);
+    const [hoverTime, setHoverTime] = useState(null);
+    const [hoverX, setHoverX] = useState(0);
     const videoRef = useRef(null);
     const videoContainerRef = useRef(null);
+    const progressBarRef = useRef(null);
+    const [isRewindActive, setIsRewindActive] = useState(false);
+    const [isForwardActive, setIsForwardActive] = useState(false);
+
 
 
     // Sample video data
@@ -52,7 +61,7 @@ const VideoPage = () => {
         duration: "10:00",
         progress: 40,
         module: "ABAP Fundamentals",
-        src: Video1
+        src: Video2
     };
 
     const playbackSpeeds = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
@@ -65,6 +74,37 @@ const VideoPage = () => {
                 videoRef.current.play();
             }
             setIsPlaying(!isPlaying);
+        }
+    };
+
+    // Handle Spacebar Play/Pause
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.code === "Space") {
+                event.preventDefault(); // Prevents scrolling when pressing spacebar
+                handlePlayPause();
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [isPlaying]);
+
+    // Forward 10s
+    const handleForward = () => {
+        if (videoRef.current) {
+            const newTime = Math.min(videoRef.current.currentTime + 10, duration);
+            videoRef.current.currentTime = newTime;
+            setCurrentTime(newTime);
+        }
+    };
+
+    // Rewind 10s
+    const handleRewind = () => {
+        if (videoRef.current) {
+            const newTime = Math.max(videoRef.current.currentTime - 10, 0);
+            videoRef.current.currentTime = newTime;
+            setCurrentTime(newTime);
         }
     };
 
@@ -141,6 +181,37 @@ const VideoPage = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+    // Click on progress bar to seek video
+    const handleProgressBarClick = (event) => {
+        if (videoRef.current && progressBarRef.current) {
+            const rect = progressBarRef.current.getBoundingClientRect();
+            const clickX = event.clientX - rect.left; // X position inside the progress bar
+            const progressWidth = rect.width; // Width of the progress bar
+            const seekTime = (clickX / progressWidth) * videoRef.current.duration;
+
+            videoRef.current.currentTime = seekTime;
+            setCurrentTime(seekTime);
+        }
+    };
+
+    // Show timestamp on hover
+    const handleProgressBarHover = (event) => {
+        if (progressBarRef.current && videoRef.current) {
+            const rect = progressBarRef.current.getBoundingClientRect();
+            const hoverX = event.clientX - rect.left;
+            const progressWidth = rect.width;
+            const hoverTime = (hoverX / progressWidth) * videoRef.current.duration;
+
+            setHoverTime(formatTime(hoverTime));
+            setHoverX(hoverX);
+        }
+    };
+
+    // Hide timestamp when mouse leaves
+    const handleMouseLeave = () => {
+        setHoverTime(null);
+    };
+
     const addNote = () => {
         if (newNote.trim()) {
             setNotes([
@@ -213,45 +284,108 @@ const VideoPage = () => {
                                 ref={videoRef}
                                 className="w-full h-full"
                                 src={currentVideo.src}
+                                onClick={handlePlayPause}
                                 onTimeUpdate={handleTimeUpdate}
+                                onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
                                 onPlay={() => setIsPlaying(true)}
                                 onPause={() => setIsPlaying(false)}
                             />
 
-                            {/* Play Button Overlay */}
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                {!isPlaying && (
+                            {/* Play Button Overlay (Appears Only When Paused) */}
+                            {!isPlaying && (
+                                <div className="absolute inset-0 flex items-center justify-center">
                                     <button
                                         onClick={handlePlayPause}
                                         className="p-4 rounded-full bg-blue-600 text-white hover:bg-blue-500 transition-colors"
                                     >
                                         <Play className="h-6 w-6" />
                                     </button>
-                                )}
-                            </div>
+                                </div>
+                            )}
 
                             {/* Video Controls */}
                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                                {/* Progress Bar */}
-                                <div className="flex-1 h-1 bg-gray-600 rounded-full mb-4">
+
+                                {/* Clickable Progress Bar */}
+                                <div
+                                    ref={progressBarRef}
+                                    className="relative w-full h-2 bg-gray-600 rounded-full cursor-pointer mb-4"
+                                    onClick={handleProgressBarClick} // Seek on click
+                                    onMouseMove={handleProgressBarHover} // Show timestamp
+                                    onMouseLeave={handleMouseLeave} // Hide timestamp
+                                >
                                     <div
-                                        className="h-full bg-blue-600 rounded-full"
-                                        style={{ width: `${(currentTime / (videoRef.current?.duration || 1)) * 100}%` }}
+                                        className="absolute top-0 left-0 h-full bg-blue-600 rounded-full"
+                                        style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
                                     />
+
+                                    {/* Timestamp Tooltip on Hover */}
+                                    {hoverTime && (
+                                        <div
+                                            className="absolute -top-8 px-2 py-1 bg-black text-white text-xs rounded"
+                                            style={{ left: `${hoverX}px`, transform: "translateX(-50%)" }}
+                                        >
+                                            {hoverTime}
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Control Buttons */}
                                 <div className="flex items-center gap-4">
+
+                                    {/* Rewind 10s */}
+                                    <button
+                                        onClick={handleRewind}
+                                        className={`group relative transform transition-all duration-300 
+          ${isRewindActive ? 'scale-90' : 'hover:scale-110'}`}
+                                    >
+                                        <div className="absolute inset-0 bg-blue-500 rounded-full opacity-0 group-hover:opacity-20 
+          transition-opacity duration-300" />
+                                        <RotateCcw
+                                            className={`h-8 w-8 transition-all duration-300
+            ${isRewindActive ? 'text-blue-400' : 'text-white'}
+            group-hover:text-blue-400`}
+                                        />
+                                        <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 
+          text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            -10s
+                                        </span>
+                                    </button>
+
+
                                     {/* Play/Pause */}
                                     <button
                                         onClick={handlePlayPause}
-                                        className="text-white hover:text-blue-400 transition-colors"
+                                        className="group relative transform transition-all duration-300 hover:scale-110"
                                     >
+                                        <div className="absolute inset-0 bg-blue-500 rounded-full opacity-0 group-hover:opacity-20 
+          transition-opacity duration-300" />
                                         {isPlaying ? (
-                                            <Pause className="h-5 w-5" />
+                                            <Pause className="h-10 w-10 text-white group-hover:text-blue-400 
+            transition-colors duration-300" />
                                         ) : (
-                                            <Play className="h-5 w-5" />
+                                            <Play className="h-10 w-10 text-white group-hover:text-blue-400 
+            transition-colors duration-300" />
                                         )}
+                                    </button>
+
+                                    {/* Forward 10s */}
+                                    <button
+                                        onClick={handleForward}
+                                        className={`group relative transform transition-all duration-300 
+          ${isForwardActive ? 'scale-90' : 'hover:scale-110'}`}
+                                    >
+                                        <div className="absolute inset-0 bg-blue-500 rounded-full opacity-0 group-hover:opacity-20 
+          transition-opacity duration-300" />
+                                        <RotateCw
+                                            className={`h-8 w-8 transition-all duration-300
+            ${isForwardActive ? 'text-blue-400' : 'text-white'}
+            group-hover:text-blue-400`}
+                                        />
+                                        <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 
+          text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            +10s
+                                        </span>
                                     </button>
 
                                     {/* Volume Controls */}
