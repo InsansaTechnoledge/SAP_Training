@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Heart, GraduationCap, Search, Menu, X, ChevronRight, User, LogIn, UserPlus, ChevronDown, Settings, LogOut } from 'lucide-react';
+import { ShoppingCart, Heart, GraduationCap, Search, Menu, X, ChevronRight, User, LogIn, UserPlus, ChevronDown, Settings, LogOut, Sun, Moon } from 'lucide-react';
 import SearchOverlay from './SearchOverlay';
 
 const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
@@ -9,6 +9,7 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -40,6 +41,14 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isUserMenuOpen]);
 
+    useEffect(() => {
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }, [isDarkMode]);
+
     const handleSearch = (e) => {
         e.preventDefault();
         console.log('Searching for:', searchQuery);
@@ -57,20 +66,35 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
         setIsUserMenuOpen(false);
     };
 
+    const toggleTheme = () => {
+        setIsDarkMode(!isDarkMode);
+    };
+
     return (
         <>
             <nav className={`fixed top-0 left-0 right-0 transition-all duration-300 z-50 
                 ${scrolled
-                    ? 'bg-gradient-to-r from-blue-700 to-blue-900 shadow-lg'
+                    ? isDarkMode
+                        ? 'bg-gradient-to-r from-gray-900 to-gray-800 shadow-lg'
+                        : 'bg-gradient-to-r from-blue-700 to-blue-900 shadow-lg'
                     : 'bg-transparent'}`}>
                 <div className="max-w-7xl mx-auto px-6 py-4">
                     <div className="flex justify-between items-center">
                         {/* Logo Section */}
                         <div className="flex items-center space-x-3 group cursor-pointer">
-                            <div className={`p-2 rounded-lg transform transition-all duration-300 ${scrolled ? 'bg-blue-50' : 'bg-white/10'
-                                } group-hover:rotate-12`}>
-                                <GraduationCap className={`w-8 h-8 ${scrolled ? 'text-blue-800' : 'text-white'
-                                    }`} />
+                            <div className={`p-2 rounded-lg transform transition-all duration-300 
+                                ${scrolled
+                                    ? isDarkMode
+                                        ? 'bg-gray-700'
+                                        : 'bg-blue-50'
+                                    : 'bg-white/10'} 
+                                group-hover:rotate-12`}>
+                                <GraduationCap className={`w-8 h-8 
+                                    ${scrolled
+                                        ? isDarkMode
+                                            ? 'text-gray-100'
+                                            : 'text-blue-800'
+                                        : 'text-white'}`} />
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-2xl font-bold text-white">TechAcademy</span>
@@ -90,6 +114,28 @@ const Navigation = ({ cart, wishlist, setIsCartOpen, setIsWishlistOpen }) => {
 
                         {/* Actions Section */}
                         <div className="flex items-center space-x-6">
+                            <button
+                                onClick={toggleTheme}
+                                className={`relative p-2 rounded-full transition-all duration-300 
+                                    ${scrolled
+                                        ? isDarkMode
+                                            ? 'bg-gray-700 hover:bg-gray-600'
+                                            : 'bg-blue-800 hover:bg-blue-700'
+                                        : 'bg-white/10 hover:bg-white/20'
+                                    } overflow-hidden`}
+                                aria-label="Toggle theme"
+                            >
+                                <div className={`transform transition-all duration-500 ${isDarkMode ? '-rotate-180' : 'rotate-0'}`}>
+                                    {isDarkMode ? (
+                                        <Moon className="w-6 h-6 text-gray-100" />
+                                    ) : (
+                                        <Sun className="w-6 h-6 text-yellow-200" />
+                                    )}
+                                </div>
+                                <div className={`absolute inset-0 rounded-full transition-opacity duration-300 
+                                    ${isDarkMode ? 'opacity-0' : 'opacity-100'} 
+                                    bg-gradient-to-tr from-yellow-300/20 to-yellow-200/5`} />
+                            </button>
                             {/* Search Button */}
                             <button
                                 onClick={() => setIsSearchOpen(true)}
