@@ -55,6 +55,10 @@
   background-color: var(--color-background);
 }
 
+.bg-contrast {
+  background-color: var(--color-secondary);
+}
+
 .nav-theme-gradient {
   background: linear-gradient(to right, var(--color-gradient-nav-start), var(--color-gradient-nav-end));
 }

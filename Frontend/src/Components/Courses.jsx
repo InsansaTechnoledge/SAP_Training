@@ -256,7 +256,7 @@ const Courses = ({ cart, setCart, isCartOpen, setIsCartOpen, wishlist, setWishli
                                         href="/course"
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
-                                        className="w-full text-center bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-6 py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors duration-200"
+                                        className="w-full text-center bg-contrast hover:bg-gray-200 dark:hover:bg-gray-600 text-contrast px-6 py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors duration-200"
                                     >
                                         <span>Explore for Free</span>
                                         <BookOpen className="w-4 h-4" />
