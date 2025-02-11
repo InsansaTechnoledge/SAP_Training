@@ -182,7 +182,7 @@ const Courses = () => {
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.9 }}
                                     onClick={() => addInWishlist(course)}
-                                    className="absolute top-4 right-4 p-2 bg-transparent"
+                                    className="absolute top-4 right-4 p-2 bg-secondary rounded-full"
                                 >
                                     <Heart className={`w-5 h-5 ${isInWishlist(course.title) ? 'text-red-500 fill-current' : 'text-secondary'}`} />
                                 </motion.button>
