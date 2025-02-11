@@ -7,6 +7,7 @@ import Wishlist from './Components/Wishlist';
 import VideoPage from './Pages/VideoPage';
 import Checkout from './Pages/Checkout';
 import Navigation from './Components/Navbar';
+import QuizPage from './Pages/QuizPage';
 
 const PageLinks = () => {
     
@@ -20,6 +21,8 @@ const PageLinks = () => {
                     <Route path="/course" element={<ExamPage />} />
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/video" element={<VideoPage />} />
+                    <Route path="/quiz" element={<QuizPage />} />
+
                     <Route path="/payment" element={<Checkout />} />
                     <Route path="/dashboard" element={<UserDashboard />} />
                 </Routes>

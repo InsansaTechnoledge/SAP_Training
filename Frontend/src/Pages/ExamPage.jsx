@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Lock, Unlock, Play, Trophy, Star, CheckCircle, Clock, ChevronRight, CreditCard, Zap, Users, Book, Code, Award, BarChart, Lightbulb } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-
+import DashboardBannerComponent from '../Components/DashboardBanner';
 const ExamPage = () => {
     const navigate = useNavigate();
     const [activeModule, setActiveModule] = useState(null);
@@ -23,9 +22,11 @@ const ExamPage = () => {
             price: "Free",
             icon: Code,
             subModules: [
-                { title: "Introduction to ABAP", duration: "2 min", completed: true, exercises: 5 },
-                { title: "Data Types & Variables", duration: "1 min", completed: false, exercises: 3 },
-                { title: "Control Structures", duration: "1 min", completed: false, exercises: 4 }
+                { title: "Introduction to ABAP", duration: "2 min", completed: true, exercises: 5, type: "video" },
+                { title: "Quiz on ABAP", duration: "2 min", completed: true, exercises: "1 quiz", type: "quiz" },
+                { title: "Data Types & Variables", duration: "1 min", completed: false, exercises: 3, type: "video" },
+                { title: "Control Structures", duration: "1 min", completed: false, exercises: 4, type: "video" },
+                { title: "Module Assessment", duration: "2 min", completed: true, exercises: "final", type: "quiz" }
             ],
             features: ["Interactive Console", "Guided Examples", "Basic Certificate"],
             color: "from-blue-500 to-blue-400",
@@ -38,10 +39,13 @@ const ExamPage = () => {
             price: "49",
             icon: Lightbulb,
             subModules: [
-                { title: "Object-Oriented Programming", duration: "3 min", completed: false, exercises: 6 },
-                { title: "Design Patterns", duration: "2 min", completed: false, exercises: 4 },
-                { title: "ABAP Units", duration: "1 min", completed: false, exercises: 3 },
-                { title: "ODATA", duration: "1 min", completed: false, exercises: 5 }
+                { title: "Object-Oriented Programming", duration: "3 min", completed: false, exercises: 6, type: "video" },
+                { title: "OOP Concepts Quiz", duration: "1 min", completed: false, exercises: "1 quiz", type: "quiz" },
+                { title: "Design Patterns", duration: "2 min", completed: false, exercises: 4, type: "video" },
+                { title: "Design Patterns Quiz", duration: "1 min", completed: false, exercises: "1 quiz", type: "quiz" },
+                { title: "ABAP Units", duration: "1 min", completed: false, exercises: 3, type: "video" },
+                { title: "ODATA", duration: "1 min", completed: false, exercises: 5, type: "video" },
+                { title: "Final Assessment", duration: "2 min", completed: false, exercises: "final", type: "quiz" }
             ],
             features: ["Advanced Projects", "Code Reviews", "Premium Support"],
             color: "from-indigo-500 to-indigo-400",
@@ -54,15 +58,19 @@ const ExamPage = () => {
             price: "69",
             icon: BarChart,
             subModules: [
-                { title: "ABAP Dictionary", duration: "2 min", completed: false, exercises: 5 },
-                { title: "Database Operations", duration: "2 min", completed: false, exercises: 6 },
-                { title: "Performance Optimization", duration: "1 min", completed: false, exercises: 4 }
+                { title: "ABAP Dictionary", duration: "2 min", completed: false, exercises: 5, type: "video" },
+                { title: "Dictionary Quiz", duration: "1 min", completed: false, exercises: "1 quiz", type: "quiz" },
+                { title: "Database Operations", duration: "2 min", completed: false, exercises: 6, type: "video" },
+                { title: "Operations Quiz", duration: "1 min", completed: false, exercises: "1 quiz", type: "quiz" },
+                { title: "Performance Optimization", duration: "1 min", completed: false, exercises: 4, type: "video" },
+                { title: "Final Module Test", duration: "2 min", completed: false, exercises: "final", type: "quiz" }
             ],
             features: ["Performance Labs", "Real DB Access", "Expert Guidance"],
             color: "from-purple-500 to-purple-400",
             progress: 0
         }
     ];
+
 
     const isModuleUnlocked = (moduleId) => unlockedModules.includes(moduleId);
 
@@ -74,6 +82,16 @@ const ExamPage = () => {
     const handleVideoClick = (moduleId, subModuleId) => {
         if (isModuleUnlocked(moduleId)) {
             navigate(`/video`);
+        }
+    };
+
+    const handleContentClick = (moduleId, subModule) => {
+        if (isModuleUnlocked(moduleId)) {
+            if (subModule.type === "quiz") {
+                navigate('/quiz');
+            } else {
+                navigate('/video');
+            }
         }
     };
 
@@ -202,7 +220,7 @@ const ExamPage = () => {
                                     {module.subModules.map((sub, i) => (
                                         <div
                                             key={i}
-                                            onClick={() => handleVideoClick(module.id, sub.id)}
+                                            onClick={() => handleContentClick(module.id, sub)}
                                             className={`
                                                 p-6 rounded-xl border group
                                                 ${isModuleUnlocked(module.id)
@@ -228,8 +246,14 @@ const ExamPage = () => {
                                                     {sub.duration}
                                                 </div>
                                                 <div className="flex items-center">
-                                                    <Code className="h-4 w-4 mr-1" />
-                                                    {sub.exercises} exercises
+                                                    {sub.type === "quiz" ? (
+                                                        <span className="text-blue-500">Quiz</span>
+                                                    ) : (
+                                                        <>
+                                                            <Code className="h-4 w-4 mr-1" />
+                                                            {sub.exercises} exercises
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -250,6 +274,9 @@ const ExamPage = () => {
                     ))}
                 </div>
             </div>
+
+            <DashboardBannerComponent />
+
 
             {/* Call to Action */}
             <div className="bg-theme-gradient py-20">
