@@ -15,6 +15,13 @@
   --color-gradient-start: #eff6ff;
   --color-gradient-end: oklch(0.962 0.018 272.314);
 
+  
+  --color-bg-green:#daffe7;
+  --color-text-green:oklch(0.723 0.219 149.579);
+  
+  --color-bg-blue:#dbeafe;
+  --color-text-blue:#155dfc;
+
   --color-text-gradient-start: #eff6ff ;
   --color-text-gradient-mid: oklch(0.962 0.018 272.314) ;
   --color-text-gradient-end: #ffffff;
@@ -35,6 +42,12 @@
   --color-text-gradient-start: #101828;
   --color-text-gradient-mid: #1e1a4d;
   --color-text-gradient-end: #000000;
+
+  --color-bg-green:#0d542b;
+  --color-text-green:oklch(0.723 0.219 149.579);
+
+  --color-bg-blue:#1c398e;
+  --color-text-blue:oklch(0.882 0.059 254.128);
 
   --color-card-gradient-start:#364153;
   --color-card-gradient-end:#172135;
@@ -71,6 +84,9 @@
   color: var(--color-background);
 }
 
+.border-contrast {
+  border: 1px solid var(--color-secondary);
+}
 
 .nav-theme-gradient {
   background: linear-gradient(to right, var(--color-gradient-nav-start), var(--color-gradient-nav-end));
@@ -78,6 +94,16 @@
 
 .bg-theme-gradient {
   background: linear-gradient(to right, var(--color-gradient-start), var(--color-gradient-end));
+}
+
+.card-green {
+  background-color: var(--color-bg-green);
+  color: var(--color-text-green);
+}
+
+.card-blue {
+  background-color: var(--color-bg-blue);
+  color: var(--color-text-blue);
 }
 
 .card-theme-gradient {

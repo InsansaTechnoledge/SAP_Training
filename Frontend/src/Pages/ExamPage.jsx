@@ -112,7 +112,7 @@ const ExamPage = () => {
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                            <button className="group bg-white text-blue-900 px-8 py-4 rounded-xl font-semibold hover:shadow-xl hover:shadow-blue-900/20 transform hover:scale-105 transition-all flex items-center gap-3 w-full sm:w-auto">
+                            <button className="group bg-primary text-secondary px-8 py-4 rounded-xl font-semibold hover:shadow-xl hover:shadow-blue-900/20 transform hover:scale-105 transition-all flex items-center gap-3 w-full sm:w-auto">
                                 <Play className="h-5 w-5 group-hover:animate-pulse" />
                                 Start Free Module
                             </button>
@@ -125,10 +125,10 @@ const ExamPage = () => {
                         {/* Stats Section */}
                         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
                             {stats.map((stat, index) => (
-                                <div key={index} className="text-center p-4 rounded-xl bg-white/10 backdrop-blur-sm">
-                                    <stat.icon className="h-8 w-8 mx-auto mb-2 text-blue-300" />
-                                    <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                                    <div className="text-blue-200 text-sm">{stat.label}</div>
+                                <div key={index} className="text-center p-4 rounded-xl bg-secondary backdrop-blur-sm">
+                                    <stat.icon className="h-8 w-8 mx-auto mb-2 text-primary" />
+                                    <div className="text-2xl font-bold text-primary mb-1">{stat.value}</div>
+                                    <div className="text-primary text-sm">{stat.label}</div>
                                 </div>
                             ))}
                         </div>
@@ -137,12 +137,12 @@ const ExamPage = () => {
             </div>
 
             {/* Learning Modules Section */}
-            <div className="container mx-auto px-4 py-20">
+            <div className="container mx-auto px-4 py-20 bg-theme-gradient">
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                    <h2 className="text-4xl font-bold text-secondary mb-4">
                         Your Learning Journey
                     </h2>
-                    <p className="text-gray-600 max-w-2xl mx-auto">
+                    <p className="text-secondary max-w-2xl mx-auto">
                         Follow our structured learning path or choose individual modules.
                         Each module includes practical exercises, real-world projects, and expert support.
                     </p>
@@ -155,13 +155,13 @@ const ExamPage = () => {
                             onMouseEnter={() => setActiveModule(module.id)}
                             onMouseLeave={() => setActiveModule(null)}
                             className={`
-                                relative bg-white rounded-2xl shadow-lg overflow-hidden
+                                relative bg-primary rounded-2xl shadow-lg overflow-hidden
                                 ${activeModule === module.id ? 'transform scale-[1.02] shadow-xl' : ''}
                                 transition-all duration-300
                             `}
                         >
                             {/* Progress bar */}
-                            <div className="absolute top-0 left-0 h-1 bg-gray-100 w-full">
+                            <div className="absolute top-0 left-0 h-1 bg-secondary w-full">
                                 <div
                                     className={`h-full bg-gradient-to-r ${module.color} transition-all duration-500`}
                                     style={{ width: `${module.progress}%` }}
@@ -175,22 +175,22 @@ const ExamPage = () => {
                                             <module.icon className="h-6 w-6" />
                                         </div>
                                         <div>
-                                            <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+                                            <h3 className="text-2xl font-semibold text-primary mb-2">
                                                 {module.title}
                                             </h3>
-                                            <p className="text-gray-600 max-w-xl">{module.description}</p>
+                                            <p className="text-secondary max-w-xl">{module.description}</p>
                                         </div>
                                     </div>
 
                                     {isModuleUnlocked(module.id) ? (
-                                        <div className="flex items-center text-green-500 bg-green-50 px-6 py-3 rounded-xl">
+                                        <div className="flex items-center card-green  px-6 py-3 rounded-xl">
                                             <Unlock className="h-5 w-5 mr-2" />
                                             <span>Module Unlocked</span>
                                         </div>
                                     ) : (
                                         <button
                                             onClick={() => handleUnlockModule(module.id)}
-                                            className="flex items-center bg-blue-50 text-blue-600 px-6 py-3 rounded-xl hover:bg-blue-100 transition-colors"
+                                            className="flex items-center card-blue px-6 py-3 rounded-xl hover:cursor-pointer transition-colors"
                                         >
                                             <CreditCard className="h-5 w-5 mr-2" />
                                             <span>${module.price}</span>
@@ -206,13 +206,13 @@ const ExamPage = () => {
                                             className={`
                                                 p-6 rounded-xl border group
                                                 ${isModuleUnlocked(module.id)
-                                                    ? 'hover:border-blue-200 hover:shadow-md cursor-pointer border-gray-100'
-                                                    : 'border-gray-200 opacity-75 cursor-not-allowed'}
+                                                    ? 'hover:border-blue-200 hover:shadow-md cursor-pointer border-gray-400'
+                                                    : 'border-contrast opacity-75 cursor-not-allowed'}
                                                 transition-all
                                             `}
                                         >
                                             <div className="flex justify-between items-start mb-3">
-                                                <h4 className="font-medium text-gray-800">
+                                                <h4 className="font-medium text-secondary">
                                                     {sub.title}
                                                 </h4>
                                                 {!isModuleUnlocked(module.id) && (
@@ -239,7 +239,7 @@ const ExamPage = () => {
                                 {/* Module Features */}
                                 <div className="mt-6 flex gap-4">
                                     {module.features.map((feature, index) => (
-                                        <div key={index} className="flex items-center text-sm text-gray-600">
+                                        <div key={index} className="flex items-center text-sm text-secondary">
                                             <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
                                             {feature}
                                         </div>
@@ -252,10 +252,10 @@ const ExamPage = () => {
             </div>
 
             {/* Call to Action */}
-            <div className="bg-gradient-to-br from-blue-50 to-white py-20">
+            <div className="bg-theme-gradient py-20">
                 <div className="container mx-auto px-4 text-center">
                     <div className="max-w-3xl mx-auto">
-                        <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                        <h2 className="text-4xl font-bold text-secondary mb-6">
                             Ready to Transform Your ABAP Career?
                         </h2>
                         <p className="text-gray-600 mb-8 text-lg">
@@ -267,7 +267,7 @@ const ExamPage = () => {
                                 <Zap className="h-5 w-5 group-hover:animate-bounce" />
                                 Get Complete Bundle
                             </button>
-                            <button className="group bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold border-2 border-blue-100 hover:border-blue-200 transition-all flex items-center gap-3 w-full sm:w-auto">
+                            <button className="group bg-primary text-primary px-8 py-4 rounded-xl font-semibold border transition-all flex items-center gap-3 w-full sm:w-auto">
                                 <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                                 Learn More
                             </button>

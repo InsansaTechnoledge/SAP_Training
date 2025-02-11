@@ -53,8 +53,6 @@ const VideoPage = () => {
     const [isRewindActive, setIsRewindActive] = useState(false);
     const [isForwardActive, setIsForwardActive] = useState(false);
 
-
-
     // Sample video data
     const currentVideo = {
         title: "Introduction to ABAP",
@@ -283,12 +281,13 @@ const VideoPage = () => {
                             <video
                                 ref={videoRef}
                                 className="w-full h-full"
-                                src={currentVideo.src}
+                                src="https://app.lumi.education/api/v1/run/DIxdF1/embed"
                                 onClick={handlePlayPause}
                                 onTimeUpdate={handleTimeUpdate}
                                 onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
                                 onPlay={() => setIsPlaying(true)}
                                 onPause={() => setIsPlaying(false)}
+
                             />
 
                             {/* Play Button Overlay (Appears Only When Paused) */}
@@ -389,27 +388,33 @@ const VideoPage = () => {
                                     </button>
 
                                     {/* Volume Controls */}
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={toggleMute}
-                                            className="text-white hover:text-blue-400 transition-colors"
-                                        >
-                                            {isMuted ? (
-                                                <VolumeX className="h-5 w-5" />
-                                            ) : (
-                                                <Volume2 className="h-5 w-5" />
-                                            )}
-                                        </button>
-                                        <input
-                                            type="range"
-                                            min="0"
-                                            max="1"
-                                            step="0.1"
-                                            value={volume}
-                                            onChange={handleVolumeChange}
-                                            className="w-20"
-                                        />
-                                    </div>
+                                    {
+                                        true ?
+                                        null
+                                        :
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={toggleMute}
+                                                className="text-white hover:text-blue-400 transition-colors"
+                                            >
+                                                {isMuted ? (
+                                                    <VolumeX className="h-5 w-5" />
+                                                ) : (
+                                                    <Volume2 className="h-5 w-5" />
+                                                )}
+                                            </button>
+                                            <input
+                                                type="range"
+                                                min="0"
+                                                max="1"
+                                                step="0.1"
+                                                value={volume}
+                                                onChange={handleVolumeChange}
+                                                className="w-20"
+                                            />
+                                        </div>
+
+                                    }
 
                                     {/* Time Display */}
                                     <div className="text-white text-sm">

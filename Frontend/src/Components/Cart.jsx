@@ -13,7 +13,7 @@ const Cart = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 w-full sm:w-[448px] h-full bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl z-50 flex flex-col"
+            className="fixed top-0 right-0 w-full sm:w-[448px] h-full bg-theme-gradient shadow-2xl z-50 flex flex-col"
         >
             <div className="flex-1 flex flex-col h-full">
                 {/* Header */}
@@ -24,7 +24,7 @@ const Cart = () => {
                                 <ShoppingBag className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold dark:text-white">Your Cart</h2>
+                                <h2 className="text-xl font-bold text-secondary">Your Cart</h2>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
                                     {cart.length} {cart.length === 1 ? 'item' : 'items'}
                                 </p>
@@ -34,9 +34,9 @@ const Cart = () => {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => setIsCartOpen(false)}
-                            className="bg-gray-100 dark:bg-gray-800 p-2 rounded-xl text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                            className="bg-secondary p-2 rounded-xl text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                         >
-                            <X className="w-5 h-5" />
+                            <X className="w-5 h-5 text-primary" />
                         </motion.button>
                     </div>
                 </div>
@@ -52,12 +52,12 @@ const Cart = () => {
                             >
                                 <div className="relative">
                                     <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full opacity-75 blur"></div>
-                                    <div className="relative bg-white dark:bg-gray-900 p-6 rounded-full">
+                                    <div className="relative bg-primary p-6 rounded-full">
                                         <ShoppingBag className="w-16 h-16 text-blue-600 dark:text-blue-400" />
                                     </div>
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold dark:text-white mb-2">Your cart is empty</h3>
+                                    <h3 className="text-xl font-bold text-secondary mb-2">Your cart is empty</h3>
                                     <p className="text-gray-500 dark:text-gray-400">Looks like you haven't added any courses yet</p>
                                 </div>
                                 <motion.button

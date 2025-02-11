@@ -5,6 +5,7 @@ import {
     Users, Clock, ArrowRight, GraduationCap, Search, Filter,
     BookOpen, Activity
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/CartContext';
 import { useWishlist } from '../Context/WishlistContext';
 
@@ -12,8 +13,9 @@ const Courses = () => {
     const [activeTab, setActiveTab] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [hoveredCourse, setHoveredCourse] = useState(null);
-    const {addToCart} = useCart();
-    const {wishlist,addToWishlist} = useWishlist();
+    const { addToCart } = useCart();
+    const { wishlist, addToWishlist } = useWishlist();
+    const navigate = useNavigate();
 
     const categories = [
         { id: 'all', label: 'All Courses' },
@@ -106,7 +108,7 @@ const Courses = () => {
 
     return (
         <div className="relative min-h-screen bg-theme-gradient">
-            
+
             <div className="max-w-7xl mx-auto px-4 py-16">
                 {/* Header Section */}
                 <div className="text-center mb-12">
@@ -137,8 +139,8 @@ const Courses = () => {
                                 key={category.id}
                                 onClick={() => setActiveTab(category.id)}
                                 className={`px-6 py-3 rounded-xl font-medium whitespace-nowrap transition-all ${activeTab === category.id
-                                        ? 'bg-theme text-contrast shadow-lg'
-                                        : 'bg-secondary text-secondary hover:bg-blue-50 dark:hover:bg-gray-700'
+                                    ? 'bg-theme text-contrast shadow-lg'
+                                    : 'bg-secondary text-secondary hover:bg-blue-50 dark:hover:bg-gray-700'
                                     }`}
                             >
                                 {category.label}
@@ -237,15 +239,17 @@ const Courses = () => {
                                             <ArrowRight className="w-4 h-4" />
                                         </motion.button>
                                     </div>
-                                    <motion.a
-                                        href="/course"
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        className="w-full text-center bg-contrast hover:bg-gray-200 dark:hover:bg-gray-600 text-contrast px-6 py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors duration-200"
-                                    >
-                                        <span>Explore for Free</span>
-                                        <BookOpen className="w-4 h-4" />
-                                    </motion.a>
+
+                                        <motion.div
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            className="w-full text-center bg-contrast hover:bg-gray-200 dark:hover:bg-gray-600 text-contrast px-6 py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors duration-200"
+                                            onClick={() => {navigate('/course')}}
+                                        >
+                                            <span>Explore for Free</span>
+                                            <BookOpen className="w-4 h-4" />
+                                        </motion.div>
+
                                 </div>
                             </div>
                         </motion.div>
@@ -253,7 +257,7 @@ const Courses = () => {
                 </motion.div>
             </div>
 
-            
+
         </div>
     );
 };

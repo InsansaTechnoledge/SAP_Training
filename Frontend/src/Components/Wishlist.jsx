@@ -14,7 +14,7 @@ const Wishlist = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 w-full sm:w-[448px] h-full bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl z-50 flex flex-col"
+            className="fixed top-0 right-0 w-full sm:w-[448px] h-full bg-theme-gradient shadow-2xl z-50 flex flex-col"
         >
             <div className="flex-1 flex flex-col h-full">
                 {/* Header */}
@@ -25,7 +25,7 @@ const Wishlist = () => {
                                 <Heart className="w-6 h-6 text-pink-600 dark:text-pink-400" />
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold dark:text-white">Your Wishlist</h2>
+                                <h2 className="text-xl font-bold text-secondary">Your Wishlist</h2>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
                                     {wishlist.length} {wishlist.length === 1 ? 'course' : 'courses'}
                                 </p>
@@ -35,9 +35,9 @@ const Wishlist = () => {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => setIsWishlistOpen(false)}
-                            className="bg-gray-100 dark:bg-gray-800 p-2 rounded-xl text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                            className="bg-secondary p-2 rounded-xl text-primary dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                         >
-                            <X className="w-5 h-5" />
+                            <X className="w-5 h-5 text-primary" />
                         </motion.button>
                     </div>
                 </div>
@@ -53,12 +53,12 @@ const Wishlist = () => {
                             >
                                 <div className="relative">
                                     <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full opacity-75 blur"></div>
-                                    <div className="relative bg-white dark:bg-gray-900 p-6 rounded-full">
+                                    <div className="relative bg-primary p-6 rounded-full">
                                         <Heart className="w-16 h-16 text-pink-600 dark:text-pink-400" />
                                     </div>
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold dark:text-white mb-2">Your wishlist is empty</h3>
+                                    <h3 className="text-xl font-bold text-secondary mb-2">Your wishlist is empty</h3>
                                     <p className="text-gray-500 dark:text-gray-400">Save your favorite courses for later</p>
                                 </div>
                                 <motion.button

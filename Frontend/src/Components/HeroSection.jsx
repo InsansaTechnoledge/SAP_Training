@@ -115,7 +115,7 @@ const HeroSection = () => {
                         <div className="absolute inset-0 bg-blue-500/30 backdrop-blur-xl rounded-3xl transform -rotate-3" />
                         <div className="relative bg-gradient-to-br from-blue-900 to-blue-800 rounded-3xl p-8 shadow-2xl">
                             {/* Code editor mockup */}
-                            <div className="bg-gray-900 rounded-lg p-4 h-full">
+                            <div className="bg-primary rounded-lg p-4 h-full">
                                 <div className="flex gap-2 mb-4">
                                     <div className="w-3 h-3 rounded-full bg-red-500" />
                                     <div className="w-3 h-3 rounded-full bg-yellow-500" />
