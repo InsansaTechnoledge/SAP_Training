@@ -145,8 +145,8 @@ const QuizPage = () => {
     ]);
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            {showStartOverlay && (
+        <div className="min-h-screen bg-theme-gradient">
+            {/* {showStartOverlay && (
                 <QuizStartOverlay
                     onStart={() => setShowStartOverlay(false)}
                     onPostpone={() => {
@@ -157,25 +157,25 @@ const QuizPage = () => {
                         }
                     }}
                 />
-            )}
-            <div className="container mx-auto px-4 py-8 mt-24">
+            )} */}
+            <div className="container mx-auto px-4 py-8 mt-20">
                 {/* Navigation Breadcrumb */}
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+                <div className="flex items-center gap-2 text-sm text-secondary mb-6">
                     <span>ABAP Fundamentals</span>
                     <ChevronRight className="h-4 w-4" />
-                    <span className="text-blue-600">Quiz: Basic Syntax</span>
+                    <span className="text-blue">Quiz: Basic Syntax</span>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Quiz Section */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Quiz Container */}
-                        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <div className="bg-card rounded-xl shadow-sm overflow-hidden">
                             {/* Quiz Header */}
                             <div className="p-6 border-b">
                                 <div className="flex justify-between items-center mb-4">
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm text-gray-500">Question {currentQuestionIndex + 1} of {questions.length}</span>
+                                        <span className="text-sm text-gray-400">Question {currentQuestionIndex + 1} of {questions.length}</span>
                                         <div className="h-2 w-32 bg-gray-200 rounded-full">
                                             <div
                                                 className="h-full bg-blue-600 rounded-full"
@@ -184,11 +184,11 @@ const QuizPage = () => {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Clock className="h-4 w-4 text-gray-500" />
-                                        <span className="text-sm text-gray-500">{Math.floor(remainingTime / 60)}:{(remainingTime % 60).toString().padStart(2, '0')}</span>
+                                        <Clock className="h-4 w-4 text-gray-400" />
+                                        <span className="text-sm text-gray-400">{Math.floor(remainingTime / 60)}:{(remainingTime % 60).toString().padStart(2, '0')}</span>
                                     </div>
                                 </div>
-                                <h2 className="text-xl font-semibold text-gray-900">
+                                <h2 className="text-xl font-semibold text-secondary">
                                     {questions[currentQuestionIndex].question}
                                 </h2>
                             </div>
@@ -199,12 +199,12 @@ const QuizPage = () => {
                                     <button
                                         key={index}
                                         onClick={() => !isAnswerSubmitted && setSelectedAnswer(index)}
-                                        className={`w-full p-4 rounded-lg border text-left transition-all ${selectedAnswer === index
+                                        className={`text-secondary w-full p-4 rounded-lg border text-left transition-all ${selectedAnswer === index
                                                 ? isAnswerSubmitted
                                                     ? index === questions[currentQuestionIndex].correctAnswer
-                                                        ? 'border-green-500 bg-green-50'
-                                                        : 'border-red-500 bg-red-50'
-                                                    : 'border-blue-500 bg-blue-50'
+                                                        ? 'border-green-500 '
+                                                        : 'border-red-500 '
+                                                    : 'border-blue-500 '
                                                 : 'border-gray-200 hover:border-blue-200'
                                             }`}
                                         disabled={isAnswerSubmitted}
@@ -232,23 +232,23 @@ const QuizPage = () => {
 
                             {/* Answer Explanation */}
                             {isAnswerSubmitted && (
-                                <div className="p-6 bg-gray-50 border-t">
+                                <div className="p-6 bg-card border-t">
                                     <div className="flex items-start gap-3">
                                         <div className="p-2 bg-blue-100 rounded-lg">
                                             <Lightbulb className="h-5 w-5 text-blue-600" />
                                         </div>
                                         <div>
-                                            <h3 className="font-semibold text-gray-900 mb-2">Explanation</h3>
-                                            <p className="text-gray-700">{questions[currentQuestionIndex].explanation}</p>
+                                            <h3 className="font-semibold text-secondary mb-2">Explanation</h3>
+                                            <p className="text-secondary">{questions[currentQuestionIndex].explanation}</p>
                                         </div>
                                     </div>
                                 </div>
                             )}
 
                             {/* Action Buttons */}
-                            <div className="p-6 border-t bg-white">
+                            <div className="p-6 border-t bg-card">
                                 <div className="flex justify-between items-center">
-                                    <button className="flex items-center gap-2 text-gray-500 hover:text-red-600">
+                                    <button className="flex items-center gap-2 text-gray-400 hover:text-red-600">
                                         <Flag className="h-5 w-5" />
                                         Report Issue
                                     </button>
@@ -273,9 +273,9 @@ const QuizPage = () => {
                         </div>
 
                         {/* Notes Section */}
-                        <div className="bg-white rounded-xl p-6 shadow-sm">
-                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                                <BookOpen className="h-5 w-5 text-blue-600" />
+                        <div className="bg-card rounded-xl p-6 shadow-sm">
+                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
+                                <BookOpen className="h-5 w-5 text-blue" />
                                 Question Notes
                             </h2>
 
@@ -285,7 +285,7 @@ const QuizPage = () => {
                                     value={newNote}
                                     onChange={(e) => setNewNote(e.target.value)}
                                     placeholder="Add a note for this question..."
-                                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="flex-1 px-4 py-2 border border-contrast text-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 <button
                                     onClick={addNote}
@@ -298,8 +298,8 @@ const QuizPage = () => {
 
                             <div className="space-y-4">
                                 {notes.filter(note => note.questionId === questions[currentQuestionIndex].id).map(note => (
-                                    <div key={note.id} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                                        <p className="flex-1 text-gray-700">{note.content}</p>
+                                    <div key={note.id} className="flex items-start gap-4 p-4 bg-card border-contrast rounded-lg">
+                                        <p className="flex-1 text-secondary">{note.content}</p>
                                         <div className="flex items-center gap-2">
                                             <button className="p-1 text-gray-400 hover:text-blue-600 transition-colors">
                                                 <Edit2 className="h-4 w-4" />
@@ -320,9 +320,9 @@ const QuizPage = () => {
                     {/* Sidebar */}
                     <div className="space-y-6">
                         {/* Module Progress */}
-                        <div className="bg-white rounded-xl p-6 shadow-sm">
-                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                                <List className="h-5 w-5 text-blue-600" />
+                        <div className="bg-card rounded-xl p-6 shadow-sm">
+                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
+                                <List className="h-5 w-5 text-blue" />
                                 Quiz Progress
                             </h2>
                             <div className="space-y-4">
@@ -331,14 +331,14 @@ const QuizPage = () => {
                                         key={section.id}
                                         className={`
                                             p-4 rounded-lg border cursor-pointer
-                                            ${section.completed ? 'bg-green-50 border-green-100' : 'bg-gray-50 border-gray-100'}
+                                            ${section.completed ? 'card-green border-green-100' : 'bg-card border-contrast'}
                                             hover:border-blue-200 transition-colors
                                         `}
                                     >
                                         <div className="flex items-start justify-between">
                                             <div>
-                                                <h3 className="font-medium text-gray-900 mb-1">{section.title}</h3>
-                                                <div className="flex items-center text-sm text-gray-500">
+                                                <h3 className="font-medium text-secondary mb-1">{section.title}</h3>
+                                                <div className="flex items-center text-sm text-secondary">
                                                     <HelpCircle className="h-4 w-4 mr-1" />
                                                     {section.questionsCount} questions
                                                 </div>
@@ -351,63 +351,64 @@ const QuizPage = () => {
                                 ))}
                             </div>
                         </div>
+                        <div className='bg-card rounded-xl p-6 shadow-sm'>
                             <div className="flex items-center justify-between mb-4">
-                                <h2 className="text-lg font-semibold flex items-center gap-2">
-                                    <Lightbulb className="h-5 w-5 text-indigo-600" />
+                                <h2 className="text-lg font-semibold flex items-center gap-2 text-secondary">
+                                    <Lightbulb className="h-5 w-5 text-blue" />
                                     Next Quiz Module
                                 </h2>
                                 {nextModule.isLocked && (
-                                    <Lock className="h-5 w-5 text-indigo-400" />
+                                    <Lock className="h-5 w-5 text-blue" />
                                 )}
                             </div>
 
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">
+                            <h3 className="text-xl font-bold text-secondary mb-2">
                                 {nextModule.title}
                             </h3>
-                            <p className="text-gray-600 mb-4">
+                            <p className="text-secondary mb-4">
                                 {nextModule.description}
                             </p>
 
                             <div className="space-y-2 mb-6">
                                 {nextModule.topics.map((topic, index) => (
-                                    <div key={index} className="flex items-center text-gray-600">
-                                        <ArrowRight className="h-4 w-4 mr-2 text-indigo-500" />
+                                    <div key={index} className="flex items-center text-secondary">
+                                        <ArrowRight className="h-4 w-4 mr-2 text-blue" />
                                         {topic}
                                     </div>
                                 ))}
                             </div>
 
-                            <button className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2">
+                            <button className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors flex items-center justify-center gap-2">
                                 <Plus className="h-5 w-5" />
                                 Unlock for ${nextModule.price}
                             </button>
                         </div>
-
+                        </div>
                       
                     </div>
 
                     {/* Resources Section */}
-                    <div className="bg-white rounded-xl p-6 shadow-sm mt-6">
-                        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                            <FileText className="h-5 w-5 text-blue-600" />
+                    <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
+                        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
+                            <FileText className="h-5 w-5 text-blue" />
                             Study Resources
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {resources.map(resource => (
                                 <div
                                     key={resource.id}
-                                    className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-blue-200 transition-all"
+                                    className="flex items-center justify-between p-4 border-contrast rounded-lg hover:border-blue-200 transition-all"
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-blue-50 rounded-lg">
-                                            <FileText className="h-5 w-5 text-blue-600" />
+                                        <div className="p-2 bg-primary rounded-lg">
+                                            <FileText className="h-5 w-5 text-blue" />
                                         </div>
                                         <div>
-                                            <h3 className="font-medium text-gray-900">{resource.title}</h3>
-                                            <p className="text-sm text-gray-500">{resource.type} • {resource.size}</p>
+                                            <h3 className="font-medium text-secondary">{resource.title}</h3>
+                                            <p className="text-sm text-gray-400">{resource.type} • {resource.size}</p>
                                         </div>
                                     </div>
-                                    <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                    <button className="p-2 text-blue hover:bg-blue-50 rounded-lg transition-colors">
                                         <Download className="h-5 w-5" />
                                     </button>
                                 </div>
@@ -416,9 +417,9 @@ const QuizPage = () => {
                     </div>
 
                     {/* Community Discussion Section */}
-                    <div className="bg-white rounded-xl p-6 shadow-sm mt-6">
-                        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                            <MessageSquare className="h-5 w-5 text-blue-600" />
+                    <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
+                        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
+                            <MessageSquare className="h-5 w-5 text-blue" />
                             Discussion Forum
                         </h2>
 
@@ -434,7 +435,7 @@ const QuizPage = () => {
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                     placeholder="Ask a question about this quiz..."
-                                    className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+                                    className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] text-secondary"
                                 />
                                 <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors flex items-center gap-2">
                                     <Send className="h-4 w-4" />
@@ -456,16 +457,16 @@ const QuizPage = () => {
                                         />
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-1">
-                                                <h3 className="font-medium text-gray-900">{comment.user}</h3>
-                                                <span className="text-sm text-gray-500">{comment.timestamp}</span>
+                                                <h3 className="font-medium text-secondary">{comment.user}</h3>
+                                                <span className="text-sm text-gray-400">{comment.timestamp}</span>
                                             </div>
-                                            <p className="text-gray-700 mb-2">{comment.content}</p>
+                                            <p className="text-secondary mb-2">{comment.content}</p>
                                             <div className="flex items-center gap-4">
-                                                <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                                <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
                                                     <ThumbsUp className="h-4 w-4" />
                                                     {comment.likes}
                                                 </button>
-                                                <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                                <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
                                                     <Reply className="h-4 w-4" />
                                                     Reply
                                                 </button>
@@ -483,11 +484,11 @@ const QuizPage = () => {
                                             />
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2 mb-1">
-                                                    <h3 className="font-medium text-gray-900">{reply.user}</h3>
-                                                    <span className="text-sm text-gray-500">{reply.timestamp}</span>
+                                                    <h3 className="font-medium text-secondary">{reply.user}</h3>
+                                                    <span className="text-sm text-gray-400">{reply.timestamp}</span>
                                                 </div>
-                                                <p className="text-gray-700 mb-2">{reply.content}</p>
-                                                <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                                <p className="text-secondary mb-2">{reply.content}</p>
+                                                <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
                                                     <ThumbsUp className="h-4 w-4" />
                                                     {reply.likes}
                                                 </button>
@@ -500,17 +501,17 @@ const QuizPage = () => {
                     </div>
 
                     {/* Request Tutoring Section */}
-                    <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 shadow-sm mt-6">
+                    <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-semibold flex items-center gap-2">
-                                <Phone className="h-5 w-5 text-blue-600" />
+                            <h2 className="text-lg font-semibold flex items-center gap-2 text-secondary">
+                                <Phone className="h-5 w-5 text-blue" />
                                 Need Help with ABAP?
                             </h2>
                         </div>
 
                         {!showCallForm ? (
                             <div className="text-center">
-                                <p className="text-gray-600 mb-4">
+                                <p className="text-gray-400 mb-4">
                                     Schedule a 1-on-1 tutoring session with our ABAP experts to improve your understanding.
                                 </p>
                                 <button
@@ -524,19 +525,19 @@ const QuizPage = () => {
                         ) : (
                             <form className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-secondary mb-1">
                                         Preferred Date
                                     </label>
                                     <input
                                         type="date"
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-secondary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-secondary mb-1">
                                         Preferred Time
                                     </label>
-                                    <select className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <select className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-secondary">
                                         <option>09:00 AM</option>
                                         <option>10:00 AM</option>
                                         <option>11:00 AM</option>
@@ -546,11 +547,11 @@ const QuizPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-secondary mb-1">
                                         Topics Needing Help
                                     </label>
                                     <textarea
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] text-secondary"
                                         placeholder="Describe the topics you'd like to review..."
                                     />
                                 </div>
@@ -564,7 +565,7 @@ const QuizPage = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowCallForm(false)}
-                                        className="px-6 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                                        className="px-6 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-secondary"
                                     >
                                         Cancel
                                     </button>

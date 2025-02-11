@@ -83,10 +83,10 @@ const UserDashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-theme-gradient py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
                 {/* User Header with Glassmorphism */}
-                <div className="backdrop-blur-lg bg-white/80 rounded-2xl shadow-xl p-6 mb-8 border border-white/20">
+                <div className="backdrop-blur-lg bg-card rounded-2xl shadow-xl p-6 mb-8 border border-white/20">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg">
@@ -95,10 +95,10 @@ const UserDashboard = () => {
                                 </span>
                             </div>
                             <div>
-                                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                                <h1 className="text-3xl font-bold text-blue">
                                     {userProgress.name}
                                 </h1>
-                                <p className="text-gray-500 flex items-center gap-2">
+                                <p className="text-gray-400 flex items-center gap-2">
                                     <GraduationCap className="w-4 h-4" />
                                     {userProgress.email}
                                 </p>
@@ -107,9 +107,9 @@ const UserDashboard = () => {
                         <div className="flex items-center gap-8">
                             <div className="text-center">
                                 <div className="w-16 h-16 rounded-full border-4 border-blue-500 flex items-center justify-center mb-1">
-                                    <span className="text-xl font-bold text-blue-600">{userProgress.overallProgress}%</span>
+                                    <span className="text-xl font-bold text-blue">{userProgress.overallProgress}%</span>
                                 </div>
-                                <p className="text-sm text-gray-500">Progress</p>
+                                <p className="text-sm text-gray-400">Progress</p>
                             </div>
                             <div className="text-center">
                                 <div className="w-16 h-16 rounded-full border-4 border-green-500 flex items-center justify-center mb-1">
@@ -117,15 +117,15 @@ const UserDashboard = () => {
                                         {100 - userProgress.percentile}%
                                     </span>
                                 </div>
-                                <p className="text-sm text-gray-500">Rank</p>
+                                <p className="text-sm text-gray-400">Rank</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Progress Graph */}
-                <div className="backdrop-blur-lg bg-white/80 rounded-2xl shadow-xl p-6 mb-8 border border-white/20">
-                    <h2 className="text-xl font-semibold mb-4">Learning Progress</h2>
+                <div className="backdrop-blur-lg bg-card rounded-2xl shadow-xl p-6 mb-8 border border-white/20">
+                    <h2 className="text-xl font-semibold mb-4 text-secondary">Learning Progress</h2>
                     <div className="h-64">
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={userProgress.progressHistory}>
@@ -136,7 +136,7 @@ const UserDashboard = () => {
                                 <Line
                                     type="monotone"
                                     dataKey="score"
-                                    stroke="#4F46E5"
+                                    stroke="#6660FF"
                                     strokeWidth={2}
                                     dot={{ fill: '#4F46E5', strokeWidth: 2 }}
                                 />
@@ -153,19 +153,19 @@ const UserDashboard = () => {
                         { icon: BookOpen, title: 'Videos Completed', value: userProgress.modules.reduce((acc, module) => acc + module.completedVideos, 0), subtext: `of ${userProgress.modules.reduce((acc, module) => acc + module.totalVideos, 0)} total`, color: 'from-green-400 to-green-600' },
                         { icon: NotebookPen, title: 'Notes Taken', value: userProgress.modules.reduce((acc, module) => acc + module.notes.length, 0), subtext: 'Across all modules', color: 'from-purple-400 to-purple-600' }
                     ].map((stat, index) => (
-                        <div key={index} className="backdrop-blur-lg bg-white/80 rounded-2xl shadow-xl p-6 border border-white/20 transform hover:scale-105 transition-transform duration-200">
+                        <div key={index} className="backdrop-blur-lg bg-card rounded-2xl shadow-xl p-6 border border-white/20 transform hover:scale-105 transition-transform duration-200">
                             <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4`}>
                                 <stat.icon className="h-6 w-6 text-white" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-700">{stat.title}</h3>
-                            <p className="text-2xl font-bold text-gray-900 mt-2">{stat.value}</p>
-                            <p className="text-sm text-gray-500 mt-1">{stat.subtext}</p>
+                            <h3 className="text-lg font-semibold text-secondary">{stat.title}</h3>
+                            <p className="text-2xl font-bold text-secondary mt-2">{stat.value}</p>
+                            <p className="text-sm text-gray-400 mt-1">{stat.subtext}</p>
                         </div>
                     ))}
                 </div>
 
                 {/* Modules Section */}
-                <div className="backdrop-blur-lg bg-white/80 rounded-2xl shadow-xl overflow-hidden border border-white/20">
+                <div className="backdrop-blur-lg bg-card rounded-2xl shadow-xl overflow-hidden border border-white/20">
                     {/* Tabs */}
                     <div className="flex border-b border-gray-200">
                         {['progress', 'notes', 'performance'].map((tab) => (
@@ -173,8 +173,8 @@ const UserDashboard = () => {
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
                                 className={`px-6 py-4 font-medium transition-colors duration-200 ${activeTab === tab
-                                        ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                        ? 'text-white border-b-2 border-blue-600 bg-blue hover:cursor-pointer'
+                                        : 'text-secondary hover:border-b-2 hover:border-blue-500 hover:cursor-pointer'
                                     }`}
                             >
                                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -200,12 +200,12 @@ const UserDashboard = () => {
                                                         <ModuleIcon className={`h-6 w-6 ${module.color}`} />
                                                     </div>
                                                     <div>
-                                                        <h3 className="text-lg font-semibold text-gray-900">{module.title}</h3>
+                                                        <h3 className="text-lg font-semibold text-secondary">{module.title}</h3>
                                                         <div className="flex items-center gap-4 mt-2">
-                                                            <span className="text-sm text-gray-500">
+                                                            <span className="text-sm text-gray-400">
                                                                 {module.completedVideos}/{module.totalVideos} videos
                                                             </span>
-                                                            <span className="text-sm text-gray-500">
+                                                            <span className="text-sm text-gray-400">
                                                                 {module.progress}% complete
                                                             </span>
                                                         </div>
@@ -220,15 +220,15 @@ const UserDashboard = () => {
                                                     <div className="space-y-4">
                                                         <div className="w-full bg-gray-100 rounded-full h-2">
                                                             <div
-                                                                className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                                                                className="bg-blue h-2 rounded-full transition-all duration-500"
                                                                 style={{ width: `${module.progress}%` }}
                                                             />
                                                         </div>
                                                         <div className="grid grid-cols-2 gap-4">
                                                             {module.notes.map((note, idx) => (
-                                                                <div key={idx} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                                                                <div key={idx} className="flex items-center gap-2 p-3 card-green rounded-lg">
                                                                     <CheckCircle2 className="h-5 w-5 text-green-500" />
-                                                                    <span className="text-sm text-gray-700">{note.videoTitle}</span>
+                                                                    <span className="text-sm text-secondary">{note.videoTitle}</span>
                                                                 </div>
                                                             ))}
                                                         </div>
@@ -249,19 +249,19 @@ const UserDashboard = () => {
                                             <div className={`w-8 h-8 ${module.bgColor} rounded-lg flex items-center justify-center`}>
                                                 <module.icon className={`h-4 w-4 ${module.color}`} />
                                             </div>
-                                            <h3 className="text-lg font-semibold text-gray-900">{module.title}</h3>
+                                            <h3 className="text-lg font-semibold text-secondary">{module.title}</h3>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {module.notes.map((note, idx) => (
-                                                <div key={idx} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 hover:shadow-md transition-shadow duration-200">
+                                                <div key={idx} className="bg-card border-contrast rounded-xl p-4 hover:shadow-md transition-shadow duration-200">
                                                     <div className="flex items-center justify-between mb-3">
-                                                        <span className="text-sm font-medium text-gray-700">{note.videoTitle}</span>
-                                                        <span className="text-sm text-gray-500 flex items-center gap-1">
+                                                        <span className="text-sm font-medium text-secondary">{note.videoTitle}</span>
+                                                        <span className="text-sm text-gray-400 flex items-center gap-1">
                                                             <Clock className="h-4 w-4" />
                                                             {note.timestamp}
                                                         </span>
                                                     </div>
-                                                    <p className="text-gray-600 text-sm">{note.content}</p>
+                                                    <p className="text-secondary text-sm">{note.content}</p>
                                                 </div>
                                             ))}
                                         </div>
@@ -272,17 +272,17 @@ const UserDashboard = () => {
 
                         {activeTab === 'performance' && (
                             <div className="space-y-8">
-                                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6">
+                                <div className="bg-card border-contrast rounded-xl p-6">
                                     <div className="flex items-center justify-between mb-6">
-                                        <h3 className="text-xl font-semibold text-blue-900">Overall Performance</h3>
+                                        <h3 className="text-xl font-semibold text-blue">Overall Performance</h3>
                                         <div className="flex items-center gap-4">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
-                                                <span className="text-sm text-blue-900">Current: {userProgress.totalScore}</span>
+                                                <span className="text-sm text-blue">Current: {userProgress.totalScore}</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <div className="w-3 h-3 bg-blue-300 rounded-full"></div>
-                                                <span className="text-sm text-blue-900">Required: {userProgress.requiredScore}</span>
+                                                <span className="text-sm text-blue">Required: {userProgress.requiredScore}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -301,20 +301,20 @@ const UserDashboard = () => {
                                 </div>
 
                                 {userProgress.modules.map((module) => (
-                                    <div key={module.id} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                    <div key={module.id} className="bg-card border-contrast rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
                                         <div className="flex items-center gap-3 mb-6">
                                             <div className={`w-10 h-10 ${module.bgColor} rounded-lg flex items-center justify-center`}>
                                                 <module.icon className={`h-5 w-5 ${module.color}`} />
                                             </div>
-                                            <h3 className="text-lg font-semibold text-gray-900">{module.title}</h3>
+                                            <h3 className="text-lg font-semibold text-secondary">{module.title}</h3>
                                         </div>
 
                                         <div className="space-y-6">
                                             {module.testScores.map((test, idx) => (
-                                                <div key={idx} className="bg-gray-50 rounded-lg p-4">
+                                                <div key={idx} className="bg-card-50 border-contrast rounded-lg p-4">
                                                     <div className="flex items-center justify-between mb-2">
-                                                        <span className="font-medium text-gray-700">{test.title}</span>
-                                                        <span className="text-sm font-bold text-gray-900">{test.score}%</span>
+                                                        <span className="font-medium text-secondary">{test.title}</span>
+                                                        <span className="text-sm font-bold text-secondary">{test.score}%</span>
                                                     </div>
                                                     <div className="relative">
                                                         <div className="w-full bg-gray-200 rounded-full h-2">
@@ -327,7 +327,7 @@ const UserDashboard = () => {
                                                                 style={{ width: `${test.score}%` }}
                                                             />
                                                         </div>
-                                                        <div className="mt-2 flex justify-between text-xs text-gray-500">
+                                                        <div className="mt-2 flex justify-between text-xs text-gray-400">
                                                             <span>0%</span>
                                                             <span>50%</span>
                                                             <span>100%</span>

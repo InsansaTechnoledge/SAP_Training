@@ -39,7 +39,7 @@ const Navigation = () => {
             setScrolled(isScrolled);
         };
 
-        if(location.pathname!=='/video' && location.pathname!=='/quiz'){
+        if(location.pathname!=='/video' && location.pathname!=='/quiz' && location.pathname!=='/dashboard'){
             setScrolled(false);
             window.addEventListener('scroll', handleScroll);
             return () => window.removeEventListener('scroll', handleScroll);
