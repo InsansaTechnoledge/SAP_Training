@@ -15,8 +15,8 @@ const PageLinks = () => {
 
     return (
         <>
-            <Navigation />
             <Router>
+            <Navigation />
                 <Routes>
                     <Route path="/" element={<LandingPage />} />
                     <Route path="/course" element={<ExamPage />} />

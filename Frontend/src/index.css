@@ -15,6 +15,7 @@
   --color-gradient-start: #eff6ff;
   --color-gradient-end: oklch(0.962 0.018 272.314);
 
+  --color-background-card:#ffffff;
   
   --color-bg-green:#daffe7;
   --color-text-green:oklch(0.723 0.219 149.579);
@@ -34,6 +35,7 @@
   --color-secondary: #d1d5dc;
   --color-background-theme:#ffffff; 
 
+  --color-background-card:#364154;
 
   --color-gradient-nav-start: #1e2939;
   --color-gradient-nav-end: #101828;
@@ -47,7 +49,7 @@
   --color-text-green:oklch(0.723 0.219 149.579);
 
   --color-bg-blue:#1c398e;
-  --color-text-blue:oklch(0.882 0.059 254.128);
+  --color-text-blue:#7799ff;
 
   --color-card-gradient-start:#364153;
   --color-card-gradient-end:#172135;
@@ -72,8 +74,20 @@
   background-color: var(--color-secondary);
 }
 
+.bg-blue {
+  background-color: var(--color-text-blue);
+}
+
+.bg-card {
+  background-color: var(--color-background-card);
+}
+
 .text-primary {
   color: var(--color-primary);
+}
+
+.text-blue {
+  color: var(--color-text-blue);
 }
 
 .text-secondary {
