@@ -8,6 +8,7 @@ import VideoPage from './Pages/VideoPage';
 import Checkout from './Pages/Checkout';
 import Navigation from './Components/Navbar';
 import QuizPage from './Pages/QuizPage';
+import CourseShop from './Pages/ShopPage';
 
 const PageLinks = () => {
     
@@ -22,7 +23,7 @@ const PageLinks = () => {
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/video" element={<VideoPage />} />
                     <Route path="/quiz" element={<QuizPage />} />
-
+                    <Route path="/shop" element={<CourseShop />} />
                     <Route path="/payment" element={<Checkout />} />
                     <Route path="/dashboard" element={<UserDashboard />} />
                 </Routes>

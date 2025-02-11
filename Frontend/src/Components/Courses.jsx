@@ -8,6 +8,13 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/CartContext';
 import { useWishlist } from '../Context/WishlistContext';
+import AIimage from '../assets/AI.jpg';
+import CCimage from '../assets/CC.jpg';
+import FSDimage from '../assets/FSD.jpg';
+import ABAPimage from '../assets/ABAP.jpg';
+
+
+
 
 const Courses = () => {
     const [activeTab, setActiveTab] = useState('all');
@@ -35,7 +42,7 @@ const Courses = () => {
             students: 1234,
             rating: 4.8,
             duration: '12 weeks',
-            image: '/api/placeholder/800/400',
+            image: ABAPimage,
             features: ['24/7 Support', 'Certificate', 'Projects']
         },
         {
@@ -47,11 +54,11 @@ const Courses = () => {
             students: 2156,
             rating: 4.9,
             duration: '10 weeks',
-            image: '/api/placeholder/800/400',
+            image: CCimage,
             features: ['Live Projects', 'Cloud Credits', 'Certification']
         },
         {
-            title: 'AI/ML Fundamentals',
+            title: 'AI Fundamentals',
             icon: <Brain className="w-8 h-8" />,
             description: 'Learn AI/ML concepts, build models, and deploy intelligent applications.',
             price: 699,
@@ -59,7 +66,7 @@ const Courses = () => {
             students: 1789,
             rating: 4.7,
             duration: '14 weeks',
-            image: '/api/placeholder/800/400',
+            image: AIimage,
             features: ['GPU Access', 'Datasets', 'ML Models']
         },
         {
@@ -71,7 +78,7 @@ const Courses = () => {
             students: 3421,
             rating: 4.9,
             duration: '16 weeks',
-            image: '/api/placeholder/800/400',
+            image: FSDimage,
             features: ['Code Reviews', 'Portfolio', 'Mentorship']
         }
     ];
