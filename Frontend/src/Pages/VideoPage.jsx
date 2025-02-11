@@ -586,7 +586,7 @@ const VideoPage = () => {
                                 ))}
                             </div>
 
-                            <button className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2">
+                            <button className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors flex items-center justify-center gap-2">
                                 <Plus className="h-5 w-5" />
                                 Unlock for ${nextModule.price}
                             </button>
