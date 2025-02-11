@@ -498,12 +498,12 @@ const VideoPage = () => {
                             {/* Notes List */}
                             <div className="space-y-4">
                                 {notes.map(note => (
-                                    <div key={note.id} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                                        <div className="flex items-center text-sm text-gray-500">
+                                    <div key={note.id} className="flex items-start gap-4 p-4 bg-card border-contrast rounded-lg">
+                                        <div className="flex items-center text-sm text-secondary">
                                             <Clock className="h-4 w-4 mr-1" />
                                             {note.time}
                                         </div>
-                                        <p className="flex-1 text-gray-700">{note.content}</p>
+                                        <p className="flex-1 text-secondary">{note.content}</p>
                                         <div className="flex items-center gap-2">
                                             <button className="p-1 text-gray-400 hover:text-blue-600 transition-colors">
                                                 <Edit2 className="h-4 w-4" />
