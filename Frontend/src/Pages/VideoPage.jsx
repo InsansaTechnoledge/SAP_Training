@@ -265,24 +265,24 @@ const VideoPage = () => {
 
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="container mx-auto px-4 py-8 mt-24">
+        <div className="min-h-screen bg-theme-gradient">
+            <div className="container mx-auto px-4 py-8 mt-20">
                 {/* Navigation Breadcrumb */}
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+                <div className="flex items-center gap-2 text-sm text-secondary mb-6">
                     <span>ABAP Fundamentals</span>
                     <ChevronRight className="h-4 w-4" />
-                    <span className="text-blue-600">Introduction to ABAP</span>
+                    <span className="text-blue">Introduction to ABAP</span>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Video Player Section */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Video Player */}
-                        <div ref={videoContainerRef} className="relative bg-gray-900 rounded-xl aspect-video overflow-hidden">
+                        <div ref={videoContainerRef} className="relative bg-gray-900 rounded-xl aspect-video overflow-hidden border-contrast">
                             <video
                                 ref={videoRef}
                                 className="w-full h-full"
-                                src="https://app.lumi.education/api/v1/run/DIxdF1/embed"
+                                src={"https://res.cloudinary.com/dgapvegsq/video/upload/v1739252871/ydjmvohvg00e2dxnbojo.mp4"}
                                 onClick={handlePlayPause}
                                 onTimeUpdate={handleTimeUpdate}
                                 onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
@@ -389,33 +389,30 @@ const VideoPage = () => {
                                     </button>
 
                                     {/* Volume Controls */}
-                                    {
-                                        true ?
-                                        null
-                                        :
-                                        <div className="flex items-center gap-2">
-                                            <button
-                                                onClick={toggleMute}
-                                                className="text-white hover:text-blue-400 transition-colors"
-                                            >
-                                                {isMuted ? (
-                                                    <VolumeX className="h-5 w-5" />
-                                                ) : (
-                                                    <Volume2 className="h-5 w-5" />
-                                                )}
-                                            </button>
-                                            <input
-                                                type="range"
-                                                min="0"
-                                                max="1"
-                                                step="0.1"
-                                                value={volume}
-                                                onChange={handleVolumeChange}
-                                                className="w-20"
-                                            />
-                                        </div>
 
-                                    }
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={toggleMute}
+                                            className="text-white hover:text-blue-400 transition-colors"
+                                        >
+                                            {isMuted ? (
+                                                <VolumeX className="h-5 w-5" />
+                                            ) : (
+                                                <Volume2 className="h-5 w-5" />
+                                            )}
+                                        </button>
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="1"
+                                            step="0.1"
+                                            value={volume}
+                                            onChange={handleVolumeChange}
+                                            className="w-20"
+                                        />
+                                    </div>
+
+
 
                                     {/* Time Display */}
                                     <div className="text-white text-sm">
@@ -465,18 +462,18 @@ const VideoPage = () => {
 
                         {/* Video Info */}
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                            <h1 className="text-2xl font-bold text-secondary mb-2">
                                 {currentVideo.title}
                             </h1>
-                            <p className="text-gray-600">
-                                Part of <span className="text-blue-600">{currentVideo.module}</span> module
+                            <p className="text-secondary">
+                                Part of <span className="text-blue">{currentVideo.module}</span> module
                             </p>
                         </div>
 
                         {/* Notes Section */}
-                        <div className="bg-white rounded-xl p-6 shadow-sm">
-                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                                <BookOpen className="h-5 w-5 text-blue-600" />
+                        <div className="bg-card rounded-xl p-6 shadow-sm">
+                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
+                                <BookOpen className="h-5 w-5 text-blue" />
                                 Video Notes
                             </h2>
 
@@ -487,7 +484,7 @@ const VideoPage = () => {
                                     value={newNote}
                                     onChange={(e) => setNewNote(e.target.value)}
                                     placeholder="Add a note at current timestamp..."
-                                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-secondary"
                                 />
                                 <button
                                     onClick={addNote}
@@ -529,9 +526,9 @@ const VideoPage = () => {
                     {/* Sidebar */}
                     <div className="space-y-6">
                         {/* Module Progress */}
-                        <div className="bg-white rounded-xl p-6 shadow-sm">
-                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                                <List className="h-5 w-5 text-blue-600" />
+                        <div className="bg-card rounded-xl p-6 shadow-sm">
+                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
+                                <List className="h-5 w-5 text-blue" />
                                 Module Videos
                             </h2>
                             <div className="space-y-4">
@@ -540,14 +537,14 @@ const VideoPage = () => {
                                         key={video.id}
                                         className={`
                                             p-4 rounded-lg border cursor-pointer
-                                            ${video.completed ? 'bg-green-50 border-green-100' : 'bg-gray-50 border-gray-100'}
+                                            ${video.completed ? 'card-green border-green-100' : 'bg-card border-contrast'}
                                             hover:border-blue-200 transition-colors
                                         `}
                                     >
                                         <div className="flex items-start justify-between">
                                             <div>
-                                                <h3 className="font-medium text-gray-900 mb-1">{video.title}</h3>
-                                                <div className="flex items-center text-sm text-gray-500">
+                                                <h3 className="font-medium text-secondary mb-1">{video.title}</h3>
+                                                <div className="flex items-center text-sm text-secondary">
                                                     <Clock className="h-4 w-4 mr-1" />
                                                     {video.duration}
                                                 </div>
@@ -562,34 +559,34 @@ const VideoPage = () => {
                         </div>
 
                         {/* Next Module Preview */}
-                        <div className="bg-gradient-to-br from-indigo-50 to-white rounded-xl p-6 shadow-sm border border-indigo-100">
+                        <div className="bg-card rounded-xl p-6 shadow-sm">
                             <div className="flex items-center justify-between mb-4">
-                                <h2 className="text-lg font-semibold flex items-center gap-2">
-                                    <Lightbulb className="h-5 w-5 text-indigo-600" />
+                                <h2 className="text-lg font-semibold flex items-center gap-2 text-secondary">
+                                    <Lightbulb className="h-5 w-5 text-blue" />
                                     Up Next
                                 </h2>
                                 {nextModule.isLocked && (
-                                    <Lock className="h-5 w-5 text-indigo-400" />
+                                    <Lock className="h-5 w-5 text-blue" />
                                 )}
                             </div>
 
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">
+                            <h3 className="text-xl font-boldmb-2 text-secondary">
                                 {nextModule.title}
                             </h3>
-                            <p className="text-gray-600 mb-4">
+                            <p className="mb-4 text-secondary">
                                 {nextModule.description}
                             </p>
 
                             <div className="space-y-2 mb-6">
                                 {nextModule.topics.map((topic, index) => (
-                                    <div key={index} className="flex items-center text-gray-600">
-                                        <ArrowRight className="h-4 w-4 mr-2 text-indigo-500" />
+                                    <div key={index} className="flex items-center text-secondary">
+                                        <ArrowRight className="h-4 w-4 mr-2 text-blue" />
                                         {topic}
                                     </div>
                                 ))}
                             </div>
 
-                            <button className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2">
+                            <button className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2">
                                 <Plus className="h-5 w-5" />
                                 Unlock for ${nextModule.price}
                             </button>
@@ -597,24 +594,24 @@ const VideoPage = () => {
                     </div>
 
                     {/* Resources Section */}
-                    <div className="bg-white rounded-xl p-6 shadow-sm mt-6">
-                        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                            <FileText className="h-5 w-5 text-blue-600" />
+                    <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
+                        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
+                            <FileText className="h-5 w-5 text-blue" />
                             Downloadable Resources
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {resources.map(resource => (
                                 <div
                                     key={resource.id}
-                                    className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-blue-200 transition-all"
+                                    className="flex items-center justify-between p-4 border-contrast rounded-lg transition-all"
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-blue-50 rounded-lg">
-                                            <FileText className="h-5 w-5 text-blue-600" />
+                                        <div className="p-2 bg-primary rounded-lg">
+                                            <FileText className="h-5 w-5 text-blue" />
                                         </div>
                                         <div>
-                                            <h3 className="font-medium text-gray-900">{resource.title}</h3>
-                                            <p className="text-sm text-gray-500">{resource.type} • {resource.size}</p>
+                                            <h3 className="font-medium text-secondary">{resource.title}</h3>
+                                            <p className="text-sm text-secondary">{resource.type} • {resource.size}</p>
                                         </div>
                                     </div>
                                     <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
@@ -628,9 +625,9 @@ const VideoPage = () => {
 
 
                     {/* Community Discussion Section */}
-                    <div className="bg-white rounded-xl p-6 shadow-sm mt-6">
-                        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                            <MessageSquare className="h-5 w-5 text-blue-600" />
+                    <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
+                        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
+                            <MessageSquare className="h-5 w-5 text-blue" />
                             Community Discussion
                         </h2>
 
@@ -646,7 +643,7 @@ const VideoPage = () => {
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                     placeholder="Ask a question or share your thoughts..."
-                                    className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+                                    className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] text-secondary"
                                 />
                                 <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors flex items-center gap-2">
                                     <Send className="h-4 w-4" />
@@ -668,16 +665,16 @@ const VideoPage = () => {
                                         />
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-1">
-                                                <h3 className="font-medium text-gray-900">{comment.user}</h3>
-                                                <span className="text-sm text-gray-500">{comment.timestamp}</span>
+                                                <h3 className="font-medium text-secondary">{comment.user}</h3>
+                                                <span className="text-sm text-gray-400">{comment.timestamp}</span>
                                             </div>
-                                            <p className="text-gray-700 mb-2">{comment.content}</p>
+                                            <p className="text-secondary mb-2">{comment.content}</p>
                                             <div className="flex items-center gap-4">
-                                                <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                                <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
                                                     <ThumbsUp className="h-4 w-4" />
                                                     {comment.likes}
                                                 </button>
-                                                <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                                <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
                                                     <Reply className="h-4 w-4" />
                                                     Reply
                                                 </button>
@@ -695,11 +692,11 @@ const VideoPage = () => {
                                             />
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2 mb-1">
-                                                    <h3 className="font-medium text-gray-900">{reply.user}</h3>
-                                                    <span className="text-sm text-gray-500">{reply.timestamp}</span>
+                                                    <h3 className="font-medium text-secondary">{reply.user}</h3>
+                                                    <span className="text-sm text-gray-400">{reply.timestamp}</span>
                                                 </div>
                                                 <p className="text-gray-700 mb-2">{reply.content}</p>
-                                                <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                                <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
                                                     <ThumbsUp className="h-4 w-4" />
                                                     {reply.likes}
                                                 </button>
@@ -713,17 +710,17 @@ const VideoPage = () => {
 
 
                     {/* Request a Call Section */}
-                    <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 shadow-sm mt-6">
+                    <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-semibold flex items-center gap-2">
-                                <Phone className="h-5 w-5 text-blue-600" />
+                            <h2 className="text-lg font-semibold flex items-center gap-2 text-secondary">
+                                <Phone className="h-5 w-5 text-blue" />
                                 Need Personal Assistance?
                             </h2>
                         </div>
 
                         {!showCallForm ? (
                             <div className="text-center">
-                                <p className="text-gray-600 mb-4">
+                                <p className="text-gray-400 mb-4">
                                     Schedule a 1-on-1 call with our ABAP experts to get personalized help with your questions.
                                 </p>
                                 <button
@@ -737,19 +734,19 @@ const VideoPage = () => {
                         ) : (
                             <form className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-secondary mb-1">
                                         Preferred Date
                                     </label>
                                     <input
                                         type="date"
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-secondary"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-secondary mb-1">
                                         Preferred Time
                                     </label>
-                                    <select className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <select className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-secondary">
                                         <option>09:00 AM</option>
                                         <option>10:00 AM</option>
                                         <option>11:00 AM</option>
@@ -759,11 +756,11 @@ const VideoPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-secondary mb-1">
                                         Topics to Discuss
                                     </label>
                                     <textarea
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] text-secondary"
                                         placeholder="Brief description of what you'd like to discuss..."
                                     />
                                 </div>
@@ -777,7 +774,7 @@ const VideoPage = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowCallForm(false)}
-                                        className="px-6 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                                        className="px-6 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-secondary"
                                     >
                                         Cancel
                                     </button>

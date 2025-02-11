@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Layout, Activity, Trophy, Lock, ShoppingCart, LogIn } from 'lucide-react';
 
 const DashboardBannerComponent = ({
-    isLoggedIn = false,
-    isFullCoursePurchased = false,
+    isLoggedIn = true,
+    isFullCoursePurchased = true,
     onPurchase,
     onLogin
 }) => {
@@ -38,7 +38,7 @@ const DashboardBannerComponent = ({
             return (
                 <button
                     onClick={onLogin}
-                    className="group flex items-center space-x-2 bg-blue-400 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:bg-blue-300 transition-colors duration-200"
+                    className="group flex items-center space-x-2 bg-blue-400 text-contrast px-6 py-3 rounded-xl font-medium shadow-lg hover:bg-blue-300 transition-colors duration-200"
                 >
                     <LogIn className="w-5 h-5" />
                     <span>Login to Access</span>
@@ -51,7 +51,7 @@ const DashboardBannerComponent = ({
             return (
                 <button
                     onClick={handleNavigate}
-                    className="group flex items-center space-x-2 bg-white text-blue-700 px-6 py-3 rounded-xl font-medium shadow-lg hover:bg-blue-50 transition-colors duration-200"
+                    className="group flex items-center space-x-2 bg-primary text-primary px-6 py-3 rounded-xl font-medium shadow-lg hover:bg-blue-50 transition-colors duration-200"
                 >
                     <Layout className="w-5 h-5" />
                     <span>Go to Dashboard</span>
@@ -63,7 +63,7 @@ const DashboardBannerComponent = ({
         return (
             <button
                 onClick={onPurchase}
-                className="group flex items-center space-x-2 bg-blue-400 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:bg-blue-300 transition-colors duration-200"
+                className="group flex items-center space-x-2 bg-blue-400 text-contrast px-6 py-3 rounded-xl font-medium shadow-lg hover:bg-blue-300 transition-colors duration-200"
             >
                 <ShoppingCart className="w-5 h-5" />
                 <span>Purchase Full Course</span>
@@ -73,7 +73,7 @@ const DashboardBannerComponent = ({
     };
 
     return (
-        <div className="w-full bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 overflow-hidden shadow-xl mb-8">
+        <div className="w-full bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 overflow-hidden shadow-xl">
             <div className="p-6 md:p-8">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     <div className="flex-1">

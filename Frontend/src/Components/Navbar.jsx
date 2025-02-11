@@ -5,6 +5,7 @@ import { useCart } from '../Context/CartContext';
 import { useWishlist } from '../Context/WishlistContext';
 import Wishlist from './Wishlist';
 import Cart from './Cart';
+import { useLocation } from 'react-router-dom';
 
 const Navigation = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -19,6 +20,18 @@ const Navigation = () => {
     const { cart, setIsCartOpen, isCartOpen } = useCart()
     // const [wishlist, setWishlist] = useState([]); 
     const { wishlist, setIsWishlistOpen, isWishlistOpen } = useWishlist();
+    const location = useLocation();
+
+    useEffect(() => {
+        
+        // Dark mode not working on reload
+
+        const dark = localStorage.getItem('darkTheme');
+        dark ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
+
+        
+
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -26,15 +39,15 @@ const Navigation = () => {
             setScrolled(isScrolled);
         };
 
-        // Dark mode not working on reload
-
-        const dark = localStorage.getItem('darkTheme');
-        dark ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-
-    }, []);
+        if(location.pathname!=='/video' && location.pathname!=='/quiz'){
+            setScrolled(false);
+            window.addEventListener('scroll', handleScroll);
+            return () => window.removeEventListener('scroll', handleScroll);
+        }
+        else{
+            setScrolled(true);
+        }
+    },[location]);
 
     useEffect(() => {
         if (isMenuOpen || isSearchOpen) {
