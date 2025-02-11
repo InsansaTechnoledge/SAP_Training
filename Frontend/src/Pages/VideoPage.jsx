@@ -30,7 +30,8 @@ import {
     RotateCw
 } from 'lucide-react';
 
-import Video2 from '../assets/Video2.mp4'
+import Video2 from '../assets/Video2.mp4';
+import H5PVideo from '../Components/H5PVideo';
 
 const VideoPage = () => {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -267,7 +268,7 @@ const VideoPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-4 py-8 mt-24">
                 {/* Navigation Breadcrumb */}
                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
                     <span>ABAP Fundamentals</span>
