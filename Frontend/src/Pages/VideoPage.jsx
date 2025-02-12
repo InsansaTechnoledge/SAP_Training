@@ -695,7 +695,7 @@ const VideoPage = () => {
                                                     <h3 className="font-medium text-secondary">{reply.user}</h3>
                                                     <span className="text-sm text-gray-400">{reply.timestamp}</span>
                                                 </div>
-                                                <p className="text-gray-700 mb-2">{reply.content}</p>
+                                                <p className="text-secondary mb-2">{reply.content}</p>
                                                 <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
                                                     <ThumbsUp className="h-4 w-4" />
                                                     {reply.likes}
