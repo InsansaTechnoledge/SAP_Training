@@ -155,7 +155,7 @@ const ExamPage = () => {
             </div>
 
             {/* Learning Modules Section */}
-            <div className="container mx-auto px-4 py-20 bg-theme-gradient">
+            <div className="mx-auto px-4 py-20 bg-theme-gradient">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl font-bold text-secondary mb-4">
                         Your Learning Journey
