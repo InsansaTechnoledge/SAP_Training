@@ -233,7 +233,7 @@ const Courses = () => {
                                         <div className="flex flex-col">
                                             <span className="text-sm text-gray-500 dark:text-gray-400">Price</span>
                                             <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                                                ${course.price}
+                                            ₹{course.price}
                                             </span>
                                         </div>
                                         <motion.button
