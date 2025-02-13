@@ -1,83 +1,149 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Star, Clock, Users, Sparkles, Gift, Moon, Sun, Filter, BookOpen, DollarSign, Bookmark, ChevronDown } from 'lucide-react';
+import { Search, Star, Clock, Users, Sparkles, Heart, ShoppingCart, ChevronDown, ChevronRight, Tag, TrendingUp, Award, BookOpen, Filter, X, Shield, Zap, Gift, Briefcase, Code, Database, ChartBar, BookType, GraduationCap, Layout } from 'lucide-react';
 
-const EnhancedCourseShop = () => {
-    const [selectedCategory, setSelectedCategory] = useState('all');
+const PlacementTrainingShop = () => {
+    const [cartItems, setCartItems] = useState([]);
+    const [wishlist, setWishlist] = useState([]);
+    const [showCart, setShowCart] = useState(false);
+    const [activeCategory, setActiveCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
-    const [isDarkMode, setIsDarkMode] = useState(false);
-    const [priceFilter, setPriceFilter] = useState('all');
-    const [sortBy, setSortBy] = useState('popular');
-    const [showFilters, setShowFilters] = useState(false);
-    const [savedCourses, setSavedCourses] = useState([]);
+
+    const categories = [
+        {
+            id: 'placement',
+            name: 'Placement Integrated',
+            icon: GraduationCap,
+            description: 'Complete training with placement assistance',
+            courses: 15,
+            features: ['Interview Prep', 'Resume Building', 'Mock Tests']
+        },
+        {
+            id: 'sap-major',
+            name: 'SAP Major Courses',
+            icon: BookType,
+            description: 'Core SAP modules certification',
+            courses: 8,
+            features: ['SAP FICO', 'SAP MM', 'SAP SD']
+        },
+        {
+            id: 'sap-minor',
+            name: 'SAP Minor Courses',
+            icon: Layout,
+            description: 'Specialized SAP modules',
+            courses: 12,
+            features: ['SAP BASIS', 'SAP ABAP', 'SAP HCM']
+        }
+    ];
 
     const courses = [
         {
             id: 1,
-            title: "SAP S/4HANA Implementation",
-            category: "major",
+            title: "Placement Readiness Program",
+            category: "placement",
+            originalPrice: 1999,
             price: 999,
-            duration: "12 weeks",
-            rating: 4.8,
-            students: 1250,
+            duration: "16 weeks",
+            rating: 4.9,
+            reviews: 1850,
+            students: 7250,
             image: "/api/placeholder/400/225",
-            description: "Master SAP S/4HANA implementation with hands-on projects",
-            highlight: "Best Seller",
-            level: "Advanced",
-            modules: 24
+            description: "Complete placement preparation with job guarantee",
+            level: "All Levels",
+            instructor: {
+                name: "Career Expert Team",
+                title: "Industry Professionals",
+                image: "/api/placeholder/64/64"
+            },
+            tags: ["Job Guarantee", "Live Classes"],
+            features: [
+                "Technical Interview Prep",
+                "Aptitude Training",
+                "Soft Skills Development",
+                "Resume Building",
+                "Mock Interviews"
+            ]
         },
         {
             id: 2,
-            title: "SAP FICO Professional",
-            category: "major",
+            title: "SAP FICO Certification",
+            category: "sap-major",
+            originalPrice: 1499,
             price: 899,
-            duration: "10 weeks",
-            rating: 4.7,
-            students: 980,
+            duration: "12 weeks",
+            rating: 4.8,
+            reviews: 920,
+            students: 4800,
             image: "/api/placeholder/400/225",
-            description: "Become an expert in SAP Financial Accounting",
-            highlight: "Popular",
-            level: "Intermediate",
-            modules: 20
+            description: "Complete SAP FICO module training",
+            level: "Professional",
+            instructor: {
+                name: "Robert Wilson",
+                title: "SAP Certified Consultant",
+                image: "/api/placeholder/64/64"
+            },
+            tags: ["Certification", "Industry Ready"],
+            features: [
+                "Financial Accounting",
+                "Controlling",
+                "Real-time Projects",
+                "Certification Prep"
+            ]
         },
         {
             id: 3,
-            title: "SAP MM Master Course",
-            category: "minor",
-            price: 299,
-            duration: "4 weeks",
-            rating: 4.5,
-            students: 2100,
+            title: "SAP ABAP Programming",
+            category: "sap-minor",
+            originalPrice: 799,
+            price: 499,
+            duration: "8 weeks",
+            rating: 4.7,
+            reviews: 650,
+            students: 3200,
             image: "/api/placeholder/400/225",
-            description: "Perfect starting point for SAP beginners",
-            highlight: "Beginner Friendly",
-            level: "Beginner",
-            modules: 12
+            description: "Learn SAP ABAP programming from scratch",
+            level: "Intermediate",
+            instructor: {
+                name: "David Chen",
+                title: "Senior SAP Developer",
+                image: "/api/placeholder/64/64"
+            },
+            tags: ["Hands-on", "Project Based"],
+            features: [
+                "ABAP Basics",
+                "Advanced Programming",
+                "Integration Skills",
+                "Real Projects"
+            ]
         }
     ];
 
-    const filteredCourses = courses.filter(course => {
-        const matchesCategory = selectedCategory === 'all' || course.category === selectedCategory;
-        const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesPrice = priceFilter === 'all' ||
-            (priceFilter === 'under500' && course.price < 500) ||
-            (priceFilter === 'over500' && course.price >= 500);
-        return matchesCategory && matchesSearch && matchesPrice;
-    }).sort((a, b) => {
-        if (sortBy === 'popular') return b.students - a.students;
-        if (sortBy === 'rating') return b.rating - a.rating;
-        if (sortBy === 'priceAsc') return a.price - b.price;
-        if (sortBy === 'priceDesc') return b.price - a.price;
-        return 0;
-    });
-
-    const toggleSavedCourse = (courseId) => {
-        setSavedCourses(prev =>
-            prev.includes(courseId)
-                ? prev.filter(id => id !== courseId)
-                : [...prev, courseId]
-        );
-    };
+    const CategoryCard = ({ category }) => (
+        <motion.div
+            whileHover={{ y: -5 }}
+            className="bg-card rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer"
+            onClick={() => setActiveCategory(category.id)}
+        >
+            <div className="flex justify-between items-start mb-4">
+                <div className="card-theme-gradient p-3 rounded-lg">
+                    <category.icon className="w-6 h-6 text-primary" />
+                </div>
+                <span className="card-blue text-sm font-medium px-3 py-1 rounded-full">
+                    {category.courses} Courses
+                </span>
+            </div>
+            <h3 className="text-xl font-bold text-secondary mb-2">{category.name}</h3>
+            <p className="text-secondary/80 text-sm mb-4">{category.description}</p>
+            <div className="space-y-2">
+                {category.features.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-2 text-secondary/70 text-sm">
+                        <ChevronRight className="w-4 h-4 text-blue" />
+                        {feature}
+                    </div>
+                ))}
+            </div>
+        </motion.div>
+    );
 
     const CourseCard = ({ course }) => (
         <motion.div
@@ -85,7 +151,7 @@ const EnhancedCourseShop = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="group relative rounded-xl overflow-hidden card-theme-gradient"
+            className="bg-card rounded-xl overflow-hidden hover:shadow-xl transition-all"
         >
             <div className="relative">
                 <img
@@ -93,65 +159,85 @@ const EnhancedCourseShop = () => {
                     alt={course.title}
                     className="w-full h-48 object-cover"
                 />
-                <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => toggleSavedCourse(course.id)}
-                    className="absolute top-4 right-4 p-2 rounded-full bg-white/90 shadow-lg"
-                >
-                    <Bookmark
-                        className={`w-5 h-5 ${savedCourses.includes(course.id) ? 'text-blue' : 'text-secondary'}`}
-                        fill={savedCourses.includes(course.id) ? 'currentColor' : 'none'}
-                    />
-                </motion.button>
-                {course.highlight && (
-                    <div className="absolute top-4 left-4 card-blue px-3 py-1 rounded-full text-sm font-medium">
-                        <div className="flex items-center gap-1">
-                            <Sparkles className="w-4 h-4" />
-                            {course.highlight}
-                        </div>
-                    </div>
-                )}
+                <div className="absolute top-4 right-4">
+                    <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="p-2 bg-card rounded-full shadow-lg"
+                    >
+                        <Heart className={`w-5 h-5 ${wishlist.includes(course.id) ? 'text-blue fill-current' : 'text-secondary'}`} />
+                    </motion.button>
+                </div>
             </div>
 
-            <div className="p-6 bg-card">
-                <div className="flex items-center gap-2 mb-3">
-                    <span className="card-green px-2 py-1 rounded-full text-xs font-medium">
-                        {course.level}
-                    </span>
-                    <span className="text-secondary text-sm">
-                        {course.modules} modules
-                    </span>
+            <div className="p-6">
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {course.tags.map(tag => (
+                        <span key={tag} className="card-blue text-sm px-3 py-1 rounded-full">
+                            {tag}
+                        </span>
+                    ))}
                 </div>
 
-                <h3 className="text-xl font-bold text-primary mb-2 group-hover:text-blue transition-colors">
-                    {course.title}
-                </h3>
-                <p className="text-secondary mb-4">{course.description}</p>
+                <h3 className="text-xl font-bold text-secondary mb-3">{course.title}</h3>
 
-                <div className="flex items-center gap-4 text-secondary mb-4">
-                    <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {course.duration}
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        {course.students}
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-500" />
-                        {course.rating}
+                <div className="flex items-center gap-3 mb-4">
+                    <img
+                        src={course.instructor.image}
+                        alt={course.instructor.name}
+                        className="w-10 h-10 rounded-full"
+                    />
+                    <div>
+                        <p className="text-secondary font-medium">{course.instructor.name}</p>
+                        <p className="text-secondary/70 text-sm">{course.instructor.title}</p>
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-blue">${course.price}</span>
+                <div className="space-y-2 mb-4">
+                    {course.features.slice(0, 3).map((feature, index) => (
+                        <div key={index} className="flex items-center gap-2 text-secondary/70 text-sm">
+                            <ChevronRight className="w-4 h-4 text-blue" />
+                            {feature}
+                        </div>
+                    ))}
+                </div>
+
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                        <Star className="w-5 h-5 text-blue" />
+                        <span className="text-secondary font-medium">{course.rating}</span>
+                        <span className="text-secondary/70">({course.reviews})</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Clock className="w-5 h-5 text-blue" />
+                        <span className="text-secondary">{course.duration}</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-3 mb-6">
+                    <span className="text-3xl font-bold text-blue">${course.price}</span>
+                    <div className="flex flex-col">
+                        <span className="text-secondary/50 line-through">${course.originalPrice}</span>
+                        <span className="card-green text-sm px-2 rounded">
+                            Save ${course.originalPrice - course.price}
+                        </span>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
                     <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="nav-theme-gradient text-white px-6 py-2 rounded-full transition-colors"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="card-theme-gradient text-primary py-3 rounded-xl font-medium"
                     >
                         Enroll Now
+                    </motion.button>
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="bg-secondary/10 text-secondary py-3 rounded-xl font-medium"
+                    >
+                        Course Details
                     </motion.button>
                 </div>
             </div>
@@ -159,123 +245,72 @@ const EnhancedCourseShop = () => {
     );
 
     return (
-        <div className={`min-h-screen bg-primary transition-colors duration-300`}>
-           
-            {/* Header Section */}
-            <div className="nav-theme-gradient py-20 px-4">
-                <div className="container mx-auto max-w-6xl">
-                    <h1 className="text-4xl font-bold text-white mb-4">
-                        Discover Your Next Learning Journey
-                    </h1>
-                    <p className="text-white/80 text-lg mb-8">
-                        Expert-led courses to advance your career in SAP
+        <div className="bg-primary min-h-screen">
+            <div className="container mx-auto max-w-7xl px-4 py-12">
+                {/* Hero Section */}
+                <div className="text-center mb-16">
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-5xl font-bold text-secondary mb-6"
+                    >
+                        Master{' '}
+                        <span className="text-blue">SAP & Career Skills</span>
+                    </motion.h1>
+                    <p className="text-xl text-secondary/80 mb-8 max-w-2xl mx-auto">
+                        Comprehensive SAP training and placement programs to accelerate your career growth
                     </p>
 
                     {/* Search Bar */}
-                    <div className="bg-card rounded-xl shadow-xl p-6">
-                        <div className="relative">
-                            <Search className="absolute left-4 top-3.5 text-secondary" />
-                            <input
-                                type="text"
-                                placeholder="Search courses..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3 bg-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-blue text-secondary"
-                            />
-                        </div>
+                    <div className="max-w-2xl mx-auto relative">
+                        <input
+                            type="text"
+                            placeholder="Search for SAP courses and placement programs..."
+                            className="w-full bg-card text-secondary px-6 py-4 rounded-xl pl-12 focus:outline-none focus:ring-2 focus:ring-blue"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <Search className="w-5 h-5 text-secondary/50 absolute left-4 top-1/2 transform -translate-y-1/2" />
                     </div>
                 </div>
-            </div>
 
-            {/* Filters Section */}
-            <div className="container mx-auto max-w-6xl px-4 -mt-8">
-                <div className="bg-card rounded-xl shadow-lg p-6 mb-8">
-                    <div className="flex flex-wrap items-center justify-between gap-4">
-                        <div className="flex flex-wrap gap-4">
-                            <select
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                className="bg-primary text-secondary px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue"
-                            >
-                                <option value="popular">Most Popular</option>
-                                <option value="rating">Highest Rated</option>
-                                <option value="priceAsc">Price: Low to High</option>
-                                <option value="priceDesc">Price: High to Low</option>
-                            </select>
-
-                            <select
-                                value={priceFilter}
-                                onChange={(e) => setPriceFilter(e.target.value)}
-                                className="bg-primary text-secondary px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue"
-                            >
-                                <option value="all">All Prices</option>
-                                <option value="under500">Under $500</option>
-                                <option value="over500">$500 and above</option>
-                            </select>
-                        </div>
-
-                        <div className="flex gap-4">
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => setSelectedCategory('all')}
-                                className={`px-4 py-2 rounded-lg transition-all ${selectedCategory === 'all'
-                                        ? 'nav-theme-gradient text-white'
-                                        : 'bg-primary text-secondary'
-                                    }`}
-                            >
-                                All Courses
-                            </motion.button>
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => setSelectedCategory('major')}
-                                className={`px-4 py-2 rounded-lg transition-all ${selectedCategory === 'major'
-                                        ? 'nav-theme-gradient text-white'
-                                        : 'bg-primary text-secondary'
-                                    }`}
-                            >
-                                Major Courses
-                            </motion.button>
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => setSelectedCategory('minor')}
-                                className={`px-4 py-2 rounded-lg transition-all ${selectedCategory === 'minor'
-                                        ? 'nav-theme-gradient text-white'
-                                        : 'bg-primary text-secondary'
-                                    }`}
-                            >
-                                Minor Courses
-                            </motion.button>
-                        </div>
-                    </div>
+                {/* Categories Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                    {categories.map(category => (
+                        <CategoryCard key={category.id} category={category} />
+                    ))}
                 </div>
-            </div>
 
-            {/* Course Grid */}
-            <div className="container mx-auto max-w-6xl px-4 py-8">
-                <motion.div
-                    layout
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                >
+                {/* Courses Section */}
+                <div className="mb-8 flex items-center justify-between">
+                    <h2 className="text-2xl font-bold text-secondary">
+                        {activeCategory === 'all' ? 'Featured Courses' :
+                            categories.find(c => c.id === activeCategory)?.name}
+                    </h2>
+                    {activeCategory !== 'all' && (
+                        <button
+                            onClick={() => setActiveCategory('all')}
+                            className="text-blue hover:underline flex items-center gap-1"
+                        >
+                            View All
+                            <ChevronRight className="w-4 h-4" />
+                        </button>
+                    )}
+                </div>
+
+                {/* Courses Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <AnimatePresence>
-                        {filteredCourses.map(course => (
-                            <CourseCard key={course.id} course={course} />
-                        ))}
+                        {courses
+                            .filter(course => activeCategory === 'all' || course.category === activeCategory)
+                            .map(course => (
+                                <CourseCard key={course.id} course={course} />
+                            ))}
                     </AnimatePresence>
-                </motion.div>
-
-                {filteredCourses.length === 0 && (
-                    <div className="text-center py-12">
-                        <BookOpen className="w-16 h-16 text-secondary mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-primary mb-2">No Courses Found</h3>
-                        <p className="text-secondary">Try adjusting your filters or search query</p>
-                    </div>
-                )}
+                </div>
             </div>
         </div>
     );
 };
 
-export default EnhancedCourseShop;
+export default PlacementTrainingShop;

@@ -146,7 +146,7 @@ const QuizPage = () => {
 
     return (
         <div className="min-h-screen bg-theme-gradient">
-            {/* {showStartOverlay && (
+            {showStartOverlay && (
                 <QuizStartOverlay
                     onStart={() => setShowStartOverlay(false)}
                     onPostpone={() => {
@@ -157,7 +157,7 @@ const QuizPage = () => {
                         }
                     }}
                 />
-            )} */}
+            )}
             <div className="container mx-auto px-4 py-8 mt-20">
                 {/* Navigation Breadcrumb */}
                 <div className="flex items-center gap-2 text-sm text-secondary mb-6">
