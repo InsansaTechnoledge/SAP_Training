@@ -14,21 +14,19 @@ const Navigation = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('darkTheme'));
+    const [isDarkMode, setIsDarkMode] = useState();
 
-    // const [cart, setCart] = useState([]);
     const { cart, setIsCartOpen, isCartOpen } = useCart()
-    // const [wishlist, setWishlist] = useState([]); 
     const { wishlist, setIsWishlistOpen, isWishlistOpen } = useWishlist();
     const location = useLocation();
 
     useEffect(() => {
         
-        // Dark mode not working on reload
+        // Dark mode
 
         const dark = localStorage.getItem('darkTheme');
-        dark ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
-
+        dark==='true' ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
+        setIsDarkMode(dark==='true');
         
 
     }, []);

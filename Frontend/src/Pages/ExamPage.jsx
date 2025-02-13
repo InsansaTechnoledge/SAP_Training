@@ -142,7 +142,7 @@ const ExamPage = () => {
 
                         {/* Stats Section */}
                         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
-                            {stats.map((stat, index) => (
+                            {stats.map((stat, index) => (  
                                 <div key={index} className="text-center p-4 rounded-xl bg-secondary backdrop-blur-sm">
                                     <stat.icon className="h-8 w-8 mx-auto mb-2 text-primary" />
                                     <div className="text-2xl font-bold text-primary mb-1">{stat.value}</div>
@@ -155,7 +155,7 @@ const ExamPage = () => {
             </div>
 
             {/* Learning Modules Section */}
-            <div className="container mx-auto px-4 py-20 bg-theme-gradient">
+            <div className="mx-auto px-4 py-20 bg-theme-gradient">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl font-bold text-secondary mb-4">
                         Your Learning Journey
