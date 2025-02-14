@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Star, Clock, Users, Sparkles, Heart, ShoppingCart, ChevronDown, ChevronRight, Tag, TrendingUp, Award, BookOpen, Filter, X, Shield, Zap, Gift, Briefcase, Code, Database, ChartBar, BookType, GraduationCap, Layout } from 'lucide-react';
+import {
+    Search, Star, Clock, Users, Sparkles, Heart, ShoppingCart, ChevronDown,
+    ChevronRight, Tag, TrendingUp, Award, BookOpen, Filter, X, Shield,
+    Zap, Gift, Briefcase, Code, Database, ChartBar, BookType,
+    GraduationCap, Layout
+} from 'lucide-react';
+
 
 const PlacementTrainingShop = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -8,6 +14,16 @@ const PlacementTrainingShop = () => {
     const [showCart, setShowCart] = useState(false);
     const [activeCategory, setActiveCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [announcement, setAnnouncement] = useState('');
+    useEffect(() => {
+        if (announcement) {
+            const timeout = setTimeout(() => setAnnouncement(''), 1000);
+            return () => clearTimeout(timeout);
+        }
+    }, [announcement]);
+
 
     const categories = [
         {
@@ -118,11 +134,50 @@ const PlacementTrainingShop = () => {
         }
     ];
 
+
+    // Memoized filtered courses
+    const filteredCourses = useMemo(() => {
+        return courses.filter(course => {
+            const matchesCategory = activeCategory === 'all' || course.category === activeCategory;
+            const matchesSearch = searchQuery === '' ||
+                course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                course.description.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesCategory && matchesSearch;
+        });
+    }, [activeCategory, searchQuery]);
+
+    const handleWishlist = (courseId) => {
+        setWishlist(prev => {
+            const newWishlist = prev.includes(courseId)
+                ? prev.filter(id => id !== courseId)
+                : [...prev, courseId];
+            setAnnouncement(prev.includes(courseId)
+                ? 'Removed from wishlist'
+                : 'Added to wishlist');
+            return newWishlist;
+        });
+    };
+
+
+
+    
+
     const CategoryCard = ({ category }) => (
         <motion.div
             whileHover={{ y: -5 }}
-            className="bg-card rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer"
-            onClick={() => setActiveCategory(category.id)}
+            className="bg-card rounded-xl p-6 hover:shadow-lg transition-all"
+            onClick={() => {
+                setActiveCategory(category.id);
+                setAnnouncement(`Showing ${category.name} courses`);
+            }}
+            role="button"
+            tabIndex={0}
+            onKeyPress={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    setActiveCategory(category.id);
+                }
+            }}
+            aria-label={`${category.name} category with ${category.courses} courses`}
         >
             <div className="flex justify-between items-start mb-4">
                 <div className="card-theme-gradient p-3 rounded-lg">
@@ -146,28 +201,32 @@ const PlacementTrainingShop = () => {
     );
 
     const CourseCard = ({ course }) => (
-        <motion.div
+        <motion.article
             layout
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="bg-card rounded-xl overflow-hidden hover:shadow-xl transition-all"
+            className="bg-card rounded-xl overflow-hidden hover:shadow-xl transition-all focus-within:ring-2 focus-within:ring-blue"
+            role="article"
+            aria-label={`${course.title} course`}
+
         >
             <div className="relative">
                 <img
                     src={course.image}
-                    alt={course.title}
+                    alt={`${course.title} course cover`}
                     className="w-full h-48 object-cover"
+                    loading="lazy"
                 />
-                <div className="absolute top-4 right-4">
-                    <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-2 bg-card rounded-full shadow-lg"
-                    >
-                        <Heart className={`w-5 h-5 ${wishlist.includes(course.id) ? 'text-blue fill-current' : 'text-secondary'}`} />
-                    </motion.button>
-                </div>
+                <button
+                    onClick={() => handleWishlist(course.id)}
+                    className="absolute top-4 right-4 p-2 bg-card rounded-full shadow-lg hover:scale-110 transition-transform focus:outline-none focus:ring-2 focus:ring-blue"
+                    aria-label={`${wishlist.includes(course.id) ? 'Remove from' : 'Add to'} wishlist`}
+                >
+                    <Heart
+                        className={`w-5 h-5 ${wishlist.includes(course.id) ? 'text-blue fill-current' : 'text-secondary'}`}
+                    />
+                </button>
             </div>
 
             <div className="p-6">
@@ -224,29 +283,46 @@ const PlacementTrainingShop = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 p-6">
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="card-theme-gradient text-primary py-3 rounded-xl font-medium"
+                        className="card-theme-gradient text-primary py-3 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue"
+                        onClick={() => {
+                            setAnnouncement(`Enrolling in ${course.title}`);
+                            // Enrollment logic here
+                        }}
                     >
                         Enroll Now
                     </motion.button>
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="bg-secondary/10 text-secondary py-3 rounded-xl font-medium"
+                        className="bg-secondary/10 text-secondary py-3 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue"
+                        onClick={() => {
+                            setAnnouncement(`Viewing details for ${course.title}`);
+                            // Show details logic here
+                        }}
                     >
                         Course Details
                     </motion.button>
                 </div>
             </div>
-        </motion.div>
+        </motion.article>
     );
 
     return (
         <div className="bg-primary min-h-screen">
             <div className="container mx-auto max-w-7xl px-4 py-12">
+                {/* Accessibility announcer */}
+                <div
+                    role="status"
+                    aria-live="polite"
+                    className="sr-only"
+                >
+                    {announcement}
+                </div>
+
                 {/* Hero Section */}
                 <div className="text-center mb-16">
                     <motion.h1
@@ -263,51 +339,77 @@ const PlacementTrainingShop = () => {
 
                     {/* Search Bar */}
                     <div className="max-w-2xl mx-auto relative">
+                        <label htmlFor="search" className="sr-only">
+                            Search courses
+                        </label>
                         <input
-                            type="text"
+                            id="search"
+                            type="search"
                             placeholder="Search for SAP courses and placement programs..."
                             className="w-full bg-card text-secondary px-6 py-4 rounded-xl pl-12 focus:outline-none focus:ring-2 focus:ring-blue"
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onChange={(e) => {
+                                setSearchQuery(e.target.value);
+                                setAnnouncement(`Searching for ${e.target.value}`);
+                            }}
                         />
-                        <Search className="w-5 h-5 text-secondary/50 absolute left-4 top-1/2 transform -translate-y-1/2" />
+                        <Search
+                            className="w-5 h-5 text-secondary/50 absolute left-4 top-1/2 transform -translate-y-1/2"
+                            aria-hidden="true"
+                        />
                     </div>
                 </div>
 
                 {/* Categories Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                <section
+                    className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
+                    aria-label="Course categories"
+                >
                     {categories.map(category => (
                         <CategoryCard key={category.id} category={category} />
                     ))}
-                </div>
+                </section>
 
                 {/* Courses Section */}
-                <div className="mb-8 flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-secondary">
-                        {activeCategory === 'all' ? 'Featured Courses' :
-                            categories.find(c => c.id === activeCategory)?.name}
-                    </h2>
-                    {activeCategory !== 'all' && (
-                        <button
-                            onClick={() => setActiveCategory('all')}
-                            className="text-blue hover:underline flex items-center gap-1"
-                        >
-                            View All
-                            <ChevronRight className="w-4 h-4" />
-                        </button>
-                    )}
-                </div>
+                <section aria-label="Available courses">
+                    <div className="mb-8 flex items-center justify-between">
+                        <h2 className="text-2xl font-bold text-secondary">
+                            {activeCategory === 'all' ? 'Featured Courses' :
+                                categories.find(c => c.id === activeCategory)?.name}
+                        </h2>
+                        {activeCategory !== 'all' && (
+                            <button
+                                onClick={() => {
+                                    setActiveCategory('all');
+                                    setAnnouncement('Showing all courses');
+                                }}
+                                className="text-blue hover:underline flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-blue rounded-lg px-2 py-1"
+                            >
+                                View All
+                                <ChevronRight className="w-4 h-4" />
+                            </button>
+                        )}
+                    </div>
 
-                {/* Courses Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <AnimatePresence>
-                        {courses
-                            .filter(course => activeCategory === 'all' || course.category === activeCategory)
-                            .map(course => (
+                    {/* Courses Grid */}
+                    <div
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                        role="list"
+                        aria-label="Course list"
+                    >
+                        <AnimatePresence>
+                            {filteredCourses.map(course => (
                                 <CourseCard key={course.id} course={course} />
                             ))}
-                    </AnimatePresence>
-                </div>
+                        </AnimatePresence>
+                    </div>
+
+                    {filteredCourses.length === 0 && (
+                        <p className="text-center text-secondary/70 py-8">
+                            No courses found. Try adjusting your search or filters.
+                        </p>
+                    )}
+                </section>
             </div>
         </div>
     );

@@ -8,6 +8,7 @@ import CertificateSection from '../Components/CertificateDisplay';
 import LearningExp from '../Components/LearningExp';
 import DashboardBanner from '../Components/DashBoardLanding';
 import AnimatedFooter from '../Components/Footer';
+import ShopBanner from '../Components/ShopBanner';
 
 const LandingPage = () => {
     // const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,6 +25,8 @@ const LandingPage = () => {
 
             {/* Courses Grid */}
             <Courses/>
+
+            <ShopBanner/>
 
             <LearningExp />
 
