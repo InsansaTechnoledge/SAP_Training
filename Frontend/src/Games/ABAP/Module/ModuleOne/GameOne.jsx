@@ -2,11 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code, Star, Trophy, Sparkles, Check } from 'lucide-react';
 
-const ABAPRunner = () => {
+const ABAPRunner = ({score,setScore}) => {
     const [position, setPosition] = useState({ x: 1, y: 0 });
     const [isJumping, setIsJumping] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
-    const [score, setScore] = useState(0);
     const [gameStarted, setGameStarted] = useState(false);
     const [gameOver, setGameOver] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -86,7 +85,7 @@ const ABAPRunner = () => {
         setShowNextQuestion(false);
         const questionIndex = Math.floor(Math.random() * questions.length);
         const newQuestion = { ...questions[questionIndex] };
-
+        {console.log(newQuestion);}
         // Immediate question setting instead of delayed
         setCurrentQuestion(newQuestion);
         setQuestionBanner(true);
@@ -210,7 +209,7 @@ const ABAPRunner = () => {
     const checkAnswer = useCallback(() => {
         if (!currentQuestion || !gameStarted || gameOver) return;
 
-        if (position.y >= 70) {
+        if (position.y >= 80) {
             if (position.x === currentQuestion.correct) {
                 setScore(prev => prev + 10);
                 setCorrectAnswerEffect(true);
@@ -282,7 +281,7 @@ const ABAPRunner = () => {
                     transition={{ type: "spring", duration: 1 }}
                 >
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
-                        ABAP Runner
+                        {currentQuestion ? currentQuestion.text : "ABAP Runner"}
                     </span>
                 </motion.h1>
 
@@ -323,7 +322,7 @@ const ABAPRunner = () => {
                     </div>
 
                     {/* Question Banner */}
-                    <AnimatePresence mode="wait">
+                    {/* <AnimatePresence mode="wait">
                         {currentQuestion && (
                             <motion.div
                                 key={currentQuestion.text}
@@ -351,7 +350,7 @@ const ABAPRunner = () => {
                                 </div>
                             </motion.div>
                         )}
-                    </AnimatePresence>
+                    </AnimatePresence> */}
 
                     {/* Game Lanes */}
                     <div className="absolute bottom-0 w-full h-full flex">
@@ -380,9 +379,9 @@ const ABAPRunner = () => {
                                         initial={{ y: -30, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         exit={{ y: 30, opacity: 0 }}
-                                        className="relative top-1/4 transform -translate-x-0.5 z-40"
+                                        className="relative top-2 transform -translate-x-0.5 z-40"
                                     >
-                                        <div className="bg-white/10 w-full backdrop-blur-md py-2 px-4 rounded-xl text-md font-bold shadow-2xl text-white tracking-wide border border-white/20 text-center transform hover:scale-105 transition-transform">
+                                        <div className="bg-white/10 w-full backdrop-blur-md py-4 px-4 rounded-xl text-md font-bold shadow-2xl text-white tracking-wide border border-white/20 text-center transform hover:scale-105 transition-transform">
                                             {currentQuestion.answers[index]}
                                         </div>
                                     </motion.div>
@@ -436,17 +435,7 @@ const ABAPRunner = () => {
                         </div>
                     </motion.div>
 
-                    {/* Score HUD */}
-                    <motion.div
-                        initial={{ x: -100, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        className="absolute top-4 left-4 bg-black/40 backdrop-blur-md p-3 rounded-xl border border-purple-500/30"
-                    >
-                        <div className="flex items-center space-x-3">
-                            <Trophy className="text-yellow-400 w-6 h-6" />
-                            <span className="text-white text-lg font-bold">{score}</span>
-                        </div>
-                    </motion.div>
+                    
 
                     {/* Start/Game Over Screen */}
                     <AnimatePresence>
@@ -463,7 +452,7 @@ const ABAPRunner = () => {
                                     className="text-center p-8 bg-gradient-to-r from-purple-900/50 to-violet-900/50 rounded-2xl border border-purple-500/30 backdrop-blur-md"
                                 >
                                     <motion.h2
-                                        className="text-4xl text-white mb-6 font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400"
+                                        className="text-4xl text-white mb-6 font-bold bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400"
                                         animate={{
                                             textShadow: [
                                                 "0 0 20px rgba(168,85,247,0.5)",
