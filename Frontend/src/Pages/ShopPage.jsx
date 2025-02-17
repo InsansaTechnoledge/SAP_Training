@@ -371,47 +371,6 @@ const PlacementTrainingShop = () => {
                     ))}
                 </section>
 
-                {/* Courses Section */}
-                {/* <section aria-label="Available courses">
-                    <div className="mb-8 flex items-center justify-between">
-                        <h2 className="text-2xl font-bold text-secondary">
-                            {activeCategory === 'all' ? 'Featured Courses' :
-                                categories.find(c => c.id === activeCategory)?.name}
-                        </h2>
-                        {activeCategory !== 'all' && (
-                            <button
-                                onClick={() => {
-                                    setActiveCategory('all');
-                                    setAnnouncement('Showing all courses');
-                                }}
-                                className="text-blue hover:underline flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-blue rounded-lg px-2 py-1"
-                            >
-                                View All
-                                <ChevronRight className="w-4 h-4" />
-                            </button>
-                        )}
-                    </div> */}
-
-                    {/* Courses Grid */}
-                    {/* <div
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                        role="list"
-                        aria-label="Course list"
-                    >
-                        <AnimatePresence>
-                            {filteredCourses.map(course => (
-                                <CourseCard key={course.id} course={course} />
-                            ))}
-                        </AnimatePresence>
-                    </div>
-
-                    {filteredCourses.length === 0 && (
-                        <p className="text-center text-secondary/70 py-8">
-                            No courses found. Try adjusting your search or filters.
-                        </p>
-                    )} */}
-                {/* </section> */}
-
                 <Courses category={activeCategory}/>
             </div>
         </div>

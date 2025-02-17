@@ -9,6 +9,7 @@ import LearningExp from '../Components/LearningExp';
 import DashboardBanner from '../Components/DashBoardLanding';
 import AnimatedFooter from '../Components/Footer';
 import ShopBanner from '../Components/ShopBanner';
+import Curve from '../assets/curve_line.svg'
 
 const LandingPage = () => {
     // const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,15 +17,16 @@ const LandingPage = () => {
     
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-blue-600">
 
             {/* Hero Section */}
             <HeroSection />
 
             <DashboardBanner />
 
+            {/* <img src={Curve} className='backdrop-opacity-0 w-full'/> */}
             {/* Courses Grid */}
-            <Courses/>
+            {/* <Courses/> */}
 
             <ShopBanner/>
 
