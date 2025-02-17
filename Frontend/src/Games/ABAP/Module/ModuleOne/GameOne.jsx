@@ -567,13 +567,7 @@ const ABAPRunner = () => {
                     </div>
                 </div>
 
-                {/* Controls Guide */}
-                <div className="absolute top-2 right-2 bg-black/50 p-2 rounded-lg text-white text-xs">
-                    <p>← → Move left/right</p>
-                    <p>↑ Move forward</p>
-                    <p>↓ Move backward</p>
-                </div>
-
+               
                 {/* Start/Game Over Screen */}
                 <AnimatePresence>
                     {(!gameStarted || gameOver) && (
@@ -602,6 +596,13 @@ const ABAPRunner = () => {
                                 >
                                     {gameOver ? 'Play Again' : 'Start Game'}
                                 </motion.button>
+                                {/* Controls Guide */}
+                                <div className="  mt-10 bg-black/50 p-2 rounded-lg text-white text-xs">
+                                    <p>← → Move left/right</p>
+                                    <p>↑ Move forward</p>
+                                    <p>↓ Move backward</p>
+                                </div>
+
                             </motion.div>
                         </motion.div>
                     )}
