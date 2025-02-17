@@ -158,8 +158,12 @@ const ABAPRunner = () => {
                     }
                     break;
                 case 'down':
-                    if (prev.y > 0) newPos.y = prev.y - 10;
-                    break;
+                    if (prev.y > 0) {
+                        newPos.y = prev.y - 10;
+                        generateParticle(prev.x * 33.33 + 16.67, prev.y);
+                        setPathHighlight(true);
+                    }
+                        break;
                 default:
                     break;
             }
@@ -197,7 +201,7 @@ const ABAPRunner = () => {
                 break;
             case 'ArrowDown':
                 movePlayer('down');
-                setIsRunning(true);
+                // setIsRunning(true);
                 break;
             default:
                 break;
@@ -270,11 +274,14 @@ const ABAPRunner = () => {
         generateSpeedLines();
         // Immediate question generation
         generateNewQuestion();
+        document.getElementById('key-context').focus();
+
     }, [generateCollectibles, generateSpeedLines, generateNewQuestion]);
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-900 p-4">
             <div
+                id='key-context'
                 className="w-full max-w-2xl h-[600px] bg-gray-800 relative overflow-hidden rounded-lg shadow-xl"
                 tabIndex={0}
                 onKeyDown={handleKeyDown}

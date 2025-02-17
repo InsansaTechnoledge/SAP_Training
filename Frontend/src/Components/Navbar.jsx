@@ -20,7 +20,7 @@ const Navigation = () => {
     const { wishlist, setIsWishlistOpen, isWishlistOpen } = useWishlist();
     const location = useLocation();
 
-    const fixed_navbar_in = ['/video', '/quiz', '/dashboard', '/shop'];
+    const fixed_navbar_in = ['/video', '/quiz', '/dashboard', '/shop', '/game'];
 
     useEffect(() => {
         

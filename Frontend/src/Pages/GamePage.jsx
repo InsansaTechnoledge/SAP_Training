@@ -14,7 +14,7 @@ const GameDashboard = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
+        <div className="min-h-screen bg-gray-100 p-6 mt-20">
             <div className="max-w-7xl mx-auto flex gap-6">
                 {/* Left side - Game View */}
                 <div className="w-2/3 bg-white rounded-2xl shadow-lg p-6">
