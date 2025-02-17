@@ -5,7 +5,8 @@ import ABAPExplorer from '../Games/ABAP/Module/ModuleOne/GameTwo';
 
 const GameDashboard = () => {
     const [isPaused, setIsPaused] = useState(false);
-    const [score,setScore] = useState(0);
+    const [score, setScore] = useState(0);
+    const [currentGame, setCurrentGame] = useState('ABAPExplorer'); // State to toggle between games
 
     const questionTree = [
         { id: 1, level: 'Basic', title: 'ABAP Syntax Basics', status: 'completed', score: 95 },
@@ -26,10 +27,11 @@ const GameDashboard = () => {
                                 onClick={() => setIsPaused(!isPaused)}
                                 className="p-3 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors"
                             >
-                                {isPaused ?
-                                    <Play className="w-6 h-6 text-blue-600" /> :
+                                {isPaused ? (
+                                    <Play className="w-6 h-6 text-blue-600" />
+                                ) : (
                                     <Pause className="w-6 h-6 text-blue-600" />
-                                }
+                                )}
                             </button>
                             <div>
                                 <h2 className="text-xl font-bold">ABAP Learning Game</h2>
@@ -51,24 +53,33 @@ const GameDashboard = () => {
                         </div>
                     </div>
 
+                    {/* Toggle Game Buttons */}
+                    <div className="flex justify-center gap-4 mb-4">
+                        <button
+                            onClick={() => setCurrentGame('ABAPExplorer')}
+                            className={`px-4 py-2 rounded-lg border ${currentGame === 'ABAPExplorer' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+                                }`}
+                        >
+                            ABAP Explorer
+                        </button>
+                        <button
+                            onClick={() => setCurrentGame('ABAPRunner')}
+                            className={`px-4 py-2 rounded-lg border ${currentGame === 'ABAPRunner' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+                                }`}
+                        >
+                            ABAP Runner
+                        </button>
+                    </div>
 
-                    <div class="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[16px] rounded-t-xl">
-                        <div class="rounded-xl">
-
+                    <div className="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[16px] rounded-t-xl">
+                        <div className="rounded-xl">
                             <div className="relative w-full">
-                                <ABAPExplorer />
+                                {currentGame === 'ABAPExplorer' ? <ABAPExplorer /> : <ABAPRunner />}
                             </div>
                         </div>
                     </div>
-                    <div class="relative mx-auto bg-gray-900 dark:bg-gray-700 rounded-b-xl h-[24px]"></div>
-                    <div class="relative mx-auto bg-gray-800 rounded-b-xl h-[55px] max-w-[83px] md:h-[95px] md:max-w-[142px]"></div>
-
-
-                
-
-
-
-                    {/* Game Content Area */}
+                    <div className="relative mx-auto bg-gray-900 dark:bg-gray-700 rounded-b-xl h-[24px]"></div>
+                    <div className="relative mx-auto bg-gray-800 rounded-b-xl h-[55px] max-w-[83px] md:h-[95px] md:max-w-[142px]"></div>
                 </div>
 
                 {/* Right side - Question Controls */}
@@ -95,9 +106,11 @@ const GameDashboard = () => {
                             {questionTree.map((question) => (
                                 <div
                                     key={question.id}
-                                    className={`p-4 rounded-lg border ${question.status === 'current' ? 'border-blue-500 bg-blue-50' :
-                                        question.status === 'completed' ? 'border-green-500 bg-green-50' :
-                                            'border-gray-200'
+                                    className={`p-4 rounded-lg border ${question.status === 'current'
+                                            ? 'border-blue-500 bg-blue-50'
+                                            : question.status === 'completed'
+                                                ? 'border-green-500 bg-green-50'
+                                                : 'border-gray-200'
                                         }`}
                                 >
                                     <div className="flex justify-between items-center">
