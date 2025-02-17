@@ -18,6 +18,7 @@ const ABAPRunner = () => {
     const [pathHighlight, setPathHighlight] = useState(false);
     const [correctAnswerEffect, setCorrectAnswerEffect] = useState(false);
     const [showNextQuestion, setShowNextQuestion] = useState(true);
+    const [isPaused, setIsPaused] = useState(false);
 
 
     const questions = [
@@ -40,6 +41,15 @@ const ABAPRunner = () => {
             explanation: "LOOP AT is used to iterate through internal tables"
         }
     ];
+
+    const questionTree = [
+        { id: 1, level: 'Basic', title: 'ABAP Syntax Basics', status: 'completed', score: 95 },
+        { id: 2, level: 'Basic', title: 'Data Types Overview', status: 'current', score: 0 },
+        { id: 3, level: 'Intermediate', title: 'Control Structures', status: 'locked', score: 0 },
+        { id: 4, level: 'Intermediate', title: 'Modularization', status: 'locked', score: 0 },
+        { id: 5, level: 'Advanced', title: 'Object Oriented ABAP', status: 'locked', score: 0 }
+    ];
+
 
     // Function to create celebration particles
     const createCelebrationEffect = useCallback(() => {

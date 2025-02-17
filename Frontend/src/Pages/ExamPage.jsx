@@ -90,7 +90,11 @@ const ExamPage = () => {
         if (isModuleUnlocked(moduleId)) {
             if (subModule.type === "quiz") {
                 navigate('/quiz');
-            } else {
+            } 
+            else if (subModule.type === "game" ){
+                navigate('/game');
+            }
+            else {
                 navigate('/video');
             }
         }
