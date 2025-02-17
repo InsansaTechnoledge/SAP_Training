@@ -6,6 +6,7 @@ const ABAPExplorer = () => {
     const [position, setPosition] = useState({ x: 1, y: 0 });
     const [currentModule, setCurrentModule] = useState(null);
     const [discoveredConcepts, setDiscoveredConcepts] = useState([]);
+    const [nodeVisible, setNodeVisible] = useState(false);
     const [score, setScore] = useState(0);
     const [gameStarted, setGameStarted] = useState(false);
     const [particleEffects, setParticleEffects] = useState([]);
@@ -14,6 +15,10 @@ const ABAPExplorer = () => {
     const [selectedOptions, setSelectedOptions] = useState({});
     const [executionOutput, setExecutionOutput] = useState('');
     const [codeSuccess, setCodeSuccess] = useState(false);
+    const [gameOnChallengeOff, setGameOnChallengeOff] = useState(true);
+    const [nodeDiscoveryAlertVisible, setNodeDiscoveryAlertVisible] = useState(false);
+    const [resumePlayingVisible,setResumePlayingVisible] = useState(false);
+    const [playingModule, setPlayingModule] = useState();
 
     const abapModules = [
         {
@@ -152,11 +157,14 @@ const ABAPExplorer = () => {
                     !discoveredConcepts.includes(concept.concept)
                 ) {
                     setDiscoveredConcepts(prev => [...prev, concept.concept]);
+                    setGameOnChallengeOff(false);
                     setActiveCodeBlock(concept);
                     setShowChallenge(true);
                     setSelectedOptions({});
                     setExecutionOutput('');
                     setCodeSuccess(false);
+                    setPlayingModule(module);
+                    setNodeDiscoveryAlertVisible(true);
                 }
             });
         });
@@ -189,6 +197,7 @@ const ABAPExplorer = () => {
                 color: ['#FFD700', '#FF69B4', '#00FF00'][Math.floor(Math.random() * 3)]
             }));
             setParticleEffects(prev => [...prev, ...particles]);
+            setResumePlayingVisible(true);
         } else {
             setExecutionOutput('Execution failed. Check your code!');
             setCodeSuccess(false);
@@ -220,11 +229,14 @@ const ABAPExplorer = () => {
         setScore(0);
         setPosition({ x: 1, y: 0 });
         setDiscoveredConcepts([]);
+        setNodeVisible(true);
         document.getElementById('explorer-container').focus();
     }, []);
 
+
     return (
-        <div className="min-h-screen items-center justify-center bg-gradient-to-b from-gray-900 via-purple-900 to-violet-900 p-4">
+        <div className="items-center justify-center bg-gradient-to-b from-gray-900 via-purple-900 to-violet-900 p-4">
+
             <div className="w-full max-w-4xl">
                 <motion.h1
                     className="text-4xl font-bold text-center text-white mb-6 tracking-wider"
@@ -237,251 +249,300 @@ const ABAPExplorer = () => {
                 </motion.h1>
 
                 <div className="flex gap-4">
-                    {/* Main Game Area */}
-                    <div
-                        id="explorer-container"
-                        className="w-2/3 h-[600px] relative overflow-hidden rounded-2xl shadow-[0_0_50px_rgba(168,85,247,0.3)] border border-purple-500/30"
-                        tabIndex={0}
-                        onKeyDown={handleKeyDown}
-                    >
-                        {/* Futuristic Grid Background */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-indigo-900 to-purple-900">
-                            <div className="absolute inset-0 grid grid-cols-12 grid-rows-12 gap-4 p-4">
-                                {Array.from({ length: 144 }).map((_, i) => (
-                                    <motion.div
-                                        key={i}
-                                        className="border border-purple-500/10 rounded"
-                                        animate={{
-                                            opacity: [0.1, 0.2, 0.1],
-                                            scale: [1, 1.02, 1],
-                                        }}
-                                        transition={{
-                                            duration: 2,
-                                            repeat: Infinity,
-                                            delay: i * 0.01,
-                                        }}
-                                    />
-                                ))}
+                    {
+                        nodeDiscoveryAlertVisible
+                        &&
+                        <div className='absolute z-10 font-bold w-full backdrop-blur-md h-[450px] flex flex-col justify-center text-white text-2xl
+                        text-center'>
+                            You discovered new challenge : {playingModule.title}
+                            <div className='mt-10'>
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => {
+                                        setGameOnChallengeOff(false)
+                                        setNodeDiscoveryAlertVisible(false)
+                                    }}
+                                    className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl text-md  shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
+                                >
+                                    Accept Challenge
+                                </motion.button>
+
                             </div>
                         </div>
+                    }
+                    {/* Main Game Area */}
+                    {
+                        gameOnChallengeOff ?
+                            <div
+                                id="explorer-container"
+                                className="w-full h-[450px] relative overflow-hidden rounded-2xl shadow-[0_0_50px_rgba(168,85,247,0.3)] border border-purple-500/30"
+                                tabIndex={0}
+                                onKeyDown={handleKeyDown}
+                            >
+                                {/* Futuristic Grid Background */}
+                                <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-indigo-900 to-purple-900">
+                                    <div className="absolute inset-0 grid grid-cols-12 grid-rows-12 gap-4 p-4">
+                                        {Array.from({ length: 144 }).map((_, i) => (
+                                            <motion.div
+                                                key={i}
+                                                className="border border-purple-500/10 rounded"
+                                                animate={{
+                                                    opacity: [0.1, 0.2, 0.1],
+                                                    scale: [1, 1.02, 1],
+                                                }}
+                                                transition={{
+                                                    duration: 2,
+                                                    repeat: Infinity,
+                                                    delay: i * 0.01,
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
 
-                        {/* Concept Nodes */}
-                        {abapModules.map(module =>
-                            module.content.map(concept => (
+                                {/* Concept Nodes */}
+                                {
+                                    nodeVisible &&
+                                    abapModules.map(module =>
+                                        module.content.map(concept => (
+                                            <motion.div
+                                                key={concept.concept}
+                                                className="absolute z-10"
+                                                style={{
+                                                    left: `${concept.position.x * 33.33 + 16.67}%`,
+                                                    bottom: `${concept.position.y}%`
+                                                }}
+                                            >
+                                                <motion.div
+                                                    className={`w-12 h-12 rounded-full flex items-center justify-center ${discoveredConcepts.includes(concept.concept)
+                                                        ? 'bg-green-500'
+                                                        : 'bg-purple-500'
+                                                        }`}
+                                                    animate={{
+                                                        scale: [1, 1.1, 1],
+                                                        boxShadow: [
+                                                            '0 0 20px rgba(168,85,247,0.5)',
+                                                            '0 0 40px rgba(168,85,247,0.2)',
+                                                            '0 0 20px rgba(168,85,247,0.5)'
+                                                        ]
+                                                    }}
+                                                    transition={{
+                                                        duration: 2,
+                                                        repeat: Infinity
+                                                    }}
+                                                >
+                                                    {discoveredConcepts.includes(concept.concept)
+                                                        ? <CheckCircle className="text-white" />
+                                                        : <Circle className="text-white" />
+                                                    }
+                                                </motion.div>
+                                            </motion.div>
+                                        ))
+                                    )}
+
+                                {/* Player Character */}
                                 <motion.div
-                                    key={concept.concept}
-                                    className="absolute z-10"
+                                    className="absolute z-50"
                                     style={{
-                                        left: `${concept.position.x * 33.33 + 16.67}%`,
-                                        bottom: `${concept.position.y}%`
+                                        left: `${position.x * 33.33 + 16.67}%`,
+                                        bottom: `${position.y}%`
+                                    }}
+                                    animate={{
+                                        scale: [1, 1.05, 1],
+                                        rotate: [0, 5, -5, 0]
+                                    }}
+                                    transition={{
+                                        duration: 2,
+                                        repeat: Infinity
                                     }}
                                 >
-                                    <motion.div
-                                        className={`w-12 h-12 rounded-full flex items-center justify-center ${discoveredConcepts.includes(concept.concept)
-                                                ? 'bg-green-500'
-                                                : 'bg-purple-500'
-                                            }`}
-                                        animate={{
-                                            scale: [1, 1.1, 1],
-                                            boxShadow: [
-                                                '0 0 20px rgba(168,85,247,0.5)',
-                                                '0 0 40px rgba(168,85,247,0.2)',
-                                                '0 0 20px rgba(168,85,247,0.5)'
-                                            ]
-                                        }}
-                                        transition={{
-                                            duration: 2,
-                                            repeat: Infinity
-                                        }}
-                                    >
-                                        {discoveredConcepts.includes(concept.concept)
-                                            ? <CheckCircle className="text-white" />
-                                            : <Circle className="text-white" />
-                                        }
-                                    </motion.div>
-                                </motion.div>
-                            ))
-                        )}
-
-                        {/* Player Character */}
-                        <motion.div
-                            className="absolute z-50"
-                            style={{
-                                left: `${position.x * 33.33 + 16.67}%`,
-                                bottom: `${position.y}%`
-                            }}
-                            animate={{
-                                scale: [1, 1.05, 1],
-                                rotate: [0, 5, -5, 0]
-                            }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity
-                            }}
-                        >
-                            <div className="w-12 h-16 relative">
-                                <motion.div
-                                    className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl shadow-lg"
-                                >
-                                    <Terminal className="w-full h-full p-2 text-white" />
-                                </motion.div>
-                            </div>
-                        </motion.div>
-
-                        {/* Score Display */}
-                        <motion.div
-                            initial={{ x: -100, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            className="absolute top-4 left-4 bg-black/40 backdrop-blur-md p-3 rounded-xl border border-purple-500/30"
-                        >
-                            <div className="flex items-center space-x-3">
-                                <Sparkles className="text-yellow-400 w-6 h-6" />
-                                <span className="text-white text-lg font-bold">{score} Points</span>
-                            </div>
-                        </motion.div>
-
-                        {/* Start Screen */}
-                        <AnimatePresence>
-                            {!gameStarted && (
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center"
-                                >
-                                    <motion.div
-                                        initial={{ scale: 0.8, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        className="text-center p-8 bg-gradient-to-r from-purple-900/50 to-violet-900/50 rounded-2xl border border-purple-500/30 backdrop-blur-md"
-                                    >
-
-                                        <motion.h2
-                                            className="text-4xl text-white mb-6 font-bold"
-                                            animate={{
-                                                textShadow: [
-                                                    "0 0 20px rgba(168,85,247,0.5)",
-                                                    "0 0 40px rgba(168,85,247,0.2)",
-                                                    "0 0 20px rgba(168,85,247,0.5)"
-                                                ]
-                                            }}
-                                            transition={{
-                                                duration: 2,
-                                                repeat: Infinity
-                                            }}
+                                    <div className="w-12 h-16 relative">
+                                        <motion.div
+                                            className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl shadow-lg"
                                         >
-                                            Interactive ABAP Explorer
-                                        </motion.h2>
-                                        <p className="text-gray-300 mb-6">
-                                            Discover ABAP concepts and complete coding challenges
-                                        </p>
-                                        <motion.button
-                                            whileHover={{ scale: 1.05 }}
-                                            whileTap={{ scale: 0.95 }}
-                                            onClick={startGame}
-                                            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-xl text-xl font-bold shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
-                                        >
-                                            Start Exploring
-                                        </motion.button>
-                                    </motion.div>
+                                            <Terminal className="w-full h-full p-2 text-white" />
+                                        </motion.div>
+                                    </div>
                                 </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
 
-                    {/* Code Challenge Panel */}
-                    <div className="w-1/3 h-[600px] bg-gray-900 rounded-2xl border border-purple-500/30 overflow-hidden flex flex-col">
-                        <div className="flex-1 p-4 overflow-y-auto">
-                            {activeCodeBlock ? (
+                                {/* Score Display */}
                                 <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="space-y-4"
+                                    initial={{ x: -100, opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    className="absolute top-4 left-4 bg-black/40 backdrop-blur-md p-3 rounded-xl border border-purple-500/30"
                                 >
-                                    <h2 className="text-xl font-bold text-white">
-                                        {activeCodeBlock.concept}
-                                    </h2>
-                                    <p className="text-gray-300">
-                                        {activeCodeBlock.explanation}
-                                    </p>
+                                    <div className="flex items-center space-x-3">
+                                        <Sparkles className="text-yellow-400 w-6 h-6" />
+                                        <span className="text-white text-lg font-bold">{score} Points</span>
+                                    </div>
+                                </motion.div>
 
-                                    {showChallenge && activeCodeBlock.challenge && (
-                                        <div className="space-y-4">
-                                            <div className="bg-purple-900/30 p-4 rounded-lg border border-purple-500/30">
-                                                <h3 className="text-white font-semibold mb-2">Challenge:</h3>
-                                                <p className="text-gray-300">{activeCodeBlock.challenge.description}</p>
-                                            </div>
+                                {/* Start Screen */}
+                                <AnimatePresence>
+                                    {!gameStarted && (
+                                        <motion.div
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center"
+                                        >
+                                            <motion.div
+                                                initial={{ scale: 0.8, opacity: 0 }}
+                                                animate={{ scale: 1, opacity: 1 }}
+                                                className="text-center p-8 bg-gradient-to-r from-purple-900/50 to-violet-900/50 rounded-2xl border border-purple-500/30 backdrop-blur-md"
+                                            >
 
-                                            <div className="bg-gray-800 p-4 rounded-lg">
-                                                <pre className="text-green-400 overflow-x-auto whitespace-pre-wrap">
-                                                    {activeCodeBlock.baseCode.split('___').map((part, index) => (
-                                                        <React.Fragment key={index}>
-                                                            {part}
-                                                            {index < activeCodeBlock.challenge.gaps.length && (
-                                                                <select
-                                                                    value={selectedOptions[activeCodeBlock.challenge.gaps[index].id] || ''}
-                                                                    onChange={(e) => handleOptionSelect(
-                                                                        activeCodeBlock.challenge.gaps[index].id,
-                                                                        e.target.value
-                                                                    )}
-                                                                    className="bg-purple-900 text-white px-2 py-1 rounded mx-1 border border-purple-500/30"
-                                                                >
-                                                                    <option value="">Select...</option>
-                                                                    {activeCodeBlock.challenge.gaps[index].options.map((opt) => (
-                                                                        <option key={opt} value={opt}>
-                                                                            {opt}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
-                                                            )}
-                                                        </React.Fragment>
-                                                    ))}
-                                                </pre>
-                                            </div>
-
-                                            {/* Output Console */}
-                                            <div className="space-y-2">
-                                                <div className="flex justify-between items-center">
-                                                    <h3 className="text-white font-semibold">Output:</h3>
-                                                    <div className="flex gap-2">
-                                                        <button
-                                                            onClick={executeCode}
-                                                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
-                                                        >
-                                                            <Play className="w-4 h-4" />
-                                                            Run
-                                                        </button>
-                                                        <button
-                                                            onClick={() => {
-                                                                setSelectedOptions({});
-                                                                setExecutionOutput('');
-                                                                setCodeSuccess(false);
-                                                            }}
-                                                            className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
-                                                        >
-                                                            <RefreshCw className="w-4 h-4" />
-                                                            Reset
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div className={`p-4 rounded-lg ${executionOutput
-                                                        ? (codeSuccess ? 'bg-green-900/30' : 'bg-red-900/30')
-                                                        : 'bg-gray-800'
-                                                    }`}>
-                                                    <pre className="text-white font-mono">
-                                                        {executionOutput || 'Output will appear here...'}
-                                                    </pre>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                <motion.h2
+                                                    className="text-4xl text-white mb-6 font-bold"
+                                                    animate={{
+                                                        textShadow: [
+                                                            "0 0 20px rgba(168,85,247,0.5)",
+                                                            "0 0 40px rgba(168,85,247,0.2)",
+                                                            "0 0 20px rgba(168,85,247,0.5)"
+                                                        ]
+                                                    }}
+                                                    transition={{
+                                                        duration: 2,
+                                                        repeat: Infinity
+                                                    }}
+                                                >
+                                                    Interactive ABAP Explorer
+                                                </motion.h2>
+                                                <p className="text-gray-300 mb-6">
+                                                    Discover ABAP concepts and complete coding challenges
+                                                </p>
+                                                <motion.button
+                                                    whileHover={{ scale: 1.05 }}
+                                                    whileTap={{ scale: 0.95 }}
+                                                    onClick={startGame}
+                                                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-xl text-xl font-bold shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
+                                                >
+                                                    Start Exploring
+                                                </motion.button>
+                                            </motion.div>
+                                        </motion.div>
                                     )}
-                                </motion.div>
-                            ) : (
-                                <div className="h-full flex items-center justify-center text-gray-400">
-                                    <p>Move to a concept node to start a challenge</p>
+                                </AnimatePresence>
+                            </div>
+                            :
+                            <>
+                                {/* Code panel */}
+                                <div className='w-full'>
+
+                                <div className="w-full h-[400px] bg-gray-900 rounded-2xl border border-purple-500/30 overflow-hidden flex flex-col">
+                                    <div className="flex-1 p-4 overflow-y-auto">
+                                        {activeCodeBlock ? (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className="space-y-4"
+                                            >
+                                                <h2 className="text-xl font-bold text-white">
+                                                    {activeCodeBlock.concept}
+                                                </h2>
+                                                <p className="text-gray-300">
+                                                    {activeCodeBlock.explanation}
+                                                </p>
+
+                                                {showChallenge && activeCodeBlock.challenge && (
+                                                    <div className="space-y-4">
+                                                        <div className="bg-purple-900/30 p-4 rounded-lg border border-purple-500/30">
+                                                            <h3 className="text-white font-semibold mb-2">Challenge:</h3>
+                                                            <p className="text-gray-300">{activeCodeBlock.challenge.description}</p>
+                                                        </div>
+
+                                                        <div className="bg-gray-800 p-4 rounded-lg">
+                                                            <pre className="text-green-400 overflow-x-auto whitespace-pre-wrap">
+                                                                {activeCodeBlock.baseCode.split('___').map((part, index) => (
+                                                                    <React.Fragment key={index}>
+                                                                        {part}
+                                                                        {index < activeCodeBlock.challenge.gaps.length && (
+                                                                            <select
+                                                                                value={selectedOptions[activeCodeBlock.challenge.gaps[index].id] || ''}
+                                                                                onChange={(e) => handleOptionSelect(
+                                                                                    activeCodeBlock.challenge.gaps[index].id,
+                                                                                    e.target.value
+                                                                                )}
+                                                                                className="bg-purple-900 text-white px-2 py-1 rounded mx-1 border border-purple-500/30"
+                                                                            >
+                                                                                <option value="">Select...</option>
+                                                                                {activeCodeBlock.challenge.gaps[index].options.map((opt) => (
+                                                                                    <option key={opt} value={opt}>
+                                                                                        {opt}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </select>
+                                                                        )}
+                                                                    </React.Fragment>
+                                                                ))}
+                                                            </pre>
+                                                        </div>
+
+                                                        {/* Output Console */}
+                                                        <div className="space-y-2">
+                                                            <div className="flex justify-between items-center">
+                                                                <h3 className="text-white font-semibold">Output:</h3>
+                                                                <div className="flex gap-2">
+                                                                    <button
+                                                                        onClick={executeCode}
+                                                                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                                                                    >
+                                                                        <Play className="w-4 h-4" />
+                                                                        Run
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            setSelectedOptions({});
+                                                                            setExecutionOutput('');
+                                                                            setCodeSuccess(false);
+                                                                        }}
+                                                                        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                                                                    >
+                                                                        <RefreshCw className="w-4 h-4" />
+                                                                        Reset
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div className={`p-4 rounded-lg ${executionOutput
+                                                                ? (codeSuccess ? 'bg-green-900/30' : 'bg-red-900/30')
+                                                                : 'bg-gray-800'
+                                                                }`}>
+                                                                <pre className="text-white font-mono">
+                                                                    {executionOutput || 'Output will appear here...'}
+                                                                </pre>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </motion.div>
+                                        ) : (
+                                            <div className="h-full flex items-center justify-center text-gray-400">
+                                                <p>Move to a concept node to start a challenge</p>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            )}
-                        </div>
-                    </div>
+                                {
+                                    resumePlayingVisible
+                                    &&
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => {
+                                            setGameOnChallengeOff(true)
+                                            setResumePlayingVisible(false)
+                                            document.getElementById("explorer-container").focus();
+                                        }}
+                                        className="mt-5 p-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl text-md  shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
+                                    >
+                                        Resume playing
+                                    </motion.button>
+                                }
+                                </div>
+                                
+                            </>
+                    }
                 </div>
             </div>
         </div>
