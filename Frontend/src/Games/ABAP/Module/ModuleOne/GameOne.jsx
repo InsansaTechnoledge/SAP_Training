@@ -42,14 +42,6 @@ const ABAPRunner = () => {
         }
     ];
 
-    const questionTree = [
-        { id: 1, level: 'Basic', title: 'ABAP Syntax Basics', status: 'completed', score: 95 },
-        { id: 2, level: 'Basic', title: 'Data Types Overview', status: 'current', score: 0 },
-        { id: 3, level: 'Intermediate', title: 'Control Structures', status: 'locked', score: 0 },
-        { id: 4, level: 'Intermediate', title: 'Modularization', status: 'locked', score: 0 },
-        { id: 5, level: 'Advanced', title: 'Object Oriented ABAP', status: 'locked', score: 0 }
-    ];
-
 
     // Function to create celebration particles
     const createCelebrationEffect = useCallback(() => {
@@ -279,334 +271,258 @@ const ABAPRunner = () => {
     }, [generateCollectibles, generateSpeedLines, generateNewQuestion]);
 
     return (
-        <div className="flex items-center justify-center bg-gray-900 p-4 rounded-2xl">
-            <div
-                id='key-context'
-                className="w-full h-[500px] bg-gray-800 relative overflow-hidden rounded-lg shadow-xl"
-                tabIndex={0}
-                onKeyDown={handleKeyDown}
-                onKeyUp={handleKeyUp}
-            >
-                {/* Fixed Background Effect */}
-                <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-blue-900 to-blue-800">
-                    {speedLines.map((line) => (
-                        <motion.div
-                            key={line.id}
-                            className="absolute bg-white/20 h-px"
-                            style={{
-                                left: `${line.x}%`,
-                                top: `${line.y}%`,
-                                width: `${line.length}px`,
-                            }}
-                            animate={{
-                                y: [0, 100],  // Fixed: Use percentage strings
-                                opacity: [0, 0.5, 0],
-                                x: [0, -100], // Fixed: Use percentage strings
-                                rotate: -45
-                            }}
-                            transition={{
-                                duration: line.speed,
-                                repeat: Infinity,
-                                ease: 'linear'
-                            }}
-                        />
-                    ))}
-                </div>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 via-purple-900 to-violet-900 p-4">
+            <div className="w-full max-w-4xl">
+                {/* Game Title */}
+                <motion.h1
+                    className="text-4xl font-bold text-center text-white mb-6 tracking-wider"
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ type: "spring", duration: 1 }}
+                >
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+                        ABAP Runner
+                    </span>
+                </motion.h1>
 
-
-                {/* Path Highlight Effect */}
-                {pathHighlight && (
-                    <motion.div
-                        className="absolute bottom-0 w-1/3 h-full"
-                        style={{
-                            left: `${position.x * 33.33}%`
-                        }}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.2 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <div className="h-full w-full bg-gradient-to-t from-blue-500/20 to-transparent" />
-                    </motion.div>
-                )}
-
-                {/* Particle Effects */}
-                <AnimatePresence>
-                    {particleEffects.map((particle) => (
-                        <motion.div
-                            key={particle.id}
-                            className="absolute w-3 h-3 rounded-full"
-                            style={{
-                                backgroundColor: particle.color,
-                                left: `${particle.x}%`,
-                                bottom: `${particle.y}%`
-                            }}
-                            initial={{ scale: 0, x: 0, y: 0 }}
-                            animate={{
-                                scale: [1, 0.8, 0],
-                                x: particle.targetX || 0,  // ✅ Ensure x is always a number
-                                y: particle.targetY || 0,  // ✅ Ensure y is always a number
-                                opacity: [1, 0.5, 0]
-                            }}
-                            exit={{ scale: 0, opacity: 0 }}
-                            transition={{
-                                duration: 0.8,
-                                ease: "easeOut"
-                            }}
-                        />
-                    ))}
-                </AnimatePresence>
-
-
-
-                {/* Dynamic Background
-                <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-blue-900 to-blue-800">
-                    {[...Array(30)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            className="absolute bg-white w-1 h-1 rounded-full"
-                            animate={{
-                                y: ['-100%', '100%'],
-                                opacity: [0, 1, 0]
-                            }}
-                            transition={{
-                                duration: Math.random() * 3 + 2,
-                                repeat: Infinity,
-                                delay: Math.random() * 2
-                            }}
-                            style={{
-                                left: `${Math.random() * 100}%`,
-                                top: `-20px`
-                            }}
-                        />
-                    ))}
-                </div> */}
-
-                {/* Modified Question Banner with improved visibility */}
-                <AnimatePresence mode="wait">
-                    {currentQuestion && (
-                        <motion.div
-                            key={currentQuestion.text}
-                            initial={{ y: -100, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            exit={{ y: 100, opacity: 0 }}
-                            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                            className="absolute top-6 left-1/2 transform -translate-x-1/2 w-11/12 z-50"
-                        >
-                            <div className="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-600 px-8 py-5 rounded-xl shadow-2xl border border-white/20 backdrop-blur-lg">
-                                <h2 className="text-2xl font-extrabold text-white text-center drop-shadow-lg tracking-wide">
-                                    {currentQuestion.text}
-                                </h2>
-                                <div className="h-1 w-full bg-white/40 mt-2 rounded-full animate-pulse" />
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
-
-                {/* Fixed Correct Answer Animation */}
-                <AnimatePresence>
-                    {correctAnswerEffect && (
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            exit={{ scale: 0 }}
-                            transition={{ duration: 0.5 }}
-                            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                        >
-                            <div className="bg-green-500 rounded-full p-8">
-                                <Check className="w-16 h-16 text-white" />
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
-                {/* Fixed Celebration Particles */}
-                <AnimatePresence>
-                    {particleEffects.map((particle) => (
-                        <motion.div
-                            key={particle.id}
-                            className="absolute w-3 h-3 rounded-full"
-                            style={{
-                                backgroundColor: particle.color,
-                                left: `${particle.x}%`,
-                                bottom: `${particle.y}%`
-                            }}
-                            initial={{ scale: 0, x: 0, y: 0 }}
-                            animate={{
-                                scale: [1, 0.8, 0],
-                                x: particle.targetX || 0,  // ✅ Ensure x is always a number
-                                y: particle.targetY || 0,  // ✅ Ensure y is always a number
-                                opacity: [1, 0.5, 0]
-                            }}
-                            exit={{ scale: 0, opacity: 0 }}
-                            transition={{
-                                duration: 0.8,
-                                ease: "easeOut"
-                            }}
-                        />
-                    ))}
-                </AnimatePresence>
-
-
-
-
-                {/* Modified Game Lanes with improved answer visibility */}
-                <div className="absolute bottom-0 w-full h-full flex">
-                    {roadColors.map((color, index) => (
-                        <div
-                            key={index}
-                            className={`w-1/3 relative bg-gradient-to-b from-black via-${color} to-gray-900 border-x-2 border-white/10 shadow-[inset_0_0_10px_rgba(255,255,255,0.1)] transition-all duration-500`}
-                        >
-                            {currentQuestion && currentQuestion.answers && (
-                                <motion.div
-                                    initial={{ y: -30, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    exit={{ y: 30, opacity: 0 }}
-                                    transition={{ type: "spring", stiffness: 150, damping: 20 }}
-                                    className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-11/12 z-40"
-                                >
-                                    <div className="bg-white/20 backdrop-blur-md p-4 rounded-lg text-xl font-bold shadow-xl text-white tracking-wide border border-white/10 text-center">
-                                        {currentQuestion.answers[index]}
-                                    </div>
-                                </motion.div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-
-                {/* Enhanced Collectibles */}
-                {collectibles.map((collectible, index) => (
-                    !collectible.collected && (
-                        <motion.div
-                            key={index}
-                            className="absolute"
-                            style={{
-                                left: `${(collectible.x * 33.33) + 16.67}%`,
-                                bottom: `${collectible.y}%`
-                            }}
-                            animate={{
-                                y: [0, -10, 0],
-                                rotate: [0, 360],
-                                scale: [1, 1.2, 1]
-                            }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity
-                            }}
-                        >
+                {/* Main Game Container */}
+                <div
+                    id='key-context'
+                    className="w-full h-[600px] relative overflow-hidden rounded-2xl shadow-[0_0_50px_rgba(168,85,247,0.3)] border border-purple-500/30"
+                    tabIndex={0}
+                    onKeyDown={handleKeyDown}
+                    onKeyUp={handleKeyUp}
+                >
+                    {/* Dynamic Background */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-indigo-900 to-purple-900">
+                        {speedLines.map((line) => (
                             <motion.div
+                                key={line.id}
+                                className="absolute bg-white/10"
+                                style={{
+                                    left: `${line.x}%`,
+                                    top: `${line.y}%`,
+                                    width: `${line.length}px`,
+                                    height: "1px",
+                                    filter: "blur(1px)"
+                                }}
                                 animate={{
-                                    boxShadow: [
-                                        "0 0 0px rgba(234, 179, 8, 0)",
-                                        "0 0 20px rgba(234, 179, 8, 0.5)",
-                                        "0 0 0px rgba(234, 179, 8, 0)"
-                                    ]
+                                    y: [0, 100],
+                                    opacity: [0, 0.3, 0],
+                                    x: [0, -100],
+                                    rotate: -45
+                                }}
+                                transition={{
+                                    duration: line.speed,
+                                    repeat: Infinity,
+                                    ease: 'linear'
+                                }}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Question Banner */}
+                    <AnimatePresence mode="wait">
+                        {currentQuestion && (
+                            <motion.div
+                                key={currentQuestion.text}
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ type: "tween", duration: 0.4 }}
+                                className="absolute top-8 left-1/2 transform -translate-x-1/2 w-11/12 z-50"
+                            >
+                                <div className="bg-black/30 backdrop-blur-sm px-6 py-4 rounded-xl border border-white/10">
+                                    <h2 className="text-xl font-medium text-white/90 text-center leading-relaxed">
+                                        {currentQuestion.text}
+                                    </h2>
+                                    <motion.div
+                                        className="h-[2px] w-full bg-white/10 mt-3 rounded-full overflow-hidden"
+                                        initial={{ scaleX: 0 }}
+                                        animate={{ scaleX: 1 }}
+                                        transition={{
+                                            duration: 15,
+                                            ease: "linear"
+                                        }}
+                                    >
+                                        <div className="h-full w-full bg-white/20" />
+                                    </motion.div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* Game Lanes */}
+                    <div className="absolute bottom-0 w-full h-full flex">
+                        {roadColors.map((color, index) => (
+                            <div
+                                key={index}
+                                className="w-1/3 relative transition-all duration-500"
+                            >
+                                <motion.div
+                                    className="absolute inset-0"
+                                    animate={{
+                                        background: [
+                                            `linear-gradient(to bottom, rgba(0,0,0,0), ${color === 'blue-500' ? '#3B82F6' : color === 'green-500' ? '#22C55E' : '#EF4444'}33)`,
+                                            `linear-gradient(to bottom, rgba(0,0,0,0), ${color === 'blue-500' ? '#3B82F6' : color === 'green-500' ? '#22C55E' : '#EF4444'}66)`
+                                        ]
+                                    }}
+                                    transition={{
+                                        duration: 2,
+                                        repeat: Infinity,
+                                        repeatType: "reverse"
+                                    }}
+                                />
+
+                                {currentQuestion && currentQuestion.answers && (
+                                    <motion.div
+                                        initial={{ y: -30, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        exit={{ y: 30, opacity: 0 }}
+                                        className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-11/12 z-40"
+                                    >
+                                        <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl text-xl font-bold shadow-2xl text-white tracking-wide border border-white/20 text-center transform hover:scale-105 transition-transform">
+                                            {currentQuestion.answers[index]}
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Player Character */}
+                    <motion.div
+                        className="absolute z-50"
+                        style={{
+                            left: `${(position.x * 33.33) + 16.67}%`,
+                            bottom: `${position.y}%`
+                        }}
+                        animate={{
+                            rotate: isJumping ? [0, 360] : 0,
+                            scale: isRunning ? [1, 1.1, 1] : 1
+                        }}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    >
+                        <div className="w-12 h-16 relative">
+                            <motion.div
+                                className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl shadow-lg"
+                                animate={{
+                                    scale: isRunning ? [1, 1.1, 1] : 1,
+                                    boxShadow: isRunning ?
+                                        "0 0 30px rgba(147, 51, 234, 0.5)" :
+                                        "0 0 0px rgba(147, 51, 234, 0)"
+                                }}
+                                transition={{
+                                    duration: 0.5,
+                                    repeat: isRunning ? Infinity : 0
+                                }}
+                            >
+                                <Code className="w-full h-full p-2 text-white" />
+                            </motion.div>
+
+                            {/* Player Glow Effect */}
+                            <motion.div
+                                className="absolute -inset-2 bg-purple-500 rounded-full opacity-20 blur-md"
+                                animate={{
+                                    scale: [1, 1.2, 1],
+                                    opacity: [0.2, 0.3, 0.2]
                                 }}
                                 transition={{
                                     duration: 2,
                                     repeat: Infinity
                                 }}
-                            >
-                                <Star className="w-4 h-4 text-yellow-400" />
-                            </motion.div>
-                        </motion.div>
-                    )
-                ))}
+                            />
+                        </div>
+                    </motion.div>
 
-                {/* Enhanced Player Character */}
-                <motion.div
-                    className="absolute"
-                    style={{
-                        left: `${(position.x * 33.33) + 16.67}%`,
-                        bottom: `${position.y}%`
-                    }}
-                    animate={{
-                        rotate: isJumping ? [0, 360] : 0,
-                        scale: isRunning ? [1, 1.1, 1] : 1
-                    }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                >
-                    <div className="w-8 h-12 relative">
-                        <motion.div
-                            className="absolute inset-0 bg-blue-400 rounded-lg shadow-lg"
-                            animate={{
-                                scale: isRunning ? [1, 1.1, 1] : 1,
-                                boxShadow: isRunning ?
-                                    "0 0 20px rgba(59, 130, 246, 0.5)" :
-                                    "0 0 0px rgba(59, 130, 246, 0)"
-                            }}
-                            transition={{
-                                duration: 0.5,
-                                repeat: isRunning ? Infinity : 0
-                            }}
-                        >
-                            <Code className="w-full h-full p-1 text-blue-600" />
-                        </motion.div>
+                    {/* Score HUD */}
+                    <motion.div
+                        initial={{ x: -100, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        className="absolute top-4 left-4 bg-black/40 backdrop-blur-md p-3 rounded-xl border border-purple-500/30"
+                    >
+                        <div className="flex items-center space-x-3">
+                            <Trophy className="text-yellow-400 w-6 h-6" />
+                            <span className="text-white text-lg font-bold">{score}</span>
+                        </div>
+                    </motion.div>
 
-                        {/* Running Trail Effect */}
-                        {isRunning && (
+                    {/* Start/Game Over Screen */}
+                    <AnimatePresence>
+                        {(!gameStarted || gameOver) && (
                             <motion.div
-                                className="absolute -bottom-4 left-1/2 transform -translate-x-1/2"
-                                animate={{
-                                    scale: [1, 1.5, 1],
-                                    opacity: [0.5, 0, 0]
-                                }}
-                                transition={{ duration: 0.5, repeat: Infinity }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center"
                             >
-                                <div className="w-8 h-8 bg-blue-300 rounded-full blur-sm" />
+                                <motion.div
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    className="text-center p-8 bg-gradient-to-r from-purple-900/50 to-violet-900/50 rounded-2xl border border-purple-500/30 backdrop-blur-md"
+                                >
+                                    <motion.h2
+                                        className="text-4xl text-white mb-6 font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400"
+                                        animate={{
+                                            textShadow: [
+                                                "0 0 20px rgba(168,85,247,0.5)",
+                                                "0 0 40px rgba(168,85,247,0.2)",
+                                                "0 0 20px rgba(168,85,247,0.5)"
+                                            ]
+                                        }}
+                                        transition={{
+                                            duration: 2,
+                                            repeat: Infinity
+                                        }}
+                                    >
+                                        {gameOver ? 'Game Over!' : 'ABAP Runner'}
+                                    </motion.h2>
+
+                                    {gameOver && (
+                                        <motion.p
+                                            initial={{ y: 20, opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            className="text-2xl text-white mb-6"
+                                        >
+                                            Final Score: {score}
+                                        </motion.p>
+                                    )}
+
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={startGame}
+                                        className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-xl text-xl font-bold shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
+                                    >
+                                        {gameOver ? 'Play Again' : 'Start Game'}
+                                    </motion.button>
+
+                                    {/* Controls Guide */}
+                                    <motion.div
+                                        initial={{ y: 20, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        transition={{ delay: 0.2 }}
+                                        className="mt-8 bg-black/30 p-4 rounded-xl text-white space-y-2 backdrop-blur-sm border border-white/10"
+                                    >
+                                        <p className="flex items-center justify-center space-x-2">
+                                            <span className="px-2 py-1 bg-white/10 rounded">←</span>
+                                            <span className="px-2 py-1 bg-white/10 rounded">→</span>
+                                            <span className="ml-2">Move left/right</span>
+                                        </p>
+                                        <p className="flex items-center justify-center space-x-2">
+                                            <span className="px-2 py-1 bg-white/10 rounded">↑</span>
+                                            <span className="ml-2">Move forward</span>
+                                        </p>
+                                        <p className="flex items-center justify-center space-x-2">
+                                            <span className="px-2 py-1 bg-white/10 rounded">↓</span>
+                                            <span className="ml-2">Move backward</span>
+                                        </p>
+                                    </motion.div>
+                                </motion.div>
                             </motion.div>
                         )}
-                    </div>
-                </motion.div>
-
-                {/* HUD */}
-                <div className="absolute top-2 left-2 bg-black/50 p-2 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                        <Trophy className="text-yellow-400 w-4 h-4" />
-                        <span className="text-white text-sm font-bold">Score: {score}</span>
-                    </div>
+                    </AnimatePresence>
                 </div>
-
-               
-                {/* Start/Game Over Screen */}
-                <AnimatePresence>
-                    {(!gameStarted || gameOver) && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="absolute inset-0 bg-black/80 flex items-center justify-center"
-                        >
-                            <motion.div
-                                initial={{ scale: 0.8, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                className="text-center"
-                            >
-                                <h2 className="text-3xl text-white mb-4 font-bold">
-                                    {gameOver ? 'Game Over!' : 'ABAP Runner'}
-                                </h2>
-                                {gameOver && (
-                                    <p className="text-xl text-white mb-4">Final Score: {score}</p>
-                                )}
-                                <motion.button
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.9 }}
-                                    onClick={startGame}
-                                    className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition-colors"
-                                >
-                                    {gameOver ? 'Play Again' : 'Start Game'}
-                                </motion.button>
-                                {/* Controls Guide */}
-                                <div className="  mt-10 bg-black/50 p-2 rounded-lg text-white text-xs">
-                                    <p>← → Move left/right</p>
-                                    <p>↑ Move forward</p>
-                                    <p>↓ Move backward</p>
-                                </div>
-
-                            </motion.div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
             </div>
         </div>
     );
