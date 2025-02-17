@@ -7,6 +7,7 @@ import {
     GraduationCap, Layout
 } from 'lucide-react';
 import { useWishlist } from '../Context/WishlistContext';
+import Courses from '../Components/Courses';
 
 
 const PlacementTrainingShop = () => {
@@ -54,99 +55,99 @@ const PlacementTrainingShop = () => {
         }
     ];
 
-    const courses = [
-        {
-            id: 1,
-            title: "Placement Readiness Program",
-            category: "placement",
-            originalPrice: 1999,
-            price: 999,
-            duration: "16 weeks",
-            rating: 4.9,
-            reviews: 1850,
-            students: 7250,
-            image: "/api/placeholder/400/225",
-            description: "Complete placement preparation with job guarantee",
-            level: "All Levels",
-            instructor: {
-                name: "Career Expert Team",
-                title: "Industry Professionals",
-                image: "/api/placeholder/64/64"
-            },
-            tags: ["Job Guarantee", "Live Classes"],
-            features: [
-                "Technical Interview Prep",
-                "Aptitude Training",
-                "Soft Skills Development",
-                "Resume Building",
-                "Mock Interviews"
-            ]
-        },
-        {
-            id: 2,
-            title: "SAP FICO Certification",
-            category: "sap-major",
-            originalPrice: 1499,
-            price: 899,
-            duration: "12 weeks",
-            rating: 4.8,
-            reviews: 920,
-            students: 4800,
-            image: "/api/placeholder/400/225",
-            description: "Complete SAP FICO module training",
-            level: "Professional",
-            instructor: {
-                name: "Robert Wilson",
-                title: "SAP Certified Consultant",
-                image: "/api/placeholder/64/64"
-            },
-            tags: ["Certification", "Industry Ready"],
-            features: [
-                "Financial Accounting",
-                "Controlling",
-                "Real-time Projects",
-                "Certification Prep"
-            ]
-        },
-        {
-            id: 3,
-            title: "SAP ABAP Programming",
-            category: "sap-minor",
-            originalPrice: 799,
-            price: 499,
-            duration: "8 weeks",
-            rating: 4.7,
-            reviews: 650,
-            students: 3200,
-            image: "/api/placeholder/400/225",
-            description: "Learn SAP ABAP programming from scratch",
-            level: "Intermediate",
-            instructor: {
-                name: "David Chen",
-                title: "Senior SAP Developer",
-                image: "/api/placeholder/64/64"
-            },
-            tags: ["Hands-on", "Project Based"],
-            features: [
-                "ABAP Basics",
-                "Advanced Programming",
-                "Integration Skills",
-                "Real Projects"
-            ]
-        }
-    ];
+    // const courses = [
+    //     {
+    //         id: 1,
+    //         title: "Placement Readiness Program",
+    //         category: "placement",
+    //         originalPrice: 1999,
+    //         price: 999,
+    //         duration: "16 weeks",
+    //         rating: 4.9,
+    //         reviews: 1850,
+    //         students: 7250,
+    //         image: "/api/placeholder/400/225",
+    //         description: "Complete placement preparation with job guarantee",
+    //         level: "All Levels",
+    //         instructor: {
+    //             name: "Career Expert Team",
+    //             title: "Industry Professionals",
+    //             image: "/api/placeholder/64/64"
+    //         },
+    //         tags: ["Job Guarantee", "Live Classes"],
+    //         features: [
+    //             "Technical Interview Prep",
+    //             "Aptitude Training",
+    //             "Soft Skills Development",
+    //             "Resume Building",
+    //             "Mock Interviews"
+    //         ]
+    //     },
+    //     {
+    //         id: 2,
+    //         title: "SAP FICO Certification",
+    //         category: "sap-major",
+    //         originalPrice: 1499,
+    //         price: 899,
+    //         duration: "12 weeks",
+    //         rating: 4.8,
+    //         reviews: 920,
+    //         students: 4800,
+    //         image: "/api/placeholder/400/225",
+    //         description: "Complete SAP FICO module training",
+    //         level: "Professional",
+    //         instructor: {
+    //             name: "Robert Wilson",
+    //             title: "SAP Certified Consultant",
+    //             image: "/api/placeholder/64/64"
+    //         },
+    //         tags: ["Certification", "Industry Ready"],
+    //         features: [
+    //             "Financial Accounting",
+    //             "Controlling",
+    //             "Real-time Projects",
+    //             "Certification Prep"
+    //         ]
+    //     },
+    //     {
+    //         id: 3,
+    //         title: "SAP ABAP Programming",
+    //         category: "sap-minor",
+    //         originalPrice: 799,
+    //         price: 499,
+    //         duration: "8 weeks",
+    //         rating: 4.7,
+    //         reviews: 650,
+    //         students: 3200,
+    //         image: "/api/placeholder/400/225",
+    //         description: "Learn SAP ABAP programming from scratch",
+    //         level: "Intermediate",
+    //         instructor: {
+    //             name: "David Chen",
+    //             title: "Senior SAP Developer",
+    //             image: "/api/placeholder/64/64"
+    //         },
+    //         tags: ["Hands-on", "Project Based"],
+    //         features: [
+    //             "ABAP Basics",
+    //             "Advanced Programming",
+    //             "Integration Skills",
+    //             "Real Projects"
+    //         ]
+    //     }
+    // ];
 
 
     // Memoized filtered courses
-    const filteredCourses = useMemo(() => {
-        return courses.filter(course => {
-            const matchesCategory = activeCategory === 'all' || course.category === activeCategory;
-            const matchesSearch = searchQuery === '' ||
-                course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                course.description.toLowerCase().includes(searchQuery.toLowerCase());
-            return matchesCategory && matchesSearch;
-        });
-    }, [activeCategory, searchQuery]);
+    // const filteredCourses = useMemo(() => {
+    //     return courses.filter(course => {
+    //         const matchesCategory = activeCategory === 'all' || course.category === activeCategory;
+    //         const matchesSearch = searchQuery === '' ||
+    //             course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //             course.description.toLowerCase().includes(searchQuery.toLowerCase());
+    //         return matchesCategory && matchesSearch;
+    //     });
+    // }, [activeCategory, searchQuery]);
 
     const handleWishlist = (course) => {
         
@@ -371,7 +372,7 @@ const PlacementTrainingShop = () => {
                 </section>
 
                 {/* Courses Section */}
-                <section aria-label="Available courses">
+                {/* <section aria-label="Available courses">
                     <div className="mb-8 flex items-center justify-between">
                         <h2 className="text-2xl font-bold text-secondary">
                             {activeCategory === 'all' ? 'Featured Courses' :
@@ -389,10 +390,10 @@ const PlacementTrainingShop = () => {
                                 <ChevronRight className="w-4 h-4" />
                             </button>
                         )}
-                    </div>
+                    </div> */}
 
                     {/* Courses Grid */}
-                    <div
+                    {/* <div
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                         role="list"
                         aria-label="Course list"
@@ -408,8 +409,10 @@ const PlacementTrainingShop = () => {
                         <p className="text-center text-secondary/70 py-8">
                             No courses found. Try adjusting your search or filters.
                         </p>
-                    )}
-                </section>
+                    )} */}
+                {/* </section> */}
+
+                <Courses category={activeCategory}/>
             </div>
         </div>
     );

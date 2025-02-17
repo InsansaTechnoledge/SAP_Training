@@ -103,8 +103,8 @@ const Cart = () => {
                                                 <X className="w-4 h-4" />
                                             </motion.button>
                                         </div>
-                                        <div className="mt-4 flex justify-between items-center">
-                                            <div className="flex items-center space-x-3">
+                                        <div className="mt-4 flex justify-end">
+                                            {/* <div className="flex items-center space-x-3">
                                                 <motion.button
                                                     whileHover={{ scale: 1.1 }}
                                                     whileTap={{ scale: 0.9 }}
@@ -122,7 +122,7 @@ const Cart = () => {
                                                 >
                                                     <Plus className="w-4 h-4" />
                                                 </motion.button>
-                                            </div>
+                                            </div> */}
                                             <p className="font-bold text-blue-600 dark:text-blue-400">
                                                 ${(item.price * item.quantity).toFixed(2)}
                                             </p>
