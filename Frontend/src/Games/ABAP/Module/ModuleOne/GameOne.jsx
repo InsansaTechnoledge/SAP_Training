@@ -2,11 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code, Star, Trophy, Sparkles, Check } from 'lucide-react';
 
-const ABAPRunner = () => {
+const ABAPRunner = ({score,setScore}) => {
     const [position, setPosition] = useState({ x: 1, y: 0 });
     const [isJumping, setIsJumping] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
-    const [score, setScore] = useState(0);
     const [gameStarted, setGameStarted] = useState(false);
     const [gameOver, setGameOver] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -86,7 +85,7 @@ const ABAPRunner = () => {
         setShowNextQuestion(false);
         const questionIndex = Math.floor(Math.random() * questions.length);
         const newQuestion = { ...questions[questionIndex] };
-
+        {console.log(newQuestion);}
         // Immediate question setting instead of delayed
         setCurrentQuestion(newQuestion);
         setQuestionBanner(true);
@@ -233,6 +232,7 @@ const ABAPRunner = () => {
                 ));
                 setTimeout(() => {
                     setGameOver(true);
+                    setCurrentQuestion(null);
                     setPosition({ x: 1, y: 0 });
                 }, 1000);
             }
@@ -271,7 +271,7 @@ const ABAPRunner = () => {
     }, [generateCollectibles, generateSpeedLines, generateNewQuestion]);
 
     return (
-        <div className="min-h-screen  items-center justify-center bg-gradient-to-b from-gray-900 via-purple-900 to-violet-900 p-4">
+        <div className="flex items-center justify-center bg-gradient-to-b from-gray-900 via-purple-900 to-violet-900 p-4">
             <div className="w-full max-w-4xl">
                 {/* Game Title */}
                 <motion.h1
@@ -281,14 +281,14 @@ const ABAPRunner = () => {
                     transition={{ type: "spring", duration: 1 }}
                 >
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
-                        ABAP Runner
+                        {currentQuestion ? currentQuestion.text : "ABAP Runner"}
                     </span>
                 </motion.h1>
 
                 {/* Main Game Container */}
                 <div
                     id='key-context'
-                    className="w-full h-[600px] relative overflow-hidden rounded-2xl shadow-[0_0_50px_rgba(168,85,247,0.3)] border border-purple-500/30"
+                    className="w-full h-[450px] relative overflow-hidden rounded-2xl shadow-[0_0_50px_rgba(168,85,247,0.3)] border border-purple-500/30"
                     tabIndex={0}
                     onKeyDown={handleKeyDown}
                     onKeyUp={handleKeyUp}
@@ -322,7 +322,7 @@ const ABAPRunner = () => {
                     </div>
 
                     {/* Question Banner */}
-                    <AnimatePresence mode="wait">
+                    {/* <AnimatePresence mode="wait">
                         {currentQuestion && (
                             <motion.div
                                 key={currentQuestion.text}
@@ -330,7 +330,7 @@ const ABAPRunner = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ type: "tween", duration: 0.4 }}
-                                className="absolute top-8 left-1/2 transform -translate-x-1/2 w-11/12 z-50"
+                                className="absolute top-2 right-2 transform w-[36rem] z-50"
                             >
                                 <div className="bg-black/30 backdrop-blur-sm px-6 py-4 rounded-xl border border-white/10">
                                     <h2 className="text-xl font-medium text-white/90 text-center leading-relaxed">
@@ -350,17 +350,17 @@ const ABAPRunner = () => {
                                 </div>
                             </motion.div>
                         )}
-                    </AnimatePresence>
+                    </AnimatePresence> */}
 
                     {/* Game Lanes */}
                     <div className="absolute bottom-0 w-full h-full flex">
                         {roadColors.map((color, index) => (
                             <div
                                 key={index}
-                                className="w-1/3 relative transition-all duration-500"
+                                className=" relative transition-all duration-500 w-full px-2"
                             >
                                 <motion.div
-                                    className="absolute inset-0"
+                                    className="absolute inset-0 w-full"
                                     animate={{
                                         background: [
                                             `linear-gradient(to bottom, rgba(0,0,0,0), ${color === 'blue-500' ? '#3B82F6' : color === 'green-500' ? '#22C55E' : '#EF4444'}33)`,
@@ -379,9 +379,9 @@ const ABAPRunner = () => {
                                         initial={{ y: -30, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         exit={{ y: 30, opacity: 0 }}
-                                        className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-11/12 z-40"
+                                        className="relative top-2 transform -translate-x-0.5 z-40"
                                     >
-                                        <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl text-xl font-bold shadow-2xl text-white tracking-wide border border-white/20 text-center transform hover:scale-105 transition-transform">
+                                        <div className="bg-white/10 w-full backdrop-blur-md py-4 px-4 rounded-xl text-md font-bold shadow-2xl text-white tracking-wide border border-white/20 text-center transform hover:scale-105 transition-transform">
                                             {currentQuestion.answers[index]}
                                         </div>
                                     </motion.div>
@@ -403,7 +403,7 @@ const ABAPRunner = () => {
                         }}
                         transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     >
-                        <div className="w-12 h-16 relative">
+                        <div className="w-8 h-12 relative">
                             <motion.div
                                 className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl shadow-lg"
                                 animate={{
@@ -435,17 +435,7 @@ const ABAPRunner = () => {
                         </div>
                     </motion.div>
 
-                    {/* Score HUD */}
-                    <motion.div
-                        initial={{ x: -100, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        className="absolute top-4 left-4 bg-black/40 backdrop-blur-md p-3 rounded-xl border border-purple-500/30"
-                    >
-                        <div className="flex items-center space-x-3">
-                            <Trophy className="text-yellow-400 w-6 h-6" />
-                            <span className="text-white text-lg font-bold">{score}</span>
-                        </div>
-                    </motion.div>
+                    
 
                     {/* Start/Game Over Screen */}
                     <AnimatePresence>
@@ -462,7 +452,7 @@ const ABAPRunner = () => {
                                     className="text-center p-8 bg-gradient-to-r from-purple-900/50 to-violet-900/50 rounded-2xl border border-purple-500/30 backdrop-blur-md"
                                 >
                                     <motion.h2
-                                        className="text-4xl text-white mb-6 font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400"
+                                        className="text-4xl text-white mb-6 font-bold bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400"
                                         animate={{
                                             textShadow: [
                                                 "0 0 20px rgba(168,85,247,0.5)",

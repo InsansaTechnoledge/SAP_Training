@@ -5,6 +5,7 @@ import ABAPExplorer from '../Games/ABAP/Module/ModuleOne/GameTwo';
 
 const GameDashboard = () => {
     const [isPaused, setIsPaused] = useState(false);
+    const [score,setScore] = useState(0);
 
     const questionTree = [
         { id: 1, level: 'Basic', title: 'ABAP Syntax Basics', status: 'completed', score: 95 },
@@ -42,7 +43,7 @@ const GameDashboard = () => {
                             </div>
                             <div className="flex items-center gap-2">
                                 <Star className="w-5 h-5 text-yellow-500" />
-                                <span className="font-medium">2,450 pts</span>
+                                <span className="font-medium">{score}</span>
                             </div>
                             <button className="p-2 hover:bg-gray-100 rounded-lg">
                                 <Settings className="w-6 h-6 text-gray-600" />
