@@ -279,10 +279,10 @@ const ABAPRunner = () => {
     }, [generateCollectibles, generateSpeedLines, generateNewQuestion]);
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-900 p-4">
+        <div className="flex items-center justify-center bg-gray-900 p-4 rounded-2xl">
             <div
                 id='key-context'
-                className="w-full max-w-2xl h-[600px] bg-gray-800 relative overflow-hidden rounded-lg shadow-xl"
+                className="w-full h-[500px] bg-gray-800 relative overflow-hidden rounded-lg shadow-xl"
                 tabIndex={0}
                 onKeyDown={handleKeyDown}
                 onKeyUp={handleKeyUp}

@@ -49,10 +49,24 @@ const GameDashboard = () => {
                         </div>
                     </div>
 
-                    {/* Game Content Area */}
-                    <div className="relative w-full h-[600px]">
-                        <ABAPRunner />
+
+                    <div class="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[16px] rounded-t-xl">
+                        <div class="rounded-xl">
+
+                            <div className="relative w-full">
+                                <ABAPRunner />
+                            </div>
+                        </div>
                     </div>
+                    <div class="relative mx-auto bg-gray-900 dark:bg-gray-700 rounded-b-xl h-[24px]"></div>
+                    <div class="relative mx-auto bg-gray-800 rounded-b-xl h-[55px] max-w-[83px] md:h-[95px] md:max-w-[142px]"></div>
+
+
+                
+
+
+
+                    {/* Game Content Area */}
                 </div>
 
                 {/* Right side - Question Controls */}
@@ -80,8 +94,8 @@ const GameDashboard = () => {
                                 <div
                                     key={question.id}
                                     className={`p-4 rounded-lg border ${question.status === 'current' ? 'border-blue-500 bg-blue-50' :
-                                            question.status === 'completed' ? 'border-green-500 bg-green-50' :
-                                                'border-gray-200'
+                                        question.status === 'completed' ? 'border-green-500 bg-green-50' :
+                                            'border-gray-200'
                                         }`}
                                 >
                                     <div className="flex justify-between items-center">
