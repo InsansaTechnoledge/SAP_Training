@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { motion } from 'framer-motion';
+import { domAnimation, motion } from 'framer-motion';
 import {
     Cloud, Code, Database, Brain, ShoppingCart, Heart, Star,
     Users, Clock, ArrowRight, GraduationCap, Search, Filter,
@@ -16,8 +16,7 @@ import ABAPimage from '../assets/ABAP.jpg';
 
 
 
-const Courses = () => {
-    const [activeTab, setActiveTab] = useState('all');
+const Courses = ({category}) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [hoveredCourse, setHoveredCourse] = useState(null);
     const { addToCart } = useCart();
@@ -43,7 +42,8 @@ const Courses = () => {
             rating: 4.8,
             duration: '12 weeks',
             image: ABAPimage,
-            features: ['24/7 Support', 'Certificate', 'Projects']
+            features: ['24/7 Support', 'Certificate', 'Projects'],
+            domain: 'placement'
         },
         {
             title: 'Cloud Computing',
@@ -55,7 +55,8 @@ const Courses = () => {
             rating: 4.9,
             duration: '10 weeks',
             image: CCimage,
-            features: ['Live Projects', 'Cloud Credits', 'Certification']
+            features: ['Live Projects', 'Cloud Credits', 'Certification'],
+            domain: 'placement'
         },
         {
             title: 'AI Fundamentals',
@@ -67,7 +68,8 @@ const Courses = () => {
             rating: 4.7,
             duration: '14 weeks',
             image: AIimage,
-            features: ['GPU Access', 'Datasets', 'ML Models']
+            features: ['GPU Access', 'Datasets', 'ML Models'],
+            domain: 'placement'
         },
         {
             title: 'Full Stack Development',
@@ -79,7 +81,8 @@ const Courses = () => {
             rating: 4.9,
             duration: '16 weeks',
             image: FSDimage,
-            features: ['Code Reviews', 'Portfolio', 'Mentorship']
+            features: ['Code Reviews', 'Portfolio', 'Mentorship'],
+            domain: 'placement'
         }
     ];
 
@@ -94,7 +97,7 @@ const Courses = () => {
     const isInWishlist = (courseTitle) => wishlist.some(item => item.title === courseTitle);
 
     const filteredCourses = courses.filter(course =>
-        (activeTab === 'all' || course.category === activeTab) &&
+        (category === 'all' || course.domain === category) &&
         course.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -113,14 +116,21 @@ const Courses = () => {
         visible: { y: 0, opacity: 1 }
     };
 
-    return (
-        <div className="relative min-h-screen bg-theme-gradient">
+    if(filteredCourses.length===0){
+        return(
+            <div className='text-secondary text-lg text-center'>
+                New Courses coming soon!
+            </div>
+        )
+    }
 
+    return (
+        <div className="relative min-h-screen">
             <div className="max-w-7xl mx-auto px-4 py-16">
                 {/* Header Section */}
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-                        Explore Our Courses
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4 pb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                        Explore {category} Courses  
                     </h1>
                     <p className="text-primary text-lg max-w-2xl mx-auto">
                         Level up your skills with our industry-leading courses taught by expert instructors
@@ -128,8 +138,8 @@ const Courses = () => {
                 </div>
 
                 {/* Search and Filter Section */}
-                <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
-                    <div className="relative w-full md:w-96">
+                <div className="mb-12 flex flex-col md:flex-row gap-4 items-center justify-center">
+                    <div className="relative w-full md:w-xl">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                         <input
                             type="text"
@@ -140,7 +150,7 @@ const Courses = () => {
                         />
                     </div>
 
-                    <div className="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto">
+                    {/* <div className="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto">
                         {categories.map((category) => (
                             <button
                                 key={category.id}
@@ -153,7 +163,7 @@ const Courses = () => {
                                 {category.label}
                             </button>
                         ))}
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Course Grid */}
@@ -169,7 +179,7 @@ const Courses = () => {
                             variants={courseVariants}
                             onHoverStart={() => setHoveredCourse(course.title)}
                             onHoverEnd={() => setHoveredCourse(null)}
-                            className="bg-secondary rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                            className="bg-secondary rounded-2xl shadow-md shadow-gray-500 hover:shadow-lg transition-all duration-300 overflow-hidden"
                         >
                             <div className="relative">
                                 <img

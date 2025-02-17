@@ -87,7 +87,7 @@ const AuthBanner = () => {
             <input
                 type={actualType}
                 id={id}
-                className="block w-full pl-10 pr-10 py-3 bg-secondary rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out"
+                className="block w-full pl-10 pr-10 py-3 bg-secondary rounded-xl text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out"
                 placeholder={placeholder}
             />
             {isPassword && (

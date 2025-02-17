@@ -23,7 +23,7 @@ const DashboardBanner = () => {
     ];
 
     return (
-        <div className="bg-theme-gradient py-16">
+        <div className="bg-theme-gradient pb-16 pt-44 rounded-br-[30rem] ">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col lg:flex-row items-center gap-12">
                     {/* Left side - Content */}
