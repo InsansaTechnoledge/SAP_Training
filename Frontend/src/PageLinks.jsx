@@ -9,7 +9,7 @@ import Checkout from './Pages/Checkout';
 import Navigation from './Components/Navbar';
 import QuizPage from './Pages/QuizPage';
 import CourseShop from './Pages/ShopPage';
-
+import ABAPRunner from './Games/ABAP/Module/ModuleOne/GameOne';
 const PageLinks = () => {
     
 
@@ -26,6 +26,8 @@ const PageLinks = () => {
                     <Route path="/shop" element={<CourseShop />} />
                     <Route path="/payment" element={<Checkout />} />
                     <Route path="/dashboard" element={<UserDashboard />} />
+                    <Route path="/game" element={<ABAPRunner />} />
+
                 </Routes>
             </Router>
         </>

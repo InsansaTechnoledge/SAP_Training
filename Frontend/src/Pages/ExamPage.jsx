@@ -26,7 +26,8 @@ const ExamPage = () => {
                 { title: "Quiz on ABAP", duration: "2 min", completed: true, exercises: "1 quiz", type: "quiz" },
                 { title: "Data Types & Variables", duration: "1 min", completed: false, exercises: 3, type: "video" },
                 { title: "Control Structures", duration: "1 min", completed: false, exercises: 4, type: "video" },
-                { title: "Module Assessment", duration: "2 min", completed: true, exercises: "final", type: "quiz" }
+                { title: "Module Assessment", duration: "2 min", completed: true, exercises: "final", type: "quiz" },
+                { title: "Game", duration: "2 min", completed: true, exercises: "final", type: "game" }
             ],
             features: ["Interactive Console", "Guided Examples", "Basic Certificate"],
             color: "from-blue-500 to-blue-400",
