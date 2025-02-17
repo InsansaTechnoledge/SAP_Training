@@ -3,7 +3,7 @@ import { X, Mail, Lock, UserPlus, LogIn, ChevronRight, Eye, EyeOff } from 'lucid
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AuthBanner = () => {
-    const [isModalOpen, setIsModalOpen] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('login');
     const [showPassword, setShowPassword] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
