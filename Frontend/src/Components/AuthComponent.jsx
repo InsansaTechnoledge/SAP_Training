@@ -72,33 +72,39 @@ const AuthBanner = () => {
         );
     };
 
-    const InputField = ({ icon: Icon, type, id, placeholder, showPasswordToggle }) => (
-        <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={itemVariants}
-            className="relative group"
-        >
-            <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
-            <input
-                type={type}
-                id={id}
-                className="block w-full pl-10 pr-10 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out"
-                placeholder={placeholder}
-            />
-            {showPasswordToggle && (
-                <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </motion.button>
-            )}
-        </motion.div>
-    );
+    // Updated InputField component with local password visibility state
+    const InputField = ({ icon: Icon, type, id, placeholder, isPassword = false }) => {
+        const [showPassword, setShowPassword] = useState(false);
+        const actualType = isPassword ? (showPassword ? "text" : "password") : type;
+
+        return (
+            <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={itemVariants}
+                className="relative group"
+            >
+                <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                <input
+                    type={actualType}
+                    id={id}
+                    className="block w-full pl-10 pr-10 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out"
+                    placeholder={placeholder}
+                />
+                {isPassword && (
+                    <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    >
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </motion.button>
+                )}
+            </motion.div>
+        );
+    };
 
     const handleGoogleLogin = async () => {
         setIsGoogleLoading(true);
@@ -198,7 +204,7 @@ const AuthBanner = () => {
                     type={showPassword ? "text" : "password"}
                     id="password"
                     placeholder="••••••••"
-                    showPasswordToggle
+                    isPassword
                 />
             </motion.div>
 
@@ -212,7 +218,7 @@ const AuthBanner = () => {
                         type={showPassword ? "text" : "password"}
                         id="confirmPassword"
                         placeholder="••••••••"
-                        showPasswordToggle
+                        isPassword
                     />
                 </motion.div>
             )}
