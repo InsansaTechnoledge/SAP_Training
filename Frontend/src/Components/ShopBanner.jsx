@@ -17,6 +17,7 @@ import {
     Calendar,
     GraduationCap
 } from "lucide-react";
+import Tilt from 'react-parallax-tilt'
 import Shop from '../assets/Shop.png'
 
 const ShopBanner = () => {
@@ -61,37 +62,48 @@ const ShopBanner = () => {
              rounded-tl-full
              mt-6
             relative w-full bg-theme-gradient outline-none px-26 grid grid-cols-2 pb-24 pt-36"
-            // style={{ "background": "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)" }}
+        // style={{ "background": "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)" }}
         >
-            <div className="relative w-lg">
-                {/* Decorative elements */}
-                <div className="absolute -top-4 -right-4 w-full h-full bg-blue-100 rounded-xl transform rotate-3"></div>
-                <div className="absolute -bottom-4 -left-4 w-full h-full bg-indigo-100 rounded-xl transform -rotate-3"></div>
+            <Tilt
+                tiltMaxAngleX={15}
+                tiltMaxAngleY={15}
+                perspective={1000}
+                scale={1.05}
+                transitionSpeed={400}
+                glareEnable={true}
+                glareMaxOpacity={0.2}>
 
-                {/* Main image */}
-                <div className="relative bg-white rounded-xl shadow-xl p-4">
-                    <img
-                        src={Shop}
-                        alt="Dashboard Preview"
-                        className="rounded-lg w-full"
-                    />
 
-                    {/* Floating stats cards */}
-                    <div className="absolute -right-8 -top-8 bg-white p-4 rounded-lg shadow-lg">
-                        <div className="flex items-center gap-2">
-                            <BarChart className="h-5 w-5 text-blue-600" />
-                            <span className="font-semibold">Latest courses</span>
+                <div className="relative w-lg">
+                    {/* Decorative elements */}
+                    <div className="absolute -top-4 -right-4 w-full h-full bg-blue-100 rounded-xl transform rotate-3"></div>
+                    <div className="absolute -bottom-4 -left-4 w-full h-full bg-indigo-100 rounded-xl transform -rotate-3"></div>
+
+                    {/* Main image */}
+                    <div className="relative bg-white rounded-xl shadow-xl p-4">
+                        <img
+                            src={Shop}
+                            alt="Dashboard Preview"
+                            className="rounded-lg w-full"
+                        />
+
+                        {/* Floating stats cards */}
+                        <div className="absolute -right-8 -top-8 bg-white p-4 rounded-lg shadow-lg">
+                            <div className="flex items-center gap-2">
+                                <BarChart className="h-5 w-5 text-blue-600" />
+                                <span className="font-semibold">Latest courses</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="absolute -left-8 -bottom-8 bg-white p-4 rounded-lg shadow-lg">
-                        <div className="flex items-center gap-2">
-                            <Star className="h-5 w-5 text-yellow-500" />
-                            <span className="font-semibold">Top Rated</span>
+                        <div className="absolute -left-8 -bottom-8 bg-white p-4 rounded-lg shadow-lg">
+                            <div className="flex items-center gap-2">
+                                <Star className="h-5 w-5 text-yellow-500" />
+                                <span className="font-semibold">Top Rated</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </Tilt>
             <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col items-center justify-between gap-6">
                 {/* Content Section */}
                 <div className="flex-1 min-w-0">

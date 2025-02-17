@@ -31,7 +31,6 @@ import {
 } from 'lucide-react';
 
 import Video2 from '../assets/Video2.mp4';
-import H5PVideo from '../Components/H5PVideo';
 
 const VideoPage = () => {
     const [isPlaying, setIsPlaying] = useState(false);
