@@ -271,7 +271,7 @@ const ABAPRunner = () => {
     }, [generateCollectibles, generateSpeedLines, generateNewQuestion]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 via-purple-900 to-violet-900 p-4">
+        <div className="min-h-screen  items-center justify-center bg-gradient-to-b from-gray-900 via-purple-900 to-violet-900 p-4">
             <div className="w-full max-w-4xl">
                 {/* Game Title */}
                 <motion.h1

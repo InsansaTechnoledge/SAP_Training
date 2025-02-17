@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Play, Pause, Settings, ChevronRight, Award, Clock, Star } from 'lucide-react';
 import ABAPRunner from '../Games/ABAP/Module/ModuleOne/GameOne';
+import ABAPExplorer from '../Games/ABAP/Module/ModuleOne/GameTwo';
 
 const GameDashboard = () => {
     const [isPaused, setIsPaused] = useState(false);
@@ -54,7 +55,7 @@ const GameDashboard = () => {
                         <div class="rounded-xl">
 
                             <div className="relative w-full">
-                                <ABAPRunner />
+                                <ABAPExplorer />
                             </div>
                         </div>
                     </div>
