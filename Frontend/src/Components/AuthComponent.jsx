@@ -3,7 +3,7 @@ import { X, Mail, Lock, UserPlus, LogIn, ChevronRight, Eye, EyeOff } from 'lucid
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AuthBanner = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(true);
     const [activeTab, setActiveTab] = useState('login');
     const [showPassword, setShowPassword] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
@@ -46,7 +46,7 @@ const AuthBanner = () => {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="fixed inset-0 bg-black/60 backdrop-blur-md"
+                        className="fixed inset-0 backdrop-blur-md"
                         onClick={onClose}
                     />
                     <motion.div
@@ -54,7 +54,7 @@ const AuthBanner = () => {
                         animate={{ scale: 1, y: 0, opacity: 1 }}
                         exit={{ scale: 0.9, y: 20, opacity: 0 }}
                         transition={{ type: "spring", duration: 0.5 }}
-                        className="relative z-50 w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl"
+                        className="relative z-50 w-full max-w-md bg-white rounded-2xl shadow-2xl"
                     >
                         {children}
                         <motion.button
@@ -62,7 +62,7 @@ const AuthBanner = () => {
                             whileTap={{ scale: 0.9 }}
                             transition={{ type: "spring", stiffness: 400 }}
                             onClick={onClose}
-                            className="absolute top-4 right-4 p-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            className="absolute top-4 right-4 p-1.5 rounded-full bg-secondary text-secondary hover:text-gray-500"
                         >
                             <X className="w-5 h-5" />
                         </motion.button>
@@ -83,7 +83,7 @@ const AuthBanner = () => {
             <input
                 type={type}
                 id={id}
-                className="block w-full pl-10 pr-10 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out"
+                className="block w-full pl-10 pr-10 py-3 bg-secondary rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out"
                 placeholder={placeholder}
             />
             {showPasswordToggle && (
@@ -92,7 +92,7 @@ const AuthBanner = () => {
                     whileTap={{ scale: 0.9 }}
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-500 "
                 >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </motion.button>
@@ -141,7 +141,7 @@ const AuthBanner = () => {
             animate="visible"
             variants={containerVariants}
             onSubmit={(e) => e.preventDefault()}
-            className="space-y-5 p-6"
+            className="space-y-5 p-6 bg-primary"
         >
             {/* Google Login Button */}
             <motion.button
@@ -150,7 +150,7 @@ const AuthBanner = () => {
                 whileTap={{ scale: 0.98 }}
                 disabled={isGoogleLoading}
                 onClick={handleGoogleLogin}
-                className="w-full px-4 py-3 flex items-center justify-center space-x-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 shadow-sm hover:shadow-md relative overflow-hidden"
+                className="w-full px-4 py-3 flex items-center justify-center space-x-2 text-secondary bg-secondary rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 shadow-sm hover:shadow-md relative overflow-hidden"
             >
                 <motion.div
                     animate={isGoogleLoading ? { opacity: 0.5 } : { opacity: 1 }}
@@ -163,7 +163,7 @@ const AuthBanner = () => {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-gray-800/50"
+                        className="absolute inset-0 flex items-center justify-center bg-secondary"
                     >
                         <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
                     </motion.div>
@@ -173,24 +173,24 @@ const AuthBanner = () => {
             {/* Divider */}
             <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
+                    <div className="w-full border-t border-contrast"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">
+                    <span className="px-2 bg-primary text-secondary">
                         Or continue with email
                     </span>
                 </div>
             </div>
 
             <motion.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-gray-500 mb-1.5">
                     Email
                 </label>
                 <InputField icon={Mail} type="email" id="email" placeholder="your@email.com" />
             </motion.div>
 
             <motion.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-gray-500 mb-1.5">
                     Password
                 </label>
                 <InputField
@@ -204,7 +204,7 @@ const AuthBanner = () => {
 
             {type === 'signup' && (
                 <motion.div variants={itemVariants}>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                    <label className="block text-sm font-medium text-gray-500 mb-1.5">
                         Confirm Password
                     </label>
                     <InputField
@@ -321,14 +321,14 @@ const AuthBanner = () => {
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <div className="w-full">
                     {/* Tabs */}
-                    <div className="flex p-1.5 bg-gray-100 dark:bg-gray-800 rounded-t-2xl">
+                    <div className="flex p-1.5 bg-primary rounded-t-2xl">
                         {['login', 'signup'].map((tab) => (
                             <motion.button
                                 key={tab}
                                 className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center space-x-2
                                     ${activeTab === tab
-                                        ? 'bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 shadow-sm'
-                                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                                        ? 'bg-secondary text-secondary shadow-sm'
+                                        : 'text-gray-600 hover:text-gray-500'
                                     }`}
                                 onClick={() => setActiveTab(tab)}
                                 whileHover={{ scale: 1.02 }}
@@ -355,7 +355,7 @@ const AuthBanner = () => {
                     {/* Additional Links */}
                     <motion.div
                         variants={itemVariants}
-                        className="px-6 pb-6 text-center text-sm text-gray-600 dark:text-gray-400"
+                        className="px-6 pb-6 text-center text-sm text-secondary bg-primary rounded-b-2xl"
                     >
                         {activeTab === 'login' ? (
                             <p>
@@ -363,7 +363,7 @@ const AuthBanner = () => {
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     onClick={() => setActiveTab('signup')}
-                                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                                    className="text-blue-600 hover:text-blue-700 font-medium"
                                 >
                                     Sign up here
                                 </motion.button>
@@ -374,7 +374,7 @@ const AuthBanner = () => {
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     onClick={() => setActiveTab('login')}
-                                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                                    className="text-blue-600 hover:text-blue-700 font-medium"
                                 >
                                     Login here
                                 </motion.button>

@@ -20,6 +20,8 @@ const Navigation = () => {
     const { wishlist, setIsWishlistOpen, isWishlistOpen } = useWishlist();
     const location = useLocation();
 
+    const fixed_navbar_in = ['/video', '/quiz', '/dashboard', '/shop'];
+
     useEffect(() => {
         
         // Dark mode
@@ -37,7 +39,7 @@ const Navigation = () => {
             setScrolled(isScrolled);
         };
 
-        if(location.pathname!=='/video' && location.pathname!=='/quiz' && location.pathname!=='/dashboard'){
+        if(!fixed_navbar_in.includes(location.pathname)){
             setScrolled(false);
             window.addEventListener('scroll', handleScroll);
             return () => window.removeEventListener('scroll', handleScroll);

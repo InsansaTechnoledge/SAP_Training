@@ -6,15 +6,17 @@ import {
     Zap, Gift, Briefcase, Code, Database, ChartBar, BookType,
     GraduationCap, Layout
 } from 'lucide-react';
+import { useWishlist } from '../Context/WishlistContext';
 
 
 const PlacementTrainingShop = () => {
     const [cartItems, setCartItems] = useState([]);
-    const [wishlist, setWishlist] = useState([]);
     const [showCart, setShowCart] = useState(false);
     const [activeCategory, setActiveCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    const {wishlist, addToWishlist} = useWishlist();
 
     const [announcement, setAnnouncement] = useState('');
     useEffect(() => {
@@ -146,16 +148,13 @@ const PlacementTrainingShop = () => {
         });
     }, [activeCategory, searchQuery]);
 
-    const handleWishlist = (courseId) => {
-        setWishlist(prev => {
-            const newWishlist = prev.includes(courseId)
-                ? prev.filter(id => id !== courseId)
-                : [...prev, courseId];
-            setAnnouncement(prev.includes(courseId)
-                ? 'Removed from wishlist'
-                : 'Added to wishlist');
-            return newWishlist;
-        });
+    const handleWishlist = (course) => {
+        
+        setAnnouncement(wishlist.includes(course.id)
+            ? 'Removed from wishlist'
+            : 'Added to wishlist');
+        
+        addToWishlist(course);
     };
 
 
@@ -180,18 +179,18 @@ const PlacementTrainingShop = () => {
             aria-label={`${category.name} category with ${category.courses} courses`}
         >
             <div className="flex justify-between items-start mb-4">
-                <div className="card-theme-gradient p-3 rounded-lg">
-                    <category.icon className="w-6 h-6 text-primary" />
+                <div className="card-theme-gradient p-3 rounded-lg border-contrast">
+                    <category.icon className="w-6 h-6 text-white" />
                 </div>
                 <span className="card-blue text-sm font-medium px-3 py-1 rounded-full">
                     {category.courses} Courses
                 </span>
             </div>
             <h3 className="text-xl font-bold text-secondary mb-2">{category.name}</h3>
-            <p className="text-secondary/80 text-sm mb-4">{category.description}</p>
+            <p className="text-secondary text-sm mb-4">{category.description}</p>
             <div className="space-y-2">
                 {category.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2 text-secondary/70 text-sm">
+                    <div key={index} className="flex items-center gap-2 text-secondary text-sm">
                         <ChevronRight className="w-4 h-4 text-blue" />
                         {feature}
                     </div>
@@ -219,12 +218,12 @@ const PlacementTrainingShop = () => {
                     loading="lazy"
                 />
                 <button
-                    onClick={() => handleWishlist(course.id)}
+                    onClick={() => handleWishlist(course)}
                     className="absolute top-4 right-4 p-2 bg-card rounded-full shadow-lg hover:scale-110 transition-transform focus:outline-none focus:ring-2 focus:ring-blue"
-                    aria-label={`${wishlist.includes(course.id) ? 'Remove from' : 'Add to'} wishlist`}
+                    aria-label={`${wishlist.includes(course) ? 'Remove from' : 'Add to'} wishlist`}
                 >
                     <Heart
-                        className={`w-5 h-5 ${wishlist.includes(course.id) ? 'text-blue fill-current' : 'text-secondary'}`}
+                        className={`w-5 h-5 ${wishlist.includes(course) ? 'text-blue fill-current' : 'text-secondary'}`}
                     />
                 </button>
             </div>
@@ -248,13 +247,13 @@ const PlacementTrainingShop = () => {
                     />
                     <div>
                         <p className="text-secondary font-medium">{course.instructor.name}</p>
-                        <p className="text-secondary/70 text-sm">{course.instructor.title}</p>
+                        <p className="text-secondary text-sm">{course.instructor.title}</p>
                     </div>
                 </div>
 
                 <div className="space-y-2 mb-4">
                     {course.features.slice(0, 3).map((feature, index) => (
-                        <div key={index} className="flex items-center gap-2 text-secondary/70 text-sm">
+                        <div key={index} className="flex items-center gap-2 text-secondary text-sm">
                             <ChevronRight className="w-4 h-4 text-blue" />
                             {feature}
                         </div>
@@ -265,7 +264,7 @@ const PlacementTrainingShop = () => {
                     <div className="flex items-center gap-2">
                         <Star className="w-5 h-5 text-blue" />
                         <span className="text-secondary font-medium">{course.rating}</span>
-                        <span className="text-secondary/70">({course.reviews})</span>
+                        <span className="text-secondary">({course.reviews})</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Clock className="w-5 h-5 text-blue" />
@@ -276,7 +275,7 @@ const PlacementTrainingShop = () => {
                 <div className="flex items-center gap-3 mb-6">
                     <span className="text-3xl font-bold text-blue">${course.price}</span>
                     <div className="flex flex-col">
-                        <span className="text-secondary/50 line-through">${course.originalPrice}</span>
+                        <span className="text-secondary line-through">${course.originalPrice}</span>
                         <span className="card-green text-sm px-2 rounded">
                             Save ${course.originalPrice - course.price}
                         </span>
@@ -287,11 +286,12 @@ const PlacementTrainingShop = () => {
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="card-theme-gradient text-primary py-3 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue"
+                        className="card-theme-gradient border-contrast text-white py-3 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-blue"
                         onClick={() => {
                             setAnnouncement(`Enrolling in ${course.title}`);
                             // Enrollment logic here
                         }}
+                    
                     >
                         Enroll Now
                     </motion.button>
@@ -312,7 +312,7 @@ const PlacementTrainingShop = () => {
     );
 
     return (
-        <div className="bg-primary min-h-screen">
+        <div className="bg-primary min-h-screen mt-20">
             <div className="container mx-auto max-w-7xl px-4 py-12">
                 {/* Accessibility announcer */}
                 <div
@@ -333,7 +333,7 @@ const PlacementTrainingShop = () => {
                         Master{' '}
                         <span className="text-blue">SAP & Career Skills</span>
                     </motion.h1>
-                    <p className="text-xl text-secondary/80 mb-8 max-w-2xl mx-auto">
+                    <p className="text-xl text-secondary mb-8 max-w-2xl mx-auto">
                         Comprehensive SAP training and placement programs to accelerate your career growth
                     </p>
 
@@ -354,7 +354,7 @@ const PlacementTrainingShop = () => {
                             }}
                         />
                         <Search
-                            className="w-5 h-5 text-secondary/50 absolute left-4 top-1/2 transform -translate-y-1/2"
+                            className="w-5 h-5 text-secondary absolute left-4 top-1/2 transform -translate-y-1/2"
                             aria-hidden="true"
                         />
                     </div>
