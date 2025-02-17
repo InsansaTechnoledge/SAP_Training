@@ -210,7 +210,7 @@ const ABAPRunner = () => {
     const checkAnswer = useCallback(() => {
         if (!currentQuestion || !gameStarted || gameOver) return;
 
-        if (position.y >= 80) {
+        if (position.y >= 70) {
             if (position.x === currentQuestion.correct) {
                 setScore(prev => prev + 10);
                 setCorrectAnswerEffect(true);
@@ -233,6 +233,7 @@ const ABAPRunner = () => {
                 ));
                 setTimeout(() => {
                     setGameOver(true);
+                    setCurrentQuestion(null);
                     setPosition({ x: 1, y: 0 });
                 }, 1000);
             }
@@ -271,7 +272,7 @@ const ABAPRunner = () => {
     }, [generateCollectibles, generateSpeedLines, generateNewQuestion]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 via-purple-900 to-violet-900 p-4">
+        <div className="flex items-center justify-center bg-gradient-to-b from-gray-900 via-purple-900 to-violet-900 p-4">
             <div className="w-full max-w-4xl">
                 {/* Game Title */}
                 <motion.h1
@@ -288,7 +289,7 @@ const ABAPRunner = () => {
                 {/* Main Game Container */}
                 <div
                     id='key-context'
-                    className="w-full h-[600px] relative overflow-hidden rounded-2xl shadow-[0_0_50px_rgba(168,85,247,0.3)] border border-purple-500/30"
+                    className="w-full h-[450px] relative overflow-hidden rounded-2xl shadow-[0_0_50px_rgba(168,85,247,0.3)] border border-purple-500/30"
                     tabIndex={0}
                     onKeyDown={handleKeyDown}
                     onKeyUp={handleKeyUp}
@@ -330,7 +331,7 @@ const ABAPRunner = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ type: "tween", duration: 0.4 }}
-                                className="absolute top-8 left-1/2 transform -translate-x-1/2 w-11/12 z-50"
+                                className="absolute top-2 right-2 transform w-[36rem] z-50"
                             >
                                 <div className="bg-black/30 backdrop-blur-sm px-6 py-4 rounded-xl border border-white/10">
                                     <h2 className="text-xl font-medium text-white/90 text-center leading-relaxed">
@@ -357,10 +358,10 @@ const ABAPRunner = () => {
                         {roadColors.map((color, index) => (
                             <div
                                 key={index}
-                                className="w-1/3 relative transition-all duration-500"
+                                className=" relative transition-all duration-500 w-full px-2"
                             >
                                 <motion.div
-                                    className="absolute inset-0"
+                                    className="absolute inset-0 w-full"
                                     animate={{
                                         background: [
                                             `linear-gradient(to bottom, rgba(0,0,0,0), ${color === 'blue-500' ? '#3B82F6' : color === 'green-500' ? '#22C55E' : '#EF4444'}33)`,
@@ -379,9 +380,9 @@ const ABAPRunner = () => {
                                         initial={{ y: -30, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         exit={{ y: 30, opacity: 0 }}
-                                        className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-11/12 z-40"
+                                        className="relative top-1/4 transform -translate-x-0.5 z-40"
                                     >
-                                        <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl text-xl font-bold shadow-2xl text-white tracking-wide border border-white/20 text-center transform hover:scale-105 transition-transform">
+                                        <div className="bg-white/10 w-full backdrop-blur-md py-2 px-4 rounded-xl text-md font-bold shadow-2xl text-white tracking-wide border border-white/20 text-center transform hover:scale-105 transition-transform">
                                             {currentQuestion.answers[index]}
                                         </div>
                                     </motion.div>
@@ -403,7 +404,7 @@ const ABAPRunner = () => {
                         }}
                         transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     >
-                        <div className="w-12 h-16 relative">
+                        <div className="w-8 h-12 relative">
                             <motion.div
                                 className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl shadow-lg"
                                 animate={{
