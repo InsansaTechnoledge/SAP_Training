@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code, Book, Terminal, Sparkles, CheckCircle, Circle, Play, RefreshCw, Lock, ChevronDown, ChevronUp } from 'lucide-react';
+import GameTwoLevelInterface from './GameTwoLevelInterface';
 
-const ABAPExplorer = ({score,setScore}) => {
+const ABAPExplorer = ({ score, setScore }) => {
     const [currentNodeIndex, setCurrentNodeIndex] = useState(0);
     const [discoveredConcepts, setDiscoveredConcepts] = useState([]);
     const [gameStarted, setGameStarted] = useState(false);
@@ -14,6 +15,7 @@ const ABAPExplorer = ({score,setScore}) => {
     const [codeSuccess, setCodeSuccess] = useState(false);
     const [isCompiling, setIsCompiling] = useState(false);
     const [isMapExpanded, setIsMapExpanded] = useState(true);
+    const [levelDisplay, setLevelDisplay] = useState();
 
     // Flatten the learning path
     const learningPath = [
@@ -251,6 +253,7 @@ const ABAPExplorer = ({score,setScore}) => {
 
     const startGame = () => {
         setGameStarted(true);
+        setLevelDisplay(true);
         setScore(0);
         setDiscoveredConcepts([]);
         setActiveCodeBlock(learningPath[0].content);
@@ -316,191 +319,208 @@ const ABAPExplorer = ({score,setScore}) => {
                         </motion.button>
                     </motion.div>
                 ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Learning Path Map with Collapse/Expand */}
-                    <div className="bg-gray-900/80 p-6 rounded-2xl border border-purple-500/30">
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-2xl font-bold text-white">Learning Progress</h2>
-                            <button
-                                onClick={() => setIsMapExpanded(!isMapExpanded)}
-                                className="text-white hover:text-purple-400 transition-colors"
-                            >
-                                {isMapExpanded ? (
-                                    <ChevronUp className="w-6 h-6" />
-                                ) : (
-                                    <ChevronDown className="w-6 h-6" />
-                                )}
-                            </button>
-                        </div>
 
-                        <AnimatePresence>
-                            {isMapExpanded && (
-                                <motion.div
-                                    initial={{ height: 0, opacity: 0 }}
-                                    animate={{ height: "auto", opacity: 1 }}
-                                    exit={{ height: 0, opacity: 0 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="overflow-hidden"
-                                >
-                                    <div className="space-y-4">
-                                        {learningPath.map((node, index) => (
-                                            <div
-                                                key={node.id}
-                                                className={`p-4 rounded-lg border ${index === currentNodeIndex
-                                                    ? 'bg-purple-900/50 border-purple-500'
-                                                    : index < currentNodeIndex
-                                                        ? 'bg-green-900/30 border-green-500'
-                                                        : 'bg-gray-800/50 border-gray-700'
-                                                    }`}
-                                            >
-                                                <div className="flex items-center justify-between">
-                                                    <span className="text-white font-medium">{node.title}</span>
-                                                    {index < currentNodeIndex ? (
-                                                        <CheckCircle className="text-green-500" />
-                                                    ) : index === currentNodeIndex ? (
-                                                        <Play className="text-purple-500" />
-                                                    ) : (
-                                                        <Lock className="text-gray-500" />
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
-                        <div className="mt-4 p-4 bg-black/40 rounded-lg">
-                            <div className="flex items-center space-x-3">
-                                <Sparkles className="text-yellow-400 w-6 h-6" />
-                                <span className="text-white text-lg font-bold">{score} Points</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Challenge Area */}
-                    <div className="bg-gray-900 rounded-2xl border border-purple-500/30 p-6">
-                        {activeCodeBlock && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="space-y-4"
-                            >
-                                <h2 className="text-xl font-bold text-white">
-                                    {activeCodeBlock.concept}
-                                </h2>
-                                <p className="text-gray-300">
-                                    {activeCodeBlock.explanation}
-                                </p>
-
-                                <div className="bg-purple-900/30 p-4 rounded-lg border border-purple-500/30">
-                                    <h3 className="text-white font-semibold mb-2">Challenge:</h3>
-                                    <p className="text-gray-300">{activeCodeBlock.challenge.description}</p>
-                                </div>
-
-                                <div className="bg-gray-800 p-4 rounded-lg">
-                                    <pre className="text-green-400 overflow-x-auto whitespace-pre-wrap">
-                                        {activeCodeBlock.baseCode.split('___').map((part, index) => (
-                                            <React.Fragment key={index}>
-                                                {part}
-                                                {index < activeCodeBlock.challenge.gaps.length && (
-                                                    <select
-                                                        value={selectedOptions[activeCodeBlock.challenge.gaps[index].id] || ''}
-                                                        onChange={(e) => handleOptionSelect(
-                                                            activeCodeBlock.challenge.gaps[index].id,
-                                                            e.target.value
-                                                        )}
-                                                        className="bg-purple-900 text-white px-2 py-1 rounded mx-1 border border-purple-500/30"
-                                                    >
-                                                        <option value="">Select...</option>
-                                                        {activeCodeBlock.challenge.gaps[index].options.map((opt) => (
-                                                            <option key={opt} value={opt}>
-                                                                {opt}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                )}
-                                            </React.Fragment>
-                                        ))}
-                                    </pre>
-                                </div>
-
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between items-center">
-                                                <h3 className="text-white font-semibold">Output:</h3>
-                                                <div className="flex gap-2">
+                    <>
+                        {
+                            levelDisplay ?
+                                (
+                                    <>
+                                        <GameTwoLevelInterface/>
+                                    </>
+                                )
+                                :
+                                (
+                                    <>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {/* Learning Path Map with Collapse/Expand */}
+                                            <div className="bg-gray-900/80 p-6 rounded-2xl border border-purple-500/30">
+                                                <div className="flex justify-between items-center mb-4">
+                                                    <h2 className="text-2xl font-bold text-white">Learning Progress</h2>
                                                     <button
-                                                        onClick={executeCode}
-                                                        disabled={isCompiling}
-                                                        className={`bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 ${isCompiling ? 'opacity-50 cursor-not-allowed' : ''
-                                                            }`}
+                                                        onClick={() => setIsMapExpanded(!isMapExpanded)}
+                                                        className="text-white hover:text-purple-400 transition-colors"
                                                     >
-                                                        {isCompiling ? (
-                                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                                        {isMapExpanded ? (
+                                                            <ChevronUp className="w-6 h-6" />
                                                         ) : (
-                                                            <Play className="w-4 h-4" />
+                                                            <ChevronDown className="w-6 h-6" />
                                                         )}
-                                                        {isCompiling ? 'Compiling...' : 'Run'}
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            setSelectedOptions({});
-                                                            setExecutionOutput('');
-                                                            setCodeSuccess(false);
-                                                        }}
-                                                        disabled={isCompiling}
-                                                        className={`bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 ${isCompiling ? 'opacity-50 cursor-not-allowed' : ''
-                                                            }`}
-                                                    >
-                                                        <RefreshCw className="w-4 h-4" />
-                                                        Reset
                                                     </button>
                                                 </div>
-                                            </div>
-                                            <div
-                                                className={`p-4 rounded-lg ${isCompiling
-                                                        ? 'bg-blue-900/30 border border-blue-500/30'
-                                                        : executionOutput
-                                                            ? (codeSuccess ? 'bg-green-900/30' : 'bg-red-900/30')
-                                                            : 'bg-gray-800'
-                                                    }`}
-                                            >
-                                                <motion.pre
-                                                    key={executionOutput}
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    transition={{ duration: 0.3 }}
-                                                    className="text-white font-mono"
-                                                >
-                                                    {isCompiling ? (
-                                                        <div className="flex items-center gap-2">
-                                                            <RefreshCw className="w-4 h-4 animate-spin" />
-                                                            {executionOutput}
-                                                        </div>
-                                                    ) : (
-                                                        executionOutput || 'Output will appear here...'
+
+                                                <AnimatePresence>
+                                                    {isMapExpanded && (
+                                                        <motion.div
+                                                            initial={{ height: 0, opacity: 0 }}
+                                                            animate={{ height: "auto", opacity: 1 }}
+                                                            exit={{ height: 0, opacity: 0 }}
+                                                            transition={{ duration: 0.3 }}
+                                                            className="overflow-hidden"
+                                                        >
+                                                            <div className="space-y-4">
+                                                                {learningPath.map((node, index) => (
+                                                                    <div
+                                                                        key={node.id}
+                                                                        className={`p-4 rounded-lg border ${index === currentNodeIndex
+                                                                            ? 'bg-purple-900/50 border-purple-500'
+                                                                            : index < currentNodeIndex
+                                                                                ? 'bg-green-900/30 border-green-500'
+                                                                                : 'bg-gray-800/50 border-gray-700'
+                                                                            }`}
+                                                                    >
+                                                                        <div className="flex items-center justify-between">
+                                                                            <span className="text-white font-medium">{node.title}</span>
+                                                                            {index < currentNodeIndex ? (
+                                                                                <CheckCircle className="text-green-500" />
+                                                                            ) : index === currentNodeIndex ? (
+                                                                                <Play className="text-purple-500" />
+                                                                            ) : (
+                                                                                <Lock className="text-gray-500" />
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </motion.div>
                                                     )}
-                                                </motion.pre>
+                                                </AnimatePresence>
+
+                                                <div className="mt-4 p-4 bg-black/40 rounded-lg">
+                                                    <div className="flex items-center space-x-3">
+                                                        <Sparkles className="text-yellow-400 w-6 h-6" />
+                                                        <span className="text-white text-lg font-bold">{score} Points</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Challenge Area */}
+                                            <div className="bg-gray-900 rounded-2xl border border-purple-500/30 p-6">
+                                                {activeCodeBlock && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: 20 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        className="space-y-4"
+                                                    >
+                                                        <h2 className="text-xl font-bold text-white">
+                                                            {activeCodeBlock.concept}
+                                                        </h2>
+                                                        <p className="text-gray-300">
+                                                            {activeCodeBlock.explanation}
+                                                        </p>
+
+                                                        <div className="bg-purple-900/30 p-4 rounded-lg border border-purple-500/30">
+                                                            <h3 className="text-white font-semibold mb-2">Challenge:</h3>
+                                                            <p className="text-gray-300">{activeCodeBlock.challenge.description}</p>
+                                                        </div>
+
+                                                        <div className="bg-gray-800 p-4 rounded-lg">
+                                                            <pre className="text-green-400 overflow-x-auto whitespace-pre-wrap">
+                                                                {activeCodeBlock.baseCode.split('___').map((part, index) => (
+                                                                    <React.Fragment key={index}>
+                                                                        {part}
+                                                                        {index < activeCodeBlock.challenge.gaps.length && (
+                                                                            <select
+                                                                                value={selectedOptions[activeCodeBlock.challenge.gaps[index].id] || ''}
+                                                                                onChange={(e) => handleOptionSelect(
+                                                                                    activeCodeBlock.challenge.gaps[index].id,
+                                                                                    e.target.value
+                                                                                )}
+                                                                                className="bg-purple-900 text-white px-2 py-1 rounded mx-1 border border-purple-500/30"
+                                                                            >
+                                                                                <option value="">Select...</option>
+                                                                                {activeCodeBlock.challenge.gaps[index].options.map((opt) => (
+                                                                                    <option key={opt} value={opt}>
+                                                                                        {opt}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </select>
+                                                                        )}
+                                                                    </React.Fragment>
+                                                                ))}
+                                                            </pre>
+                                                        </div>
+
+                                                        <div className="space-y-2">
+                                                            <div className="flex justify-between items-center">
+                                                                <h3 className="text-white font-semibold">Output:</h3>
+                                                                <div className="flex gap-2">
+                                                                    <button
+                                                                        onClick={executeCode}
+                                                                        disabled={isCompiling}
+                                                                        className={`bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 ${isCompiling ? 'opacity-50 cursor-not-allowed' : ''
+                                                                            }`}
+                                                                    >
+                                                                        {isCompiling ? (
+                                                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                                                        ) : (
+                                                                            <Play className="w-4 h-4" />
+                                                                        )}
+                                                                        {isCompiling ? 'Compiling...' : 'Run'}
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            setSelectedOptions({});
+                                                                            setExecutionOutput('');
+                                                                            setCodeSuccess(false);
+                                                                        }}
+                                                                        disabled={isCompiling}
+                                                                        className={`bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 ${isCompiling ? 'opacity-50 cursor-not-allowed' : ''
+                                                                            }`}
+                                                                    >
+                                                                        <RefreshCw className="w-4 h-4" />
+                                                                        Reset
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                className={`p-4 rounded-lg ${isCompiling
+                                                                    ? 'bg-blue-900/30 border border-blue-500/30'
+                                                                    : executionOutput
+                                                                        ? (codeSuccess ? 'bg-green-900/30' : 'bg-red-900/30')
+                                                                        : 'bg-gray-800'
+                                                                    }`}
+                                                            >
+                                                                <motion.pre
+                                                                    key={executionOutput}
+                                                                    initial={{ opacity: 0 }}
+                                                                    animate={{ opacity: 1 }}
+                                                                    transition={{ duration: 0.3 }}
+                                                                    className="text-white font-mono"
+                                                                >
+                                                                    {isCompiling ? (
+                                                                        <div className="flex items-center gap-2">
+                                                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                                                            {executionOutput}
+                                                                        </div>
+                                                                    ) : (
+                                                                        executionOutput || 'Output will appear here...'
+                                                                    )}
+                                                                </motion.pre>
+                                                            </div>
+                                                        </div>
+
+                                                        {codeSuccess && (
+                                                            <motion.button
+                                                                whileHover={{ scale: 1.05 }}
+                                                                whileTap={{ scale: 0.95 }}
+                                                                onClick={proceedToNextChallenge}
+                                                                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
+                                                                disabled={currentNodeIndex >= learningPath.length - 1}
+                                                            >
+                                                                {currentNodeIndex >= learningPath.length - 1
+                                                                    ? "You've completed all challenges!"
+                                                                    : "Continue to Next Challenge"}
+                                                            </motion.button>
+                                                        )}
+                                                    </motion.div>
+                                                )}
                                             </div>
                                         </div>
 
-                                {codeSuccess && (
-                                    <motion.button
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        onClick={proceedToNextChallenge}
-                                        className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
-                                        disabled={currentNodeIndex >= learningPath.length - 1}
-                                    >
-                                        {currentNodeIndex >= learningPath.length - 1
-                                            ? "You've completed all challenges!"
-                                            : "Continue to Next Challenge"}
-                                    </motion.button>
-                                )}
-                            </motion.div>
-                        )}
-                    </div>
-                </div>
+                                    </>
+                                )
+                        }
+                    </>
                 )}
 
                 {/* Particle Effects */}
