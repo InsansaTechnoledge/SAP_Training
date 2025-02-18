@@ -288,11 +288,11 @@ const ABAPExplorer = ({ score, setScore }) => {
             } else {
                 // Level 3: Write code
 
-                const solutionString = challenge.solution.join('');
+                var solutionString = challenge.solution.join('');
 
-                isCorrect = solutionString.replace(" ", "").replace("\n", "").replace("\t", "") == userInput.replace(" ", "").replace("\n", "").replace("\t", "")
-                console.log(solutionString.replace(" ", "").replace("\n", "").replace("\t", ""));
-                console.log(userInput.replace(" ", "").replace("\n", "").replace("\t", ""));
+                isCorrect = solutionString.replace(/\s+/g, '') === userInput.replace(/\s+/g, '')
+
+                // isCorrect = solutionString.replace(" ", "").replace("\n", "").replace("\t", "") == userInput.replace(" ", "").replace("\n", "").replace("\t", "")
             }
 
             setIsCompiling(false);
