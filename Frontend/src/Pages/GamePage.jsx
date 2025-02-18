@@ -197,7 +197,7 @@ const GameDashboard = () => {
                                         )}
                                     </motion.button>
                                     <div>
-                                        <h2 className="text-xl font-semibold">Level 2: Data Types</h2>
+                                        <h2 className="text-xl font-semibold">{currentGame || "Play And Learn"}</h2>
                                         <div className="flex items-center gap-2 text-sm text-gray-600">
                                             <Clock className="w-4 h-4" />
                                             <span>25 minutes remaining</span>
@@ -284,8 +284,8 @@ const GameDashboard = () => {
                                             </div>
                                         ) : (
                                             <div className="bg-gray-100 rounded-xl p-4">
-                                                {currentGame === 'ABAPExplorer' && <ABAPExplorer />}
-                                                {currentGame === 'ABAPRunner' && <ABAPRunner />}
+                                                {currentGame === 'ABAPRunner' && <ABAPRunner score={score} setScore={setScore}/>}
+                                                {currentGame === 'ABAPExplorer' && <ABAPExplorer score={score} setScore={setScore} />}
                                             </div>
                                         )}
                                     </div>
@@ -443,8 +443,12 @@ const GameDashboard = () => {
                                                 ]}
                                                 isActive={currentGame === 'ABAPExplorer'}
                                                 onClick={() => {
+                                                    if(currentGame!=='ABAPExplorer'){
+                                                        setScore(0)
+                                                    }
                                                     setCurrentGame('ABAPExplorer');
                                                     setShowSettings(false);
+                                                    setScore(0);
                                                 }}
                                             />
                                             <GameCard
@@ -458,8 +462,12 @@ const GameDashboard = () => {
                                                 ]}
                                                 isActive={currentGame === 'ABAPRunner'}
                                                 onClick={() => {
+                                                    if(currentGame!=='ABAPRunner'){
+                                                        setScore(0)
+                                                    }
                                                     setCurrentGame('ABAPRunner');
                                                     setShowSettings(false);
+                                                    
                                                 }}
                                             />
                                         </div>

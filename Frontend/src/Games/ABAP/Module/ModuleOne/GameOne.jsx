@@ -65,7 +65,7 @@ const ABAPRunner = ({score,setScore}) => {
 
 
     // Fixed collectibles generation
-    const generateCollectibles = useCallback(() => {
+    const generateCollectibles = () => {
         const newCollectibles = [];
         for (let i = 0; i < 5; i++) {
             newCollectibles.push({
@@ -76,25 +76,23 @@ const ABAPRunner = ({score,setScore}) => {
             });
         }
         setCollectibles(newCollectibles);
-    }, []);
+    };
 
     // Fixed question generation
-    const generateNewQuestion = useCallback(() => {
+    const generateNewQuestion = () => {
         if (!gameStarted || gameOver) return;
 
         setShowNextQuestion(false);
         const questionIndex = Math.floor(Math.random() * questions.length);
-        const newQuestion = { ...questions[questionIndex] };
-        {console.log(newQuestion);}
+        const newQuestion = questions[questionIndex];
         // Immediate question setting instead of delayed
         setCurrentQuestion(newQuestion);
-        setQuestionBanner(true);
         setPosition({ x: 1, y: 0 });
         setShowNextQuestion(true);
 
         // Shorter banner display time
         setTimeout(() => setQuestionBanner(false), 2000);
-    }, [gameStarted, gameOver]);
+    };
 
     // Fixed speed lines generation with correct animation values
     const generateSpeedLines = useCallback(() => {
@@ -225,7 +223,7 @@ const ABAPRunner = ({score,setScore}) => {
                     setCorrectAnswerEffect(false);
                     setRoadColors(['blue-500', 'blue-500', 'blue-500']);
                     generateNewQuestion();
-                }, 1500);
+                }, 1000);
             } else {
                 setRoadColors(prev => prev.map((_, i) =>
                     i === currentQuestion.correct ? 'green-500' : 'red-500'
@@ -237,13 +235,13 @@ const ABAPRunner = ({score,setScore}) => {
                 }, 1000);
             }
         }
-    }, [currentQuestion, position, gameStarted, gameOver, generateNewQuestion, createCelebrationEffect]);
+    }, [currentQuestion, position, gameStarted, gameOver, createCelebrationEffect]);
 
     useEffect(() => {
         if (gameStarted && !gameOver) {
             generateNewQuestion();
         }
-    }, [gameStarted, gameOver, generateNewQuestion]);
+    }, [gameStarted, gameOver]);
 
     useEffect(() => {
         if (gameStarted && !gameOver) {
@@ -265,10 +263,10 @@ const ABAPRunner = ({score,setScore}) => {
         generateCollectibles();
         generateSpeedLines();
         // Immediate question generation
-        generateNewQuestion();
+        // generateNewQuestion();
         document.getElementById('key-context').focus();
 
-    }, [generateCollectibles, generateSpeedLines, generateNewQuestion]);
+    }, [generateCollectibles, generateSpeedLines]);
 
     return (
         <div className="flex items-center justify-center bg-gradient-to-b from-gray-900 via-purple-900 to-violet-900 p-4">
@@ -293,6 +291,13 @@ const ABAPRunner = ({score,setScore}) => {
                     onKeyDown={handleKeyDown}
                     onKeyUp={handleKeyUp}
                 >
+                    {/* {
+                        collectibles.map((collectible) => {
+                            return <Star id={collectible.id} top={"200px"} left={"200px"} x="200px" y="200px" className='z-50 absolute' />
+                        })
+                    } */}
+
+                    {/* {console.log(collectibles)} */}
                     {/* Dynamic Background */}
                     <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-indigo-900 to-purple-900">
                         {speedLines.map((line) => (

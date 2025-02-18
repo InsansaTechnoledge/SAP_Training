@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code, Book, Terminal, Sparkles, CheckCircle, Circle, Play, RefreshCw } from 'lucide-react';
 
-const ABAPExplorer = () => {
+const ABAPExplorer = ({score, setScore}) => {
     const [position, setPosition] = useState({ x: 1, y: 0 });
     const [currentModule, setCurrentModule] = useState(null);
     const [discoveredConcepts, setDiscoveredConcepts] = useState([]);
     const [nodeVisible, setNodeVisible] = useState(false);
-    const [score, setScore] = useState(0);
+    // const [score, setScore] = useState(0);
     const [gameStarted, setGameStarted] = useState(false);
     const [particleEffects, setParticleEffects] = useState([]);
     const [activeCodeBlock, setActiveCodeBlock] = useState(null);
@@ -372,16 +372,7 @@ const ABAPExplorer = () => {
                                 </motion.div>
 
                                 {/* Score Display */}
-                                <motion.div
-                                    initial={{ x: -100, opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    className="absolute top-4 left-4 bg-black/40 backdrop-blur-md p-3 rounded-xl border border-purple-500/30"
-                                >
-                                    <div className="flex items-center space-x-3">
-                                        <Sparkles className="text-yellow-400 w-6 h-6" />
-                                        <span className="text-white text-lg font-bold">{score} Points</span>
-                                    </div>
-                                </motion.div>
+                                
 
                                 {/* Start Screen */}
                                 <AnimatePresence>
