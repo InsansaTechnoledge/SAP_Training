@@ -2,10 +2,9 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code, Book, Terminal, Sparkles, CheckCircle, Circle, Play, RefreshCw, Lock, ChevronDown, ChevronUp } from 'lucide-react';
 
-const ABAPExplorer = () => {
+const ABAPExplorer = ({score,setScore}) => {
     const [currentNodeIndex, setCurrentNodeIndex] = useState(0);
     const [discoveredConcepts, setDiscoveredConcepts] = useState([]);
-    const [score, setScore] = useState(0);
     const [gameStarted, setGameStarted] = useState(false);
     const [particleEffects, setParticleEffects] = useState([]);
     const [activeCodeBlock, setActiveCodeBlock] = useState(null);
