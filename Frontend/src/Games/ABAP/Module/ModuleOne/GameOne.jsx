@@ -88,10 +88,11 @@ const ABAPRunner = ({score,setScore}) => {
         // Immediate question setting instead of delayed
         setCurrentQuestion(newQuestion);
         setPosition({ x: 1, y: 0 });
-        setShowNextQuestion(true);
-
         // Shorter banner display time
-        setTimeout(() => setQuestionBanner(false), 2000);
+        setTimeout(() => {
+            setQuestionBanner(false)
+            setShowNextQuestion(true)
+        }, 2000);
     };
 
     // Fixed speed lines generation with correct animation values
@@ -204,7 +205,7 @@ const ABAPRunner = ({score,setScore}) => {
     }, []);
 
     // Fixed answer checking
-    const checkAnswer = useCallback(() => {
+    const checkAnswer = () => {
         if (!currentQuestion || !gameStarted || gameOver) return;
 
         if (position.y >= 80) {
@@ -235,7 +236,7 @@ const ABAPRunner = ({score,setScore}) => {
                 }, 1000);
             }
         }
-    }, [currentQuestion, position, gameStarted, gameOver, createCelebrationEffect]);
+    };
 
     useEffect(() => {
         if (gameStarted && !gameOver) {
@@ -259,7 +260,7 @@ const ABAPRunner = ({score,setScore}) => {
         setRoadColors(['blue-500', 'blue-500', 'blue-500']);
         setIsRunning(false);
         setCurrentQuestion(null);
-        setShowNextQuestion(true);
+        setShowNextQuestion(false);
         generateCollectibles();
         generateSpeedLines();
         // Immediate question generation
