@@ -1,7 +1,10 @@
 import React from 'react';
 import { motion } from "framer-motion";
 
-const CarPlayer = ({ position, isJumping }) => {
+const CarPlayer = ({ position, isJumping, carVisible }) => {
+    if(!carVisible){
+        return null;
+    }
     return (
         <motion.div
             className="absolute z-50 transition-all duration-300"

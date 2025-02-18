@@ -10,7 +10,7 @@ const sounds = {
     jump: new Howl({ src: ['/Sounds/jump.wav'], volume: 0.04 }),
     correct: new Howl({ src: ['/Sounds/correct.wav'], volume: 0.08 }),
     wrong: new Howl({ src: ['/sounds/wrong.ogg'], volume: 0.08 }),
-    gameover: new Howl({ src: ['/Sounds/gameover.wav'], volume: 0.1 }),
+    gameover: new Howl({ src: ['/Sounds/gameover.wav'], volume: 0.03 }),
     background: new Howl({ src: ['/Sounds/background.wav'], volume: 0.1, loop: true })
 };
 
@@ -27,6 +27,7 @@ const ABAPRunner = ({ score, setScore }) => {
     const [particleEffects, setParticleEffects] = useState([]);
     const [roadOffset, setRoadOffset] = useState(0);
     const [laneStates, setLaneStates] = useState(['default', 'default', 'default']);
+    const [carVisible, setCarVisible] = useState(false);
 
 
     const questions = [
@@ -138,7 +139,15 @@ const ABAPRunner = ({ score, setScore }) => {
             case 'ArrowLeft':
                 movePlayer('left');
                 break;
+            case 'ArrowLeft':
+            case 'a': 
+                movePlayer('left');
+                break;
             case 'ArrowRight':
+                movePlayer('right');
+                break;
+            case 'ArrowRight':
+            case 'd': 
                 movePlayer('right');
                 break;
             case 'ArrowUp':
@@ -146,10 +155,23 @@ const ABAPRunner = ({ score, setScore }) => {
                 if (!isJumping) {
                     setIsJumping(true);
                     setTimeout(() => setIsJumping(false), 500);
-                    sounds.jump.play();
+                    // sounds.jump.play();
+                }
+                break;
+            case 'ArrowUp':
+            case 'w': // Move Up (Jump)
+                movePlayer('up');
+                if (!isJumping) {
+                    setIsJumping(true);
+                    sounds.jump.play(); // Play jump sound
+                    setTimeout(() => setIsJumping(false), 500);
                 }
                 break;
             case 'ArrowDown':
+                movePlayer('down');
+                break;
+            case 'ArrowDown':
+            case 's': // Move Down
                 movePlayer('down');
                 break;
             default:
@@ -182,14 +204,16 @@ const ABAPRunner = ({ score, setScore }) => {
                 setRoadColors(prev => prev.map((_, i) =>
                     i === currentQuestion.correct ? 'green-500' : 'red-500'
                 ));
+                sounds.wrong.play();
                 setLaneStates(prev => prev.map((_, i) =>
                     i === currentQuestion.correct ? 'correct' : 'wrong'
                 ));
-                sounds.wrong.play();
+                
                 setTimeout(() => {
                     sounds.gameover.play();
                     sounds.background.stop(); 
                     setGameOver(true);
+                    setCarVisible(false);
                     setCurrentQuestion(null);
                     setPosition({ x: 1, y: 0 });
                 }, 1000);
@@ -210,6 +234,7 @@ const ABAPRunner = ({ score, setScore }) => {
         generateSpeedLines();
         sounds.background.play();
         document.getElementById('game-container').focus();
+        setCarVisible(true)
     }, [generateSpeedLines]);
 
     useEffect(() => {
@@ -297,7 +322,7 @@ const ABAPRunner = ({ score, setScore }) => {
 
                     {/* Player */}
 
-                    <CarPlayer position={position} isJumping={isJumping} />
+                    <CarPlayer position={position} isJumping={isJumping} carVisible={carVisible}/>
 
                     {/* <motion.div
                         className="absolute z-50 transition-all duration-300"
@@ -371,15 +396,26 @@ const ABAPRunner = ({ score, setScore }) => {
                                                 <div className="flex space-x-2">
                                                     <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">←</kbd>
                                                     <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">→</kbd>
+                                                    <div>
+                                                        |
+                                                    </div>
+                                                    <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">A</kbd>
+                                                    <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">D</kbd>
                                                 </div>
                                                 <span className="text-white/80">Move left/right</span>
                                             </div>
                                             <div className="flex items-center justify-center space-x-4">
                                                 <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">↑</kbd>
+                                                <div>|</div>
+                                                <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">W</kbd>
+
                                                 <span className="text-white/80">Move forward</span>
                                             </div>
                                             <div className="flex items-center justify-center space-x-4">
                                                 <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">↓</kbd>
+                                                <div>|</div>
+                                                <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">S</kbd>
+
                                                 <span className="text-white/80">Move backward</span>
                                             </div>
                                         </div>
