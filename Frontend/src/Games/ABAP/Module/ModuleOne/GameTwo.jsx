@@ -12,212 +12,199 @@ const ABAPExplorer = ({score,setScore}) => {
     const [selectedOptions, setSelectedOptions] = useState({});
     const [executionOutput, setExecutionOutput] = useState('');
     const [codeSuccess, setCodeSuccess] = useState(false);
+    const [isCompiling, setIsCompiling] = useState(false);
     const [isMapExpanded, setIsMapExpanded] = useState(true);
 
     // Flatten the learning path
     const learningPath = [
         {
-            id: 'variables_basics',
-            title: 'Variables Basics',
+            id: 'intro_abap_basics',
+            title: 'Introduction to ABAP',
             content: {
-                concept: 'Variable Declaration',
-                explanation: 'In ABAP, variables are declared using the DATA statement',
-                baseCode: 'DATA: lv_number TYPE i,\n      lv_text   TYPE string.\n\n* Initialize variables\nlv_number = ___.\nlv_text = ___.\n\nWRITE: lv_number, lv_text.',
+                concept: 'ABAP Fundamentals',
+                explanation: 'ABAP (Advanced Business Application Programming) is SAP\'s programming language. Let\'s write our first ABAP program.',
+                baseCode: 'WRITE: ___.\n\n* This is a comment\nWRITE: ___.',
                 challenge: {
-                    description: "Complete the code by initializing the variables",
+                    description: "Write your first ABAP program by printing 'Hello ABAP' and 'I am learning'",
                     gaps: [
-                        { id: 'gap1', options: ['42', '100', '999'], correct: '42' },
-                        { id: 'gap2', options: ["'Hello ABAP'", "'Test'", "'Learning!"], correct: "'Hello ABAP'" }
+                        { id: 'gap1', options: ["'Hello ABAP'", "'Hello World'", "'Hi ABAP'"], correct: "'Hello ABAP'" },
+                        { id: 'gap2', options: ["'I am learning'", "'Welcome'", "'Testing'"], correct: "'I am learning'" }
                     ],
-                    expectedOutput: "42 Hello ABAP"
+                    expectedOutput: "Hello ABAP\nI am learning"
                 }
             }
         },
         {
-            id: 'string_operations',
-            title: 'String Operations',
+            id: 'numeric_datatypes',
+            title: 'Numeric Data Types',
             content: {
-                concept: 'String Operations',
-                explanation: 'ABAP provides powerful string manipulation capabilities',
-                baseCode: 'DATA: lv_text1 TYPE string,\n      lv_text2 TYPE string,\n      lv_result TYPE string.\n\nlv_text1 = \"ABAP\".\nlv_text2 = ___.\n\nCONCATENATE lv_text1 lv_text2 INTO lv_result SEPARATED BY ___.\n\nWRITE: lv_result.',
+                concept: 'Integer and Decimal Types',
+                explanation: 'ABAP has different numeric types: i (integer), p (packed), f (float). Let\'s work with integer type.',
+                baseCode: 'DATA: lv_integer TYPE i,\n      lv_decimal TYPE p DECIMALS 2.\n\nlv_integer = ___.\nlv_decimal = ___.\n\nWRITE: / lv_integer, / lv_decimal.',
                 challenge: {
-                    description: "Complete the string concatenation code",
+                    description: "Initialize an integer with 42 and a decimal with 3.14",
                     gaps: [
-                        { id: 'gap1', options: ["'Programming'", "'Development'", "'Coding'"], correct: "'Programming'" },
-                        { id: 'gap2', options: ["' '", "'-'", "'_'"], correct: "' '" }
+                        { id: 'gap1', options: ['42', '100', '55'], correct: '42' },
+                        { id: 'gap2', options: ['3.14', '2.50', '1.00'], correct: '3.14' }
                     ],
-                    expectedOutput: "ABAP Programming"
+                    expectedOutput: "42\n3.14"
                 }
             }
         },
         {
-            id: 'calculations',
-            title: 'Basic Calculations',
+            id: 'character_string_types',
+            title: 'Character & String Types',
+            content: {
+                concept: 'Text Data Types',
+                explanation: 'ABAP uses c (fixed-length character), n (numeric text), and string (variable-length) types for text.',
+                baseCode: 'DATA: lv_char   TYPE c LENGTH 10,\n      lv_string TYPE string.\n\nlv_char   = ___.\nlv_string = ___.\n\nWRITE: / lv_char, / lv_string.',
+                challenge: {
+                    description: "Store 'ABAP' in fixed-length char and 'Programming Language' in string",
+                    gaps: [
+                        { id: 'gap1', options: ["'ABAP'", "'SAP'", "'CODE'"], correct: "'ABAP'" },
+                        { id: 'gap2', options: ["'Programming Language'", "'Code'", "'System'"], correct: "'Programming Language'" }
+                    ],
+                    expectedOutput: "ABAP\nProgramming Language"
+                }
+            }
+        },
+        {
+            id: 'variable_declaration',
+            title: 'Variable Declaration',
+            content: {
+                concept: 'Variable Declaration and Initialization',
+                explanation: 'Variables in ABAP must be declared with DATA statement and can be initialized inline.',
+                baseCode: 'DATA: lv_count TYPE i ___ 5,\n      lv_name  TYPE string ___ \'John\',\n      lv_active TYPE abap_bool ___ abap_true.\n\nWRITE: / lv_count, / lv_name, / lv_active.',
+                challenge: {
+                    description: "Complete the variable declarations using the correct initialization keyword (VALUE)",
+                    gaps: [
+                        { id: 'gap1', options: ['VALUE', 'INITIAL', 'DEFAULT'], correct: 'VALUE' },
+                        { id: 'gap2', options: ['VALUE', 'INITIAL', 'DEFAULT'], correct: 'VALUE' },
+                        { id: 'gap3', options: ['VALUE', 'INITIAL', 'DEFAULT'], correct: 'VALUE' }
+                    ],
+                    expectedOutput: "5\nJohn\nX"
+                }
+            }
+        },
+        {
+            id: 'arithmetic_operators',
+            title: 'Arithmetic Operators',
             content: {
                 concept: 'Basic Calculations',
-                explanation: 'ABAP supports various mathematical operations',
-                baseCode: 'DATA: lv_num1 TYPE i,\n      lv_num2 TYPE i,\n      lv_result TYPE i.\n\nlv_num1 = ___.\nlv_num2 = ___.\n\nlv_result = lv_num1 ___ lv_num2.\n\nWRITE: lv_result.',
+                explanation: 'ABAP supports standard arithmetic operators: + (add), - (subtract), * (multiply), / (divide), and ** (exponentiation).',
+                baseCode: 'DATA: lv_num1 TYPE i VALUE 10,\n      lv_num2 TYPE i VALUE 3,\n      lv_result TYPE i.\n\nlv_result = lv_num1 ___ lv_num2.\n* Now try division\nlv_result = lv_num1 ___ lv_num2.',
                 challenge: {
-                    description: "Create a calculation that results in 25",
+                    description: "Perform multiplication and division operations",
                     gaps: [
-                        { id: 'gap1', options: ['5', '10', '15'], correct: '5' },
-                        { id: 'gap2', options: ['5', '10', '15'], correct: '5' },
-                        { id: 'gap3', options: ['+', '*', '/'], correct: '*' }
+                        { id: 'gap1', options: ['*', '+', '-'], correct: '*' },
+                        { id: 'gap2', options: ['/', '*', '+'], correct: '/' }
                     ],
-                    expectedOutput: "25"
+                    expectedOutput: "30\n3"
                 }
             }
         },
         {
-            id: 'boolean_operations',
-            title: 'Boolean Operations',
+            id: 'if_statement',
+            title: 'IF Statement',
             content: {
-                concept: 'Boolean Logic',
-                explanation: 'ABAP supports logical operators like AND, OR, and NOT.',
-                baseCode: 'DATA: lv_a TYPE i,\n      lv_b TYPE i,\n      lv_result TYPE abap_bool.\n\nlv_a = ___.\nlv_b = ___.\n\nIF lv_a ___ lv_b.\n  lv_result = abap_true.\nELSE.\n  lv_result = abap_false.\nENDIF.\n\nWRITE: lv_result.',
+                concept: 'Conditional Logic',
+                explanation: 'IF statements allow conditional execution of code based on logical conditions.',
+                baseCode: 'DATA: lv_number TYPE i VALUE 15.\n\nIF lv_number ___ 10.\n  WRITE: \'Greater than 10\'.\n___ lv_number = 10.\n  WRITE: \'Equals 10\'.\nELSE.\n  WRITE: \'Less than 10\'.\nENDIF.',
                 challenge: {
-                    description: "Make the condition return TRUE",
+                    description: "Complete the IF statement using correct comparison operator and ELSEIF keyword",
                     gaps: [
-                        { id: 'gap1', options: ['10', '20', '30'], correct: '10' },
-                        { id: 'gap2', options: ['20', '10', '5'], correct: '20' },
-                        { id: 'gap3', options: ['>', '<', '>='], correct: '<' }
+                        { id: 'gap1', options: ['>', '<', '='], correct: '>' },
+                        { id: 'gap2', options: ['ELSEIF', 'ELSE IF', 'ELIF'], correct: 'ELSEIF' }
                     ],
-                    expectedOutput: "X"  // ABAP_TRUE is 'X'
+                    expectedOutput: "Greater than 10"
                 }
             }
         },
         {
-            id: 'looping_statements',
-            title: 'Looping Statements',
+            id: 'case_statement',
+            title: 'CASE Statement',
             content: {
-                concept: 'Loops',
-                explanation: 'ABAP supports DO, WHILE, and LOOP AT for iterations.',
-                baseCode: 'DATA: lv_index TYPE i,\n      lv_sum TYPE i.\n\nlv_sum = 0.\nlv_index = 1.\n\nDO __ TIMES.\n  lv_sum = lv_sum + lv_index.\n  lv_index = lv_index + 1.\nENDDO.\n\nWRITE: lv_sum.',
+                concept: 'Multiple Choice Control',
+                explanation: 'CASE statements provide a cleaner way to handle multiple conditions compared to IF-ELSEIF chains.',
+                baseCode: 'DATA: lv_grade TYPE c LENGTH 1 VALUE ___.\n\nCASE lv_grade.\n  WHEN \'A\'.\n    WRITE: \'Excellent\'.\n  WHEN ___.\n    WRITE: \'Good\'.\n  WHEN \'C\'.\n    WRITE: \'Fair\'.\n  OTHERS.\n    WRITE: \'Need improvement\'.\nENDCASE.',
                 challenge: {
-                    description: "Calculate the sum of first 5 numbers",
+                    description: "Complete the CASE statement for grade evaluation",
                     gaps: [
-                        { id: 'gap1', options: ['3', '5', '10'], correct: '5' }
+                        { id: 'gap1', options: ["'A'", "'B'", "'C'"], correct: "'A'" },
+                        { id: 'gap2', options: ["'B'", "'C'", "'D'"], correct: "'B'" }
+                    ],
+                    expectedOutput: "Excellent"
+                }
+            }
+        },
+        {
+            id: 'do_loop',
+            title: 'DO Loop',
+            content: {
+                concept: 'Basic Loop Structure',
+                explanation: 'DO loops allow you to repeat code a specific number of times.',
+                baseCode: 'DATA: lv_sum TYPE i VALUE 0,\n      lv_count TYPE i VALUE ___.\n\nDO ___ TIMES.\n  lv_sum = lv_sum + sy-index.\nENDDO.\n\nWRITE: lv_sum.',
+                challenge: {
+                    description: "Calculate sum of first 5 numbers using DO loop",
+                    gaps: [
+                        { id: 'gap1', options: ['0', '1', '5'], correct: '0' },
+                        { id: 'gap2', options: ['3', '5', '10'], correct: '5' }
                     ],
                     expectedOutput: "15"
                 }
             }
         },
         {
-            id: "conditional_statements",
-            title: "Conditional Statements",
+            id: 'while_loop',
+            title: 'WHILE Loop',
             content: {
-                concept: "IF, CASE Statements",
-                explanation: "ABAP allows conditional execution using IF...ELSEIF...ELSE and CASE statements.",
-                baseCode: "DATA: lv_value TYPE i.\n\nlv_value = ___.\n\nIF lv_value ___ 10.\n  WRITE: 'Low'.\nELSEIF lv_value ___ 20.\n  WRITE: 'Medium'.\nELSE.\n  WRITE: 'High'.\nENDIF.",
+                concept: 'Condition-Based Loop',
+                explanation: 'WHILE loops continue executing as long as a condition remains true.',
+                baseCode: 'DATA: lv_counter TYPE i VALUE 1,\n      lv_result TYPE i VALUE 1.\n\nWHILE lv_counter ___ 5.\n  lv_result = lv_result * ___.\n  lv_counter = lv_counter + 1.\nENDWHILE.\n\nWRITE: lv_result.',
                 challenge: {
-                    description: "Fill the condition to categorize the number correctly.",
+                    description: "Calculate factorial of 5 using WHILE loop",
                     gaps: [
-                        {
-                            id: "gap1",
-                            options: ["5", "15", "25"],
-                            correct: "15"
-                        },
-                        {
-                            id: "gap2",
-                            options: ["<", ">", "="],
-                            correct: "<"
-                        },
-                        {
-                            id: "gap3",
-                            options: ["=", ">", "<"],
-                            correct: "="
-                        }
+                        { id: 'gap1', options: ['<=', '<', '>='], correct: '<=' },
+                        { id: 'gap2', options: ['lv_counter', 'lv_result', '2'], correct: 'lv_counter' }
                     ],
-                    expectedOutput: "Low"
+                    expectedOutput: "120"
                 }
             }
         },
         {
-            id: "data_types_structures",
-            title: "Data Types & Structures",
+            id: 'compound_conditions',
+            title: 'Compound Conditions',
             content: {
-                concept: "Internal Tables and Work Areas",
-                explanation: "Internal tables store multiple rows of structured data.",
-                baseCode: "TYPES: BEGIN OF ty_employee,\n         id TYPE i,\n         name TYPE string,\n       END OF ty_employee.\n\nDATA: lt_employees TYPE TABLE OF ty_employee,\n      ls_employee  TYPE ty_employee.\n\nls_employee-id = ___.\nls_employee-name = ___.\n\nAPPEND ls_employee TO lt_employees.\n\nWRITE: ls_employee-id, ls_employee-name.",
+                concept: 'Complex Logical Expressions',
+                explanation: 'Combine conditions using AND, OR, and NOT operators for complex logic.',
+                baseCode: 'DATA: lv_age TYPE i VALUE 25,\n      lv_is_member TYPE abap_bool VALUE abap_true.\n\nIF lv_age ___ 18 ___ lv_is_member = abap_true.\n  WRITE: \'Access granted\'.\nELSE.\n  WRITE: \'Access denied\'.\nENDIF.',
                 challenge: {
-                    description: "Initialize an employee structure.",
+                    description: "Create a condition that checks if person is adult AND is a member",
                     gaps: [
-                        {
-                            id: "gap1",
-                            options: ["101", "202", "303"],
-                            correct: "101"
-                        },
-                        {
-                            id: "gap2",
-                            options: ["'John'", "'Alice'", "'Bob'"],
-                            correct: "'John'"
-                        }
+                        { id: 'gap1', options: ['>=', '>', '='], correct: '>=' },
+                        { id: 'gap2', options: ['AND', 'OR', 'NOT'], correct: 'AND' }
                     ],
-                    expectedOutput: "101 John"
+                    expectedOutput: "Access granted"
                 }
             }
         },
         {
-            id: "looping_internal_tables",
-            title: "Looping Over Internal Tables",
+            id: 'nested_control',
+            title: 'Nested Control Structures',
             content: {
-                concept: "LOOP AT",
-                explanation: "Iterate over internal tables using LOOP AT.",
-                baseCode: "LOOP AT lt_employees INTO ls_employee.\n  WRITE: ls_employee-name.\nENDLOOP.",
+                concept: 'Combined Control Structures',
+                explanation: 'Control structures can be nested within each other for complex logic flows.',
+                baseCode: 'DATA: lv_num TYPE i VALUE ___.\n\nIF lv_num > 0.\n  DO ___ TIMES.\n    IF sy-index MOD 2 = 0.\n      WRITE: sy-index.\n    ENDIF.\n  ENDDO.\nENDIF.',
                 challenge: {
-                    description: "Add a condition to print names longer than 3 characters.",
+                    description: "Print even numbers up to 6 using nested IF inside DO loop",
                     gaps: [
-                        {
-                            id: "gap1",
-                            options: ["4", "3", "5"],
-                            correct: "3"
-                        }
+                        { id: 'gap1', options: ['1', '5', '10'], correct: '10' },
+                        { id: 'gap2', options: ['4', '6', '8'], correct: '6' }
                     ],
-                    expectedOutput: "John"
-                }
-            }
-        },
-        {
-            id: "modularization",
-            title: "Modularization",
-            content: {
-                concept: "FORM Subroutines",
-                explanation: "Use FORM...ENDFORM to modularize ABAP code.",
-                baseCode: "FORM print_message USING lv_msg TYPE string.\n  WRITE: lv_msg.\nENDFORM.\n\nPERFORM print_message USING ___.",
-                challenge: {
-                    description: "Pass the correct string to the subroutine.",
-                    gaps: [
-                        {
-                            id: "gap1",
-                            options: ["'Hello ABAP'", "'Welcome'", "'Hi'"],
-                            correct: "'Hello ABAP'"
-                        }
-                    ],
-                    expectedOutput: "Hello ABAP"
-                }
-            }
-        },
-        {
-            id: "Field Symbols",
-            title: "Field Symbols",
-            content: {
-                concept: "Dynamic Variable Access",
-                explanation: "Field symbols act as references to variables.",
-                baseCode: "DATA: lv_number TYPE i VALUE 10.\nFIELD-SYMBOLS: <fs> TYPE i.\n\nASSIGN lv_number TO <fs>.\n\n<fs> = ___.\n\nWRITE: lv_number.",
-                challenge: {
-                    description: "Modify lv_number using field symbols.",
-                    gaps: [
-                        {
-                            id: "gap1",
-                            options: ["20", "30", "40"],
-                            correct: "20"
-                        }
-                    ],
-                    expectedOutput: "20"
+                    expectedOutput: "2 4 6"
                 }
             }
         }
-
     ];
 
 
@@ -231,28 +218,35 @@ const ABAPExplorer = ({score,setScore}) => {
     const executeCode = () => {
         if (!activeCodeBlock || !activeCodeBlock.challenge) return;
 
-        const isCorrect = activeCodeBlock.challenge.gaps.every(
-            gap => selectedOptions[gap.id] === gap.correct
-        );
+        setIsCompiling(true);
+        setExecutionOutput('Compiling ABAP code...');
 
-        if (isCorrect) {
-            setExecutionOutput(activeCodeBlock.challenge.expectedOutput);
-            setCodeSuccess(true);
-            setScore(prev => prev + 20);
-            setDiscoveredConcepts(prev => [...prev, activeCodeBlock.concept]);
+        setTimeout(() => {
+            const isCorrect = activeCodeBlock.challenge.gaps.every(
+                gap => selectedOptions[gap.id] === gap.correct
+            );
 
-            // Celebration effect
-            const particles = Array.from({ length: 20 }, (_, i) => ({
-                id: `celebrate-${Date.now()}-${i}`,
-                x: Math.random() * 100,
-                y: Math.random() * 100,
-                color: ['#FFD700', '#FF69B4', '#00FF00'][Math.floor(Math.random() * 3)]
-            }));
-            setParticleEffects(prev => [...prev, ...particles]);
-        } else {
-            setExecutionOutput('Execution failed. Check your code!');
-            setCodeSuccess(false);
-        }
+            setIsCompiling(false);
+
+            if (isCorrect) {
+                setExecutionOutput(activeCodeBlock.challenge.expectedOutput);
+                setCodeSuccess(true);
+                setScore(prev => prev + 20);
+                setDiscoveredConcepts(prev => [...prev, activeCodeBlock.concept]);
+
+                // Celebration effect
+                const particles = Array.from({ length: 20 }, (_, i) => ({
+                    id: `celebrate-${Date.now()}-${i}`,
+                    x: Math.random() * 100,
+                    y: Math.random() * 100,
+                    color: ['#FFD700', '#FF69B4', '#00FF00'][Math.floor(Math.random() * 3)]
+                }));
+                setParticleEffects(prev => [...prev, ...particles]);
+            } else {
+                setExecutionOutput('Execution failed. Check your code!');
+                setCodeSuccess(false);
+            }
+        }, 1000); // Show compiling message for 1 second
     };
 
     const startGame = () => {
@@ -431,39 +425,64 @@ const ABAPExplorer = ({score,setScore}) => {
                                     </pre>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center">
-                                        <h3 className="text-white font-semibold">Output:</h3>
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={executeCode}
-                                                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between items-center">
+                                                <h3 className="text-white font-semibold">Output:</h3>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={executeCode}
+                                                        disabled={isCompiling}
+                                                        className={`bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 ${isCompiling ? 'opacity-50 cursor-not-allowed' : ''
+                                                            }`}
+                                                    >
+                                                        {isCompiling ? (
+                                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                                        ) : (
+                                                            <Play className="w-4 h-4" />
+                                                        )}
+                                                        {isCompiling ? 'Compiling...' : 'Run'}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedOptions({});
+                                                            setExecutionOutput('');
+                                                            setCodeSuccess(false);
+                                                        }}
+                                                        disabled={isCompiling}
+                                                        className={`bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 ${isCompiling ? 'opacity-50 cursor-not-allowed' : ''
+                                                            }`}
+                                                    >
+                                                        <RefreshCw className="w-4 h-4" />
+                                                        Reset
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={`p-4 rounded-lg ${isCompiling
+                                                        ? 'bg-blue-900/30 border border-blue-500/30'
+                                                        : executionOutput
+                                                            ? (codeSuccess ? 'bg-green-900/30' : 'bg-red-900/30')
+                                                            : 'bg-gray-800'
+                                                    }`}
                                             >
-                                                <Play className="w-4 h-4" />
-                                                Run
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedOptions({});
-                                                    setExecutionOutput('');
-                                                    setCodeSuccess(false);
-                                                }}
-                                                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
-                                            >
-                                                <RefreshCw className="w-4 h-4" />
-                                                Reset
-                                            </button>
+                                                <motion.pre
+                                                    key={executionOutput}
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    transition={{ duration: 0.3 }}
+                                                    className="text-white font-mono"
+                                                >
+                                                    {isCompiling ? (
+                                                        <div className="flex items-center gap-2">
+                                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                                            {executionOutput}
+                                                        </div>
+                                                    ) : (
+                                                        executionOutput || 'Output will appear here...'
+                                                    )}
+                                                </motion.pre>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className={`p-4 rounded-lg ${executionOutput
-                                        ? (codeSuccess ? 'bg-green-900/30' : 'bg-red-900/30')
-                                        : 'bg-gray-800'
-                                        }`}>
-                                        <pre className="text-white font-mono">
-                                            {executionOutput || 'Output will appear here...'}
-                                        </pre>
-                                    </div>
-                                </div>
 
                                 {codeSuccess && (
                                     <motion.button
