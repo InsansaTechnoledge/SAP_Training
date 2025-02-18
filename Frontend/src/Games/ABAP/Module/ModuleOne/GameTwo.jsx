@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code, Book, Terminal, Sparkles, CheckCircle, Circle, Play, RefreshCw } from 'lucide-react';
 
@@ -19,6 +19,9 @@ const ABAPExplorer = () => {
     const [nodeDiscoveryAlertVisible, setNodeDiscoveryAlertVisible] = useState(false);
     const [resumePlayingVisible,setResumePlayingVisible] = useState(false);
     const [playingModule, setPlayingModule] = useState();
+
+    const explorerRef = useRef(null);
+
 
     const abapModules = [
         {
@@ -276,9 +279,11 @@ const ABAPExplorer = () => {
                         gameOnChallengeOff ?
                             <div
                                 id="explorer-container"
+                                ref={explorerRef}
                                 className="w-full h-[450px] relative overflow-hidden rounded-2xl shadow-[0_0_50px_rgba(168,85,247,0.3)] border border-purple-500/30"
                                 tabIndex={0}
                                 onKeyDown={handleKeyDown}
+                                onFocus={(e) => e.preventDefault()}
                             >
                                 {/* Futuristic Grid Background */}
                                 <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-indigo-900 to-purple-900">
@@ -526,18 +531,28 @@ const ABAPExplorer = () => {
                                 {
                                     resumePlayingVisible
                                     &&
-                                    <motion.button
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        onClick={() => {
-                                            setGameOnChallengeOff(true)
-                                            setResumePlayingVisible(false)
-                                            document.getElementById("explorer-container").focus();
-                                        }}
-                                        className="mt-5 p-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl text-md  shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
-                                    >
-                                        Resume playing
-                                    </motion.button>
+                                        <motion.button
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            onClick={() => {
+                                                setGameOnChallengeOff(true);
+                                                setResumePlayingVisible(false);
+
+                                                // Focus without scrolling
+                                                if (explorerRef.current) {
+                                                    explorerRef.current.focus({ preventScroll: true });
+
+                                                    // Ensure the explorer container doesn't trigger unwanted scrolling
+                                                    window.scrollTo({
+                                                        top: 0,
+                                                        behavior: "smooth" // Optional: Smooth scrolling to avoid sudden jumps
+                                                    });
+                                                }
+                                            }}
+                                            className="mt-5 p-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl text-md shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
+                                        >
+                                            Resume playing
+                                        </motion.button>
                                 }
                                 </div>
                                 
