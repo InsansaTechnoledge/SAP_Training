@@ -458,7 +458,7 @@ const GameDashboard = () => {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-white rounded-2xl w-[800px] max-h-[80vh] overflow-y-auto"
+                            className="bg-blue-50 rounded-2xl w-[800px] max-h-[80vh] overflow-y-auto"
                         >
                             <div className="p-6 border-b border-gray-200">
                                 <div className="flex justify-between items-center">
