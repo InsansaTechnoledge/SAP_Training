@@ -7,15 +7,46 @@ import { Howl } from 'howler'; // Import Howler
 
 // Load sounds
 const sounds = {
-    jump: new Howl({ src: ['/Sounds/jump.wav'], volume: 0.1 }),
-    correct: new Howl({ src: ['/Sounds/correct.wav'], volume: 0.08 }),
-    wrong: new Howl({ src: ['/sounds/wrong.ogg'], volume: 0.08 }),
-    gameover: new Howl({ src: ['/Sounds/gameover.wav'], volume: 0.03 }),
-    background: new Howl({ src: ['/Sounds/background.wav'], volume: 0.1, loop: true })
+    jump: new Howl({
+        src: ['/Sounds/jump.wav'],
+        volume: 0.04,
+        html5: true // Add html5 flag for better performance
+    }),
+    correct: new Howl({
+        src: ['/Sounds/correct.wav'],
+        volume: 0.08,
+        html5: true
+    }),
+    wrong: new Howl({
+        src: ['/sounds/wrong.ogg'],
+        volume: 0.08,
+        html5: true
+    }),
+    gameover: new Howl({
+        src: ['/Sounds/gameover.wav'],
+        volume: 0.03,
+        html5: true
+    }),
+    background: new Howl({
+        src: ['/Sounds/background.wav'],
+        volume: 0.1,
+        loop: true,
+        html5: true,
+        onloaderror: function (id, err) {
+            console.error('Background music loading error:', err);
+        },
+        onplayerror: function (id, err) {
+            console.error('Background music play error:', err);
+            // Attempt to recover from play error
+            sounds.background.once('unlock', function () {
+                sounds.background.play();
+            });
+        }
+    })
 };
 
 
-const ABAPRunner = ({ score, setScore }) => {
+const ABAPRunner = ({ score, setScore, audioSettings }) => {
     const [position, setPosition] = useState({ x: 1, y: 0 });
     const [isJumping, setIsJumping] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
@@ -72,6 +103,35 @@ const ABAPRunner = ({ score, setScore }) => {
         return particles;
     }, [position]);
 
+    // Effect to initialize sounds with current audio settings
+    useEffect(() => {
+        const updateVolumes = () => {
+            const masterVolume = audioSettings.isMuted ? 0 : audioSettings.masterVolume / 100;
+
+            // Update background music volume without stopping
+            const bgVolume = (audioSettings.backgroundMusic / 100) * masterVolume;
+            if (sounds.background.playing()) {
+                sounds.background.volume(bgVolume);
+            }
+
+            // Update other sound volumes
+            sounds.jump.volume((audioSettings.jumpSound / 100) * masterVolume);
+            sounds.correct.volume((audioSettings.correctSound / 100) * masterVolume);
+            sounds.wrong.volume((audioSettings.wrongSound / 100) * masterVolume);
+            sounds.gameover.volume((audioSettings.gameoverSound / 100) * masterVolume);
+        };
+
+        updateVolumes();
+
+        // Make sounds accessible globally
+        window.sounds = sounds;
+
+        return () => {
+            delete window.sounds;
+        };
+    }, [audioSettings]);
+
+    
     // Generate speed lines
     const generateSpeedLines = useCallback(() => {
         const lines = [];
@@ -138,7 +198,7 @@ const ABAPRunner = ({ score, setScore }) => {
         switch (e.key) {
             case 'ArrowLeft':
                 movePlayer('left');
-                break;
+                break
             case 'ArrowLeft':
             case 'a':
                 movePlayer('left');
@@ -232,6 +292,11 @@ const ABAPRunner = ({ score, setScore }) => {
         setRoadColors(['blue-500', 'blue-500', 'blue-500']);
         setIsRunning(false);
         generateSpeedLines();
+
+        if (!sounds.background.playing()) {
+            sounds.background.play();
+        }
+
         sounds.background.play();
         document.getElementById('game-container').focus();
         setCarVisible(true)

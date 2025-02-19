@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Pause, Settings, ChevronRight, Award, Clock, Star, X, Monitor, Trophy, BarChart, Book, Zap } from 'lucide-react';
+import { Play, Pause, Settings, ChevronRight, Award, Clock, Star, X, Monitor, Trophy, BarChart, Book, Zap, Volume2, VolumeX } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ABAPExplorer from '../Games/ABAP/Module/ModuleOne/GameTwo';
 import ABAPRunner from '../Games/ABAP/Module/ModuleOne/GameOne';
@@ -38,6 +38,80 @@ const GameDashboard = () => {
         averageScore: 85,
         streak: 5
     };
+
+    const [audioSettings, setAudioSettings] = useState({
+        masterVolume: 80,
+        backgroundMusic: 60,
+        jumpSound: 70,
+        correctSound: 75,
+        wrongSound: 65,
+        gameoverSound: 60,
+        isMuted: false
+    });
+
+    useEffect(() => {
+        // If the game is muted, set all volumes to 0
+        const volumeMultiplier = audioSettings.isMuted ? 0 : audioSettings.masterVolume / 100;
+
+        // Update all sound volumes
+        if (window.sounds) {
+            window.sounds.background.volume(audioSettings.backgroundMusic / 100 * volumeMultiplier);
+            window.sounds.jump.volume(audioSettings.jumpSound / 100 * volumeMultiplier);
+            window.sounds.correct.volume(audioSettings.correctSound / 100 * volumeMultiplier);
+            window.sounds.wrong.volume(audioSettings.wrongSound / 100 * volumeMultiplier);
+            window.sounds.gameover.volume(audioSettings.gameoverSound / 100 * volumeMultiplier);
+        }
+    }, [audioSettings]);
+
+    // Function to handle volume changes
+    const handleVolumeChange = (setting, value) => {
+        setAudioSettings(prev => {
+            const newSettings = {
+                ...prev,
+                [setting]: value
+            };
+
+            // Calculate new volume
+            const masterVolume = newSettings.isMuted ? 0 : newSettings.masterVolume / 100;
+
+            // Update the sound volume directly if it exists
+            if (window.sounds) {
+                const soundKey = setting.replace('Sound', '');
+                if (window.sounds[soundKey]) {
+                    const newVolume = (value / 100) * masterVolume;
+                    window.sounds[soundKey].volume(newVolume);
+                }
+            }
+
+            return newSettings;
+        });
+    };
+
+    // Function to toggle mute
+    const toggleMute = () => {
+        setAudioSettings(prev => ({
+            ...prev,
+            isMuted: !prev.isMuted
+        }));
+    };
+
+    // Volume Slider Component
+    const VolumeSlider = ({ label, value, onChange }) => (
+        <div className="space-y-2">
+            <div className="flex justify-between items-center">
+                <label className="text-sm font-medium text-gray-700">{label}</label>
+                <span className="text-sm text-gray-500">{value}%</span>
+            </div>
+            <input
+                type="range"
+                min="0"
+                max="100"
+                value={value}
+                onChange={(e) => onChange(parseInt(e.target.value))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            />
+        </div>
+    );
 
     const GameCard = ({ title, type, description, isActive, onClick, features }) => (
         <motion.div
@@ -284,7 +358,7 @@ const GameDashboard = () => {
                                             </div>
                                         ) : (
                                             <div className="bg-gray-100 rounded-xl p-4">
-                                                {currentGame === 'ABAPRunner' && <ABAPRunner score={score} setScore={setScore}/>}
+                                                    {currentGame === 'ABAPRunner' && <ABAPRunner score={score} setScore={setScore} audioSettings={audioSettings} />}
                                                 {currentGame === 'ABAPExplorer' && <ABAPExplorer score={score} setScore={setScore} />}
                                             </div>
                                         )}
@@ -378,13 +452,13 @@ const GameDashboard = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-opacity-50 z-50 flex items-center justify-center"
+                        className="fixed inset-0 bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center"
                     >
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-gray-500 rounded-2xl w-[800px] max-h-[80vh] overflow-y-auto"
+                            className="bg-white rounded-2xl w-[800px] max-h-[80vh] overflow-y-auto"
                         >
                             <div className="p-6 border-b border-gray-200">
                                 <div className="flex justify-between items-center">
@@ -399,77 +473,129 @@ const GameDashboard = () => {
                                     </motion.button>
                                 </div>
                             </div>
+
                             <div className="p-6 space-y-6">
-                                <div className="grid gap-6">
-                                    {/* Game Preferences */}
-                                    <div>
-                                        <h4 className="text-lg font-semibold mb-4">Game Preferences</h4>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-medium text-gray-700">
-                                                    Difficulty Level
-                                                </label>
-                                                <select className="w-full p-2 border border-gray-300 rounded-lg">
-                                                    <option>Beginner</option>
-                                                    <option>Intermediate</option>
-                                                    <option>Advanced</option>
-                                                </select>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-medium text-gray-700">
-                                                    Learning Pace
-                                                </label>
-                                                <select className="w-full p-2 border border-gray-300 rounded-lg">
-                                                    <option>Relaxed</option>
-                                                    <option>Balanced</option>
-                                                    <option>Intensive</option>
-                                                </select>
+                                {/* Audio Settings Section */}
+                                <div className="border-b border-gray-200 pb-6">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <h4 className="text-lg font-semibold">Audio Settings</h4>
+                                        <motion.button
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            onClick={toggleMute}
+                                            className={`p-2 rounded-lg ${audioSettings.isMuted ? 'bg-red-100' : 'bg-blue-100'}`}
+                                        >
+                                            {audioSettings.isMuted ? (
+                                                <VolumeX className="w-5 h-5 text-red-600" />
+                                            ) : (
+                                                <Volume2 className="w-5 h-5 text-blue-600" />
+                                            )}
+                                        </motion.button>
+                                    </div>
+                                    <div className="flex justify-between items-end gap-4 px-4 py-8">
+                                        <VolumeSlider
+                                            label="Master Volume"
+                                            value={audioSettings.masterVolume}
+                                            onChange={(value) => handleVolumeChange('masterVolume', value)}
+                                        />
+                                        <VolumeSlider
+                                            label="Background Music"
+                                            value={audioSettings.backgroundMusic}
+                                            onChange={(value) => handleVolumeChange('backgroundMusic', value)}
+                                        />
+                                        <VolumeSlider
+                                            label="Jump Sound"
+                                            value={audioSettings.jumpSound}
+                                            onChange={(value) => handleVolumeChange('jumpSound', value)}
+                                        />
+                                        <VolumeSlider
+                                            label="Correct Sound"
+                                            value={audioSettings.correctSound}
+                                            onChange={(value) => handleVolumeChange('correctSound', value)}
+                                        />
+                                        <VolumeSlider
+                                            label="Wrong Sound"
+                                            value={audioSettings.wrongSound}
+                                            onChange={(value) => handleVolumeChange('wrongSound', value)}
+                                        />
+                                        <VolumeSlider
+                                            label="Game Over"
+                                            value={audioSettings.gameoverSound}
+                                            onChange={(value) => handleVolumeChange('gameoverSound', value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="p-6 space-y-6">
+                                    <div className="grid gap-6">
+                                        {/* Game Preferences */}
+                                        <div>
+                                            <h4 className="text-lg font-semibold mb-4">Game Preferences</h4>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-2">
+                                                    <label className="block text-sm font-medium text-gray-700">
+                                                        Difficulty Level
+                                                    </label>
+                                                    <select className="w-full p-2 border border-gray-300 rounded-lg">
+                                                        <option>Beginner</option>
+                                                        <option>Intermediate</option>
+                                                        <option>Advanced</option>
+                                                    </select>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="block text-sm font-medium text-gray-700">
+                                                        Learning Pace
+                                                    </label>
+                                                    <select className="w-full p-2 border border-gray-300 rounded-lg">
+                                                        <option>Relaxed</option>
+                                                        <option>Balanced</option>
+                                                        <option>Intensive</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    {/* Game Mode Selection */}
-                                    <div>
-                                        <h4 className="text-lg font-semibold mb-4">Game Mode</h4>
-                                        <div className="grid grid-cols-2 gap-6">
-                                            <GameCard
-                                                title="ABAP Explorer"
-                                                type="ABAPExplorer"
-                                                description="Interactive exploration of ABAP concepts"
-                                                features={[
-                                                    "Visual concept mapping",
-                                                    "Interactive examples",
-                                                    "Real-time feedback"
-                                                ]}
-                                                isActive={currentGame === 'ABAPExplorer'}
-                                                onClick={() => {
-                                                    if(currentGame!=='ABAPExplorer'){
-                                                        setScore(0)
-                                                    }
-                                                    setCurrentGame('ABAPExplorer');
-                                                    setShowSettings(false);
-                                                    setScore(0);
-                                                }}
-                                            />
-                                            <GameCard
-                                                title="ABAP Runner"
-                                                type="ABAPRunner"
-                                                description="Hands-on coding challenges"
-                                                features={[
-                                                    "Live code execution",
-                                                    "Progressive difficulty",
-                                                    "Performance tracking"
-                                                ]}
-                                                isActive={currentGame === 'ABAPRunner'}
-                                                onClick={() => {
-                                                    if(currentGame!=='ABAPRunner'){
-                                                        setScore(0)
-                                                    }
-                                                    setCurrentGame('ABAPRunner');
-                                                    setShowSettings(false);
-                                                    
-                                                }}
-                                            />
+                                        {/* Game Mode Selection */}
+                                        <div>
+                                            <h4 className="text-lg font-semibold mb-4">Game Mode</h4>
+                                            <div className="grid grid-cols-2 gap-6">
+                                                <GameCard
+                                                    title="ABAP Explorer"
+                                                    type="ABAPExplorer"
+                                                    description="Interactive exploration of ABAP concepts"
+                                                    features={[
+                                                        "Visual concept mapping",
+                                                        "Interactive examples",
+                                                        "Real-time feedback"
+                                                    ]}
+                                                    isActive={currentGame === 'ABAPExplorer'}
+                                                    onClick={() => {
+                                                        if (currentGame !== 'ABAPExplorer') {
+                                                            setScore(0);
+                                                        }
+                                                        setCurrentGame('ABAPExplorer');
+                                                        setShowSettings(false);
+                                                    }}
+                                                />
+                                                <GameCard
+                                                    title="ABAP Runner"
+                                                    type="ABAPRunner"
+                                                    description="Hands-on coding challenges"
+                                                    features={[
+                                                        "Live code execution",
+                                                        "Progressive difficulty",
+                                                        "Performance tracking"
+                                                    ]}
+                                                    isActive={currentGame === 'ABAPRunner'}
+                                                    onClick={() => {
+                                                        if (currentGame !== 'ABAPRunner') {
+                                                            setScore(0);
+                                                        }
+                                                        setCurrentGame('ABAPRunner');
+                                                        setShowSettings(false);
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
