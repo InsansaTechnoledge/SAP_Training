@@ -7,7 +7,7 @@ import { Howl } from 'howler'; // Import Howler
 
 // Load sounds
 const sounds = {
-    jump: new Howl({ src: ['/Sounds/jump.wav'], volume: 0.04 }),
+    jump: new Howl({ src: ['/Sounds/jump.wav'], volume: 0.1 }),
     correct: new Howl({ src: ['/Sounds/correct.wav'], volume: 0.08 }),
     wrong: new Howl({ src: ['/sounds/wrong.ogg'], volume: 0.08 }),
     gameover: new Howl({ src: ['/Sounds/gameover.wav'], volume: 0.03 }),
@@ -114,7 +114,7 @@ const ABAPRunner = ({ score, setScore }) => {
                 case 'up':
                     if (prev.y < 90) {
                         newPos.y = prev.y + 10;
-                        setRoadOffset(prev => prev + 50); 
+                        setRoadOffset(prev => prev + 50);
                         sounds.jump.play();
                     }
                     break;
@@ -140,21 +140,21 @@ const ABAPRunner = ({ score, setScore }) => {
                 movePlayer('left');
                 break;
             case 'ArrowLeft':
-            case 'a': 
+            case 'a':
                 movePlayer('left');
                 break;
             case 'ArrowRight':
                 movePlayer('right');
                 break;
             case 'ArrowRight':
-            case 'd': 
+            case 'd':
                 movePlayer('right');
                 break;
             case 'ArrowUp':
                 movePlayer('up');
                 if (!isJumping) {
                     setIsJumping(true);
-                    setTimeout(() => setIsJumping(false), 500);
+                    setTimeout(() => setIsJumping(false), 0);
                     // sounds.jump.play();
                 }
                 break;
@@ -164,7 +164,7 @@ const ABAPRunner = ({ score, setScore }) => {
                 if (!isJumping) {
                     setIsJumping(true);
                     sounds.jump.play(); // Play jump sound
-                    setTimeout(() => setIsJumping(false), 500);
+                    setTimeout(() => setIsJumping(false), 0);
                 }
                 break;
             case 'ArrowDown':
@@ -186,7 +186,7 @@ const ABAPRunner = ({ score, setScore }) => {
         if (position.y >= 80) {
             if (position.x === currentQuestion.correct) {
                 setScore(prev => prev + 10);
-                sounds.correct.play(); 
+                sounds.correct.play();
                 setParticleEffects(prev => [...prev, ...createCelebrationEffect()]);
                 setRoadColors(prev => prev.map((_, i) =>
                     i === currentQuestion.correct ? 'green-500' : 'red-500'
@@ -200,7 +200,7 @@ const ABAPRunner = ({ score, setScore }) => {
                     generateNewQuestion();
                 }, 1000);
             } else {
-               
+
                 setRoadColors(prev => prev.map((_, i) =>
                     i === currentQuestion.correct ? 'green-500' : 'red-500'
                 ));
@@ -208,10 +208,10 @@ const ABAPRunner = ({ score, setScore }) => {
                 setLaneStates(prev => prev.map((_, i) =>
                     i === currentQuestion.correct ? 'correct' : 'wrong'
                 ));
-                
+
                 setTimeout(() => {
                     sounds.gameover.play();
-                    sounds.background.stop(); 
+                    sounds.background.stop();
                     setGameOver(true);
                     setCarVisible(false);
                     setCurrentQuestion(null);
@@ -271,7 +271,7 @@ const ABAPRunner = ({ score, setScore }) => {
                     id="game-container"
                     className="relative h-[450px] rounded-3xl overflow-hidden shadow-2xl border border-purple-500/30"
                     tabIndex={0}
-                    onKeyDown={handleKeyDown}
+                    onKeyDown={position.y===80 ? null : handleKeyDown}
                 >
                     {/* Road Container */}
                     <div className="absolute inset-0 bg-gray-900">
@@ -284,14 +284,14 @@ const ABAPRunner = ({ score, setScore }) => {
                             }}
                         >
                             {/* Lanes */}
-                            <div className="relative w-full h-full flex">
+                            <div className="    w-full h-full flex">
                                 {laneStates.map((state, index) => (
                                     <div key={index} className="flex-1 relative">
                                         {/* Lane Background */}
                                         <div
                                             className={`absolute inset-0 transition-colors duration-300 ${state === 'correct' ? 'bg-green-600' :
-                                                    state === 'wrong' ? 'bg-red-600' :
-                                                        'bg-gray-800'
+                                                state === 'wrong' ? 'bg-red-600' :
+                                                    'bg-gray-800'
                                                 }`}
                                         />
 
@@ -308,21 +308,36 @@ const ABAPRunner = ({ score, setScore }) => {
                                             ))}
                                         </div>
 
-                                        {/* Answer Box */}
-                                        {currentQuestion && (
-                                            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-white text-black px-6 py-3 rounded-xl border border-gray-300 shadow-lg">
-                                                <p className="font-semibold">{currentQuestion.answers[index] ?? "No Answer"}</p>
-                                            </div>
-                                        )}
+
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </div>
 
+                    {/* Answer Box */}
+                    <div className='absolute bottom-12 w-full grid grid-cols-3 gap-x-6 px-3'>
+                        {
+
+                            laneStates.map((state, index) => {
+                                if (currentQuestion) {
+                                    return (
+                                        <div className="text-center relative left-1/2 transform -translate-x-1/2 bg-white text-black px-6 py-3 rounded-xl border border-gray-300 shadow-lg">
+                                            <p className="font-semibold">{currentQuestion.answers[index] ?? "No Answer"}</p>
+                                        </div>
+                                    )
+
+                                }
+                            }
+
+                            )
+                        }
+
+                    </div>
+
                     {/* Player */}
 
-                    <CarPlayer position={position} isJumping={isJumping} carVisible={carVisible}/>
+                    <CarPlayer position={position} isJumping={isJumping} carVisible={carVisible} />
 
                     {/* <motion.div
                         className="absolute z-50 transition-all duration-300"
@@ -389,37 +404,43 @@ const ABAPRunner = ({ score, setScore }) => {
                                     </motion.button>
 
                                     {/* Controls Guide */}
-                                    <div className="mt-8 bg-black/30 p-6 rounded-xl text-white space-y-3 backdrop-blur-sm border border-white/10">
-                                        <h3 className="text-xl font-semibold mb-4">Controls</h3>
-                                        <div className="grid grid-cols-1 gap-4">
-                                            <div className="flex items-center justify-center space-x-4">
-                                                <div className="flex space-x-2">
-                                                    <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">←</kbd>
-                                                    <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">→</kbd>
-                                                    <div>
-                                                        |
+                                    {
+                                        !gameOver
+                                        ?
+                                        <div className="mt-8 bg-black/30 p-6 rounded-xl text-white space-y-3 backdrop-blur-sm border border-white/10">
+                                            <h3 className="text-xl font-semibold mb-4">Controls</h3>
+                                            <div className="grid grid-cols-1 gap-4">
+                                                <div className="flex items-center justify-center space-x-4">
+                                                    <div className="flex space-x-2">
+                                                        <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">←</kbd>
+                                                        <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">→</kbd>
+                                                        <div>
+                                                            |
+                                                        </div>
+                                                        <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">A</kbd>
+                                                        <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">D</kbd>
                                                     </div>
-                                                    <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">A</kbd>
-                                                    <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">D</kbd>
+                                                    <span className="text-white/80">Move left/right</span>
                                                 </div>
-                                                <span className="text-white/80">Move left/right</span>
-                                            </div>
-                                            <div className="flex items-center justify-center space-x-4">
-                                                <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">↑</kbd>
-                                                <div>|</div>
-                                                <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">W</kbd>
+                                                <div className="flex items-center justify-center space-x-4">
+                                                    <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">↑</kbd>
+                                                    <div>|</div>
+                                                    <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">W</kbd>
 
-                                                <span className="text-white/80">Move forward</span>
-                                            </div>
-                                            <div className="flex items-center justify-center space-x-4">
-                                                <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">↓</kbd>
-                                                <div>|</div>
-                                                <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">S</kbd>
+                                                    <span className="text-white/80">Move forward</span>
+                                                </div>
+                                                <div className="flex items-center justify-center space-x-4">
+                                                    <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">↓</kbd>
+                                                    <div>|</div>
+                                                    <kbd className="px-3 py-1 bg-white/10 rounded-lg border border-white/20">S</kbd>
 
-                                                <span className="text-white/80">Move backward</span>
+                                                    <span className="text-white/80">Move backward</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        :
+                                        null
+                                    }
                                 </motion.div>
                             </motion.div>
                         )}
@@ -460,7 +481,7 @@ const ABAPRunner = ({ score, setScore }) => {
                             </motion.div>
                         ))}
                     </AnimatePresence>
-                   
+
                 </div>
 
                 {/* Game Instructions */}

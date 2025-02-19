@@ -43,22 +43,22 @@ const GameDashboard = () => {
         <motion.div
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`bg-white rounded-xl transition-all duration-300 ${isActive ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'
+            className={`bg-card rounded-xl transition-all duration-300 ${isActive ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'
                 }`}
         >
             <div className="p-6">
                 <div className="flex items-start justify-between mb-4">
                     <div>
-                        <h3 className="text-lg font-semibold mb-2">{title}</h3>
-                        <p className="text-sm text-gray-600">{description}</p>
+                        <h3 className="text-lg font-semibold mb-2 text-primary">{title}</h3>
+                        <p className="text-sm text-secondary">{description}</p>
                     </div>
-                    <Monitor className="w-6 h-6 text-blue-500" />
+                    <Monitor className="w-6 h-6 text-blue" />
                 </div>
 
                 <div className="mb-4 space-y-3">
                     {features?.map((feature, index) => (
-                        <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
-                            <Zap className="w-4 h-4 text-blue-500" />
+                        <div key={index} className="flex items-center gap-2 text-sm text-secondary">
+                            <Zap className="w-4 h-4 text-blue" />
                             <span>{feature}</span>
                         </div>
                     ))}
@@ -80,14 +80,14 @@ const GameDashboard = () => {
     );
 
     const StatCard = ({ icon: Icon, title, value }) => (
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <div className="bg-card p-4 rounded-xl shadow-sm">
             <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-50 rounded-lg">
                     <Icon className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                    <p className="text-sm text-gray-600">{title}</p>
-                    <p className="text-lg font-semibold text-gray-900">{value}</p>
+                    <p className="text-sm text-secondary">{title}</p>
+                    <p className="text-lg font-semibold text-secondary">{value}</p>
                 </div>
             </div>
         </div>
@@ -102,23 +102,23 @@ const GameDashboard = () => {
                 <StatCard icon={Zap} title="Current Streak" value={stats.streak} />
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-semibold mb-4">Learning Path Progress</h3>
+            <div className="bg-card rounded-xl p-6 shadow-sm ">
+                <h3 className="text-lg font-semibold mb-4 text-secondary">Learning Path Progress</h3>
                 <div className="space-y-4">
                     {questionTree.map((question) => (
                         <motion.div
                             key={question.id}
                             whileHover={{ scale: 1.01 }}
                             className={`p-4 rounded-xl transition-all ${question.status === 'current'
-                                    ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200'
+                                    ? 'card-blue'
                                     : question.status === 'completed'
-                                        ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200'
-                                        : 'bg-gray-50 border border-gray-200'
+                                        ? 'card-green'
+                                        : 'bg-card border-contrast text-secondary'
                                 }`}
                         >
                             <div className="flex justify-between items-center">
                                 <div>
-                                    <p className="text-sm text-gray-500">{question.level}</p>
+                                    <p className="text-sm text-secondary">{question.level}</p>
                                     <p className="font-medium">{question.title}</p>
                                 </div>
                                 {question.status === 'completed' ? (
@@ -148,8 +148,8 @@ const GameDashboard = () => {
                     key={achievement.id}
                     whileHover={{ scale: 1.02 }}
                     className={`p-4 rounded-xl border ${achievement.achieved
-                            ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200'
-                            : 'bg-gray-50 border-gray-200'
+                            ? 'card-green'
+                            : 'bg-card border-contrast'
                         }`}
                 >
                     <div className="flex items-center gap-4">
@@ -157,8 +157,8 @@ const GameDashboard = () => {
                             <Trophy className={`w-6 h-6 ${achievement.achieved ? 'text-yellow-600' : 'text-gray-400'}`} />
                         </div>
                         <div>
-                            <h4 className="font-medium">{achievement.title}</h4>
-                            <p className="text-sm text-gray-600">{achievement.description}</p>
+                            <h4 className="font-medium text-secondary">{achievement.title}</h4>
+                            <p className="text-sm text-secondary">{achievement.description}</p>
                         </div>
                     </div>
                 </motion.div>
@@ -167,19 +167,19 @@ const GameDashboard = () => {
     );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6 mt-20">
+        <div className="min-h-screen bg-theme-gradient p-6 mt-20">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-4xl pb-2 font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    <h1 className="text-4xl pb-2 font-bold text-primary">
                         ABAP Learning Game
                     </h1>
-                    <p className="text-gray-600 mt-2">Master ABAP programming through interactive challenges</p>
+                    <p className="text-secondary mt-2">Master ABAP programming through interactive challenges</p>
                 </div>
 
                 <div className="flex gap-6">
                     {/* Main Game Area */}
-                    <div className="w-2/3 bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+                    <div className="w-2/3 bg-primary rounded-2xl shadow-xl overflow-hidden border border-gray-200">
                         {/* Game Controls */}
                         <div className="p-6 border-b border-gray-200">
                             <div className="flex justify-between items-center">
@@ -197,10 +197,10 @@ const GameDashboard = () => {
                                         )}
                                     </motion.button>
                                     <div>
-                                        <h2 className="text-xl font-semibold">{currentGame || "Play And Learn"}</h2>
-                                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                                        <h2 className="text-xl font-semibold text-secondary">{currentGame || "Play And Learn"}</h2>
+                                        <div className="flex items-center gap-2 text-sm text-gray-500">
                                             <Clock className="w-4 h-4" />
-                                            <span>25 minutes remaining</span>
+                                            <span className='text-gray-500'>25 minutes remaining</span>
                                         </div>
                                     </div>
                                 </div>
@@ -220,7 +220,7 @@ const GameDashboard = () => {
                                         onClick={() => setShowSettings(true)}
                                         className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                                     >
-                                        <Settings className="w-6 h-6 text-gray-600" />
+                                        <Settings className="w-6 h-6 text-gray-500" />
                                     </motion.button>
                                 </div>
                             </div>
@@ -230,7 +230,7 @@ const GameDashboard = () => {
                         <div className="p-6">
                             {!currentGame ? (
                                 <div className="text-center p-12">
-                                    <h3 className="text-2xl font-bold mb-4">Choose Your Learning Path</h3>
+                                    <h3 className="text-2xl font-bold mb-4 text-secondary">Choose Your Learning Path</h3>
                                     <div className="grid grid-cols-2 gap-6">
                                         <GameCard
                                             title="ABAP Explorer"
@@ -297,9 +297,9 @@ const GameDashboard = () => {
                     {/* Sidebar */}
                     <div className="w-1/3 space-y-6">
                         {/* Progress Overview */}
-                        <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
+                        <div className="bg-primary rounded-2xl shadow-xl p-6 border border-gray-200">
                             <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-xl font-semibold">Your Progress</h3>
+                                <h3 className="text-xl font-semibold text-secondary">Your Progress</h3>
                                 <div className="flex gap-2">
                                     <motion.button
                                         whileHover={{ scale: 1.05 }}
@@ -344,25 +344,25 @@ const GameDashboard = () => {
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200"
+                            className="bg-card rounded-2xl p-6"
                         >
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="p-2 bg-blue-100 rounded-lg">
                                     <Book className="w-5 h-5 text-blue-600" />
                                 </div>
-                                <h3 className="text-lg font-semibold text-blue-900">Quick Tips</h3>
+                                <h3 className="text-lg font-semibold text-secondary">Quick Tips</h3>
                             </div>
                             <ul className="space-y-3">
-                                <li className="flex items-start gap-2 text-sm text-blue-800">
-                                    <ChevronRight className="w-4 h-4 mt-0.5 text-blue-500" />
+                                <li className="flex items-start gap-2 text-sm text-secondary">
+                                    <ChevronRight className="w-4 h-4 mt-0.5 text-blue" />
                                     Use keyboard shortcuts (Ctrl + Space) for code completion
                                 </li>
-                                <li className="flex items-start gap-2 text-sm text-blue-800">
-                                    <ChevronRight className="w-4 h-4 mt-0.5 text-blue-500" />
+                                <li className="flex items-start gap-2 text-sm text-secondary">
+                                    <ChevronRight className="w-4 h-4 mt-0.5 text-blue" />
                                     Review completed challenges to reinforce learning
                                 </li>
-                                <li className="flex items-start gap-2 text-sm text-blue-800">
-                                    <ChevronRight className="w-4 h-4 mt-0.5 text-blue-500" />
+                                <li className="flex items-start gap-2 text-sm text-secondary">
+                                    <ChevronRight className="w-4 h-4 mt-0.5 text-blue" />
                                     Practice daily to maintain your learning streak
                                 </li>
                             </ul>
