@@ -58,7 +58,7 @@ const DashboardBanner = () => {
 
 
                     {/* Right side - Dashboard Preview */}
-                    <div className="lg:w-1/2">
+                    <div className="w-8/12 lg:w-1/2">
                         <Tilt
                             tiltMaxAngleX={15}
                             tiltMaxAngleY={15}
