@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const WishlistSchema = new mongoose.Schema({
+const certificateSchema = new mongoose.Schema({
     courseId: {
         type: String,
         required: true
@@ -9,7 +9,7 @@ const WishlistSchema = new mongoose.Schema({
         type: Date,
         required: true
     }
-})
+});
 
-const Wishlist = mongoose.model('Wishlist', WishlistSchema);
-export default Wishlist;
+const CertificateModel = mongoose.model("Certificate", certificateSchema);
+export default CertificateModel;

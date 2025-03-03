@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const PurchasedModuleSchema = new mongoose.Schema({
     ModuleId: {
-        type: Number,
+        type: String,
         required: true
     },
     completed: {
@@ -11,5 +11,5 @@ const PurchasedModuleSchema = new mongoose.Schema({
     }
 });
 
-const PurchasedModule = new mongoose.model("PurchasedModule", PurchasedModuleSchema);
+const PurchasedModule = mongoose.model("PurchasedModule", PurchasedModuleSchema);
 export default PurchasedModule;
