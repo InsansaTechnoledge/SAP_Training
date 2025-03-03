@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const certificateSchema = new mongoose.Schema({
     courseId: {
-        type: Number,
+        type: String,
         required: true
     },
     date: {

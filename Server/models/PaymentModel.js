@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const PaymentSchema = new mongoose.Schema({
     courseId: {
-        type: Number, 
+        type: String, 
         required: true
     },
     type: {

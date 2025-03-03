@@ -15,7 +15,7 @@ const DiscussionSchema = mongoose.Schema({
         required: true
     },
     contentId: {
-        type: Number,
+        type: String,
         required: true
     }
 });

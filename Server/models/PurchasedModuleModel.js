@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const PurchasedModuleSchema = new mongoose.Schema({
     ModuleId: {
-        type: Number,
+        type: String,
         required: true
     },
     completed: {

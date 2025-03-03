@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const WatchedVideoSchema = new mongoose.Schema({
     videoId: {
-        type: Number,
+        type: String,
         required: true
     },
     progress: {
