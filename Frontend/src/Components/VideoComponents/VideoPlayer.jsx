@@ -4,7 +4,7 @@ import {
     PictureInPicture, Layers, Lock, Unlock, Download, FileText, Bookmark, BookmarkCheck
 } from 'lucide-react';
 
-const VideoPlayer = ({ videoBlobUrl }) => {
+const VideoPlayer = ({ videoBlobUrl, onTimeUpdate , encryptedSrc }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -892,6 +892,44 @@ const VideoPlayer = ({ videoBlobUrl }) => {
         };
     }, []);
 
+    useEffect(() => {
+        const videoElement = videoRef.current;
+
+        // Handle time updates
+        const handleTimeUpdate = () => {
+            if (videoElement) {
+                setCurrentTime(videoElement.currentTime);
+                onTimeUpdate && onTimeUpdate(videoElement.currentTime);
+            }
+        };
+
+        // Set duration once metadata is loaded
+        const handleLoadedMetadata = () => {
+            if (videoElement) {
+                setDuration(videoElement.duration);
+            }
+        };
+
+        if (videoElement) {
+            videoElement.addEventListener('timeupdate', handleTimeUpdate);
+            videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+            // Important security feature: prevent downloading via right-click
+            videoElement.addEventListener('contextmenu', (e) => e.preventDefault());
+
+            // Set encrypted source as a custom attribute for inspection
+            videoElement.setAttribute('data-src', encryptedSrc || 'encrypted');
+        }
+
+        return () => {
+            if (videoElement) {
+                videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+                videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
+                videoElement.removeEventListener('contextmenu', (e) => e.preventDefault());
+            }
+        };
+    }, [videoBlobUrl, onTimeUpdate, encryptedSrc]);
+
     return (
         <div
             ref={videoContainerRef}
@@ -901,7 +939,7 @@ const VideoPlayer = ({ videoBlobUrl }) => {
         >
 
             {/* Video element */}
-            <video
+            {/* <video
                 ref={videoRef}
                 className={`w-full h-full ${videoBlurred ? 'blur-xl' : ''} transition-all duration-300`}
                 src={videoBlobUrl ? videoBlobUrl : ""}
@@ -915,6 +953,23 @@ const VideoPlayer = ({ videoBlobUrl }) => {
                 disablePictureInPicture
                 controlsList="nodownload"
                 playsInline
+            /> */}
+
+            <video
+                ref={videoRef}
+                className="w-full aspect-video"
+                src={videoBlobUrl}
+                playsInline
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                // Remove controlsList to prevent showing download button in some browsers
+                // Replace with our custom controls
+                controlsList="nodownload"
+                disablePictureInPicture
+                // Custom data attribute for the encrypted source (for inspection)
+                data-encrypted-src={encryptedSrc || 'encrypted'}
+                // Hide the real src from dev tools as much as possible
+                style={{ objectFit: 'contain' }}
             />
 
             {/* Watermark overlay canvas */}
