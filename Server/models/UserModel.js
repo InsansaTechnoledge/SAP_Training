@@ -20,14 +20,50 @@ const UserSchema = new mongoose.Schema({
     ],
     modulesPurchased: [
         {
-            type:mongoose.Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "PurchasedModule"
+        }
+    ],
+    coursesPurchased: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "PurchasedCourse"
         }
     ],
     payment: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Payment"
+        }
+    ],
+    certificates: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Certificate"
+        }
+    ],
+    watchedContents: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "WatchedContent"
+        }
+    ],
+    watchedVideo: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "WatchedVideo"
+        }
+    ],
+    discussionLikes: {
+        type: [Number]
+    },
+    replyLikes: {
+        type: [Number]
+    },
+    notes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Notes"
         }
     ]
 

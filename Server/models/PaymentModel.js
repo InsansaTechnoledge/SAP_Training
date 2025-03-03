@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-const PaymentSchema = new mongoose({
+const PaymentSchema = new mongoose.Schema({
     courseId: {
-        type: Number, 
+        type: String, 
         required: true
     },
     type: {
@@ -17,11 +17,11 @@ const PaymentSchema = new mongoose({
         type: Date,
         required: true
     },
-    transaction_id: {
+    transactionId: {
         type: String,
         required: true
     }
 });
 
-const PaymentModel = new mongoose.model("Payment", PaymentSchema);
+const PaymentModel = mongoose.model("Payment", PaymentSchema);
 export default PaymentModel;

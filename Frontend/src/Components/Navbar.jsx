@@ -126,7 +126,7 @@ const Navigation = () => {
                                         : 'text-white'}`} />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-2xl font-bold text-white">TechAcademy</span>
+                                <span className="text-2xl font-bold text-white">Attainment</span>
                                 <span className={`text-xs transition-colors duration-300 ${scrolled ? 'text-blue-100' : 'text-white/90'
                                     }`}>
                                     Learn. Grow. Excel.
@@ -138,7 +138,7 @@ const Navigation = () => {
                         <div className="hidden md:flex items-center space-x-8">
                             <a href="#" className="text-white hover:text-blue-50 transition-colors">Courses</a>
                             <a href="#" className="text-white hover:text-blue-50 transition-colors">Resources</a>
-                            <a href="#" className="text-white hover:text-blue-50 transition-colors">Community</a>
+                            <a href="#" className="text-white hover:text-blue-50 transition-colors">Pricing</a>
                         </div>
 
                         {/* Actions Section */}
