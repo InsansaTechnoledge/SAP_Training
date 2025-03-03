@@ -3,6 +3,7 @@ import { Play, Pause, Settings, ChevronRight, Award, Clock, Star, X, Monitor, Tr
 import { motion, AnimatePresence } from 'framer-motion';
 import ABAPExplorer from '../Games/ABAP/Module/ModuleOne/GameTwo';
 import ABAPRunner from '../Games/ABAP/Module/ModuleOne/GameOne';
+import RealisticShooterGame from '../Games/ABAP/Module/ModuleOne/GameThree';
 
 const GameDashboard = () => {
     const [isPaused, setIsPaused] = useState(false);
@@ -16,6 +17,8 @@ const GameDashboard = () => {
         { id: 2, title: 'Speed Demon', description: 'Complete 5 challenges under 10 minutes', achieved: false },
         { id: 3, title: 'Perfect Score', description: 'Get 100% on any module', achieved: false },
     ]);
+    const [isFullScreen, setIsFullScreen] = useState(false);
+    const [showQuitConfirmation, setShowQuitConfirmation] = useState(false);
 
     useEffect(() => {
         const savedGame = localStorage.getItem('selectedGame');
@@ -23,6 +26,66 @@ const GameDashboard = () => {
             setCurrentGame(savedGame);
         }
     }, []);
+
+    // Handle escape key for game exit
+    useEffect(() => {
+        const handleEscape = (e) => {
+            if (e.key === 'Escape' && isFullScreen) {
+                e.preventDefault();
+                setShowQuitConfirmation(true);
+            }
+        };
+
+        window.addEventListener('keydown', handleEscape);
+        return () => window.removeEventListener('keydown', handleEscape);
+    }, [isFullScreen]);
+
+
+    // Handle game quit
+    const handleQuitGame = () => {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+        setIsFullScreen(false);
+        setShowQuitConfirmation(false);
+        setCurrentGame(null);
+    };
+
+
+    // Modify the game selection logic to handle full-screen mode
+   const handleGameSelect = (gameName) => {
+        setCurrentGame(gameName);
+
+        if (gameName === 'AimABAP') {
+            // Wait for the state update before going full screen
+            setTimeout(() => {
+                setIsFullScreen(true);
+                document.documentElement.requestFullscreen().catch((err) => {
+                    console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            }, 50);  // Delay ensures state is set first
+        }
+    };
+
+    const renderGameContent = () => {
+        if (!currentGame) return <p className="text-center text-gray-600">Select a game to start playing.</p>;
+
+        if (currentGame === 'AimABAP' && isFullScreen) {
+            return null;
+        }
+
+        if (currentGame === 'ABAPRunner') {
+            return <ABAPRunner score={score} setScore={setScore} audioSettings={audioSettings} />;
+        }
+
+        if (currentGame === 'ABAPExplorer') {
+            return <ABAPExplorer score={score} setScore={setScore} />;
+        }
+
+        return <p className="text-center text-gray-600">Invalid game selected.</p>;
+    };
+
+
 
     const questionTree = [
         { id: 1, level: 'Basic', title: 'ABAP Syntax Basics', status: 'completed', score: 95 },
@@ -143,8 +206,8 @@ const GameDashboard = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={onClick}
                     className={`w-full py-2 px-4 rounded-lg transition-colors ${isActive
-                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
-                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                         }`}
                 >
                     {isActive ? 'Currently Selected' : 'Select Game'}
@@ -184,10 +247,10 @@ const GameDashboard = () => {
                             key={question.id}
                             whileHover={{ scale: 1.01 }}
                             className={`p-4 rounded-xl transition-all ${question.status === 'current'
-                                    ? 'card-blue'
-                                    : question.status === 'completed'
-                                        ? 'card-green'
-                                        : 'bg-card border-contrast text-secondary'
+                                ? 'card-blue'
+                                : question.status === 'completed'
+                                    ? 'card-green'
+                                    : 'bg-card border-contrast text-secondary'
                                 }`}
                         >
                             <div className="flex justify-between items-center">
@@ -222,8 +285,8 @@ const GameDashboard = () => {
                     key={achievement.id}
                     whileHover={{ scale: 1.02 }}
                     className={`p-4 rounded-xl border ${achievement.achieved
-                            ? 'card-green'
-                            : 'bg-card border-contrast'
+                        ? 'card-green'
+                        : 'bg-card border-contrast'
                         }`}
                 >
                     <div className="flex items-center gap-4">
@@ -305,10 +368,10 @@ const GameDashboard = () => {
                             {!currentGame ? (
                                 <div className="text-center p-12">
                                     <h3 className="text-2xl font-bold mb-4 text-secondary">Choose Your Learning Path</h3>
-                                    <div className="grid grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-3 gap-6">
                                         <GameCard
                                             title="ABAP Explorer"
-                                            type="ABAPExplorer"
+                                            type="learning based game"
                                             description="Interactive exploration of ABAP concepts"
                                             features={[
                                                 "Visual concept mapping",
@@ -320,7 +383,7 @@ const GameDashboard = () => {
                                         />
                                         <GameCard
                                             title="ABAP Runner"
-                                            type="ABAPRunner"
+                                            type="running game"
                                             description="Hands-on coding challenges"
                                             features={[
                                                 "Live code execution",
@@ -330,43 +393,93 @@ const GameDashboard = () => {
                                             isActive={false}
                                             onClick={() => setCurrentGame('ABAPRunner')}
                                         />
+                                        <GameCard
+                                            title="AimABAP"
+                                            type="shooting game"
+                                            description="Realistic ABAP development simulation"
+                                            features={[
+                                                "Real-world scenarios",
+                                                "Debugger practice",
+                                                "System integration"
+                                            ]}
+                                            isActive={false}
+                                            onClick={() => setCurrentGame('AimABAP')}
+                                        />
                                     </div>
                                 </div>
                             ) : (
-                                    <div className="p-6">
-                                        {!currentGame ? (
-                                            <div className="text-center p-12">
-                                                <h3 className="text-2xl font-bold mb-4">Choose Your Learning Path</h3>
-                                                <div className="grid grid-cols-2 gap-6">
-                                                    <GameCard
-                                                        title="ABAP Explorer"
-                                                        type="ABAPExplorer"
-                                                        description="Interactive exploration of ABAP concepts"
-                                                        features={["Visual concept mapping", "Interactive examples", "Real-time feedback"]}
-                                                        isActive={currentGame === 'ABAPExplorer'}
-                                                        onClick={() => setCurrentGame('ABAPExplorer')}
-                                                    />
-                                                    <GameCard
-                                                        title="ABAP Runner"
-                                                        type="ABAPRunner"
-                                                        description="Hands-on coding challenges"
-                                                        features={["Live code execution", "Progressive difficulty", "Performance tracking"]}
-                                                        isActive={currentGame === 'ABAPRunner'}
-                                                        onClick={() => setCurrentGame('ABAPRunner')}
-                                                    />
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className="bg-gray-100 rounded-xl p-4">
-                                                    {currentGame === 'ABAPRunner' && <ABAPRunner score={score} setScore={setScore} audioSettings={audioSettings} />}
-                                                {currentGame === 'ABAPExplorer' && <ABAPExplorer score={score} setScore={setScore} />}
-                                            </div>
-                                        )}
-                                    </div>
-
+                                <div className="bg-gray-100 rounded-xl p-4">
+                                        {renderGameContent()}
+                                </div>
                             )}
                         </div>
                     </div>
+
+                    {/* Full-Screen Game Overlay */}
+                    <AnimatePresence>
+                        {currentGame === 'AimABAP' && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 bg-black z-50"
+                            >
+                                <div className="relative w-full h-full">
+                                    <RealisticShooterGame
+                                        score={score}
+                                        setScore={setScore}
+                                        audioSettings={audioSettings}
+                                        isFullScreen={true}
+                                    />
+                                    <button
+                                        onClick={() => setShowQuitConfirmation(true)}
+                                        className="absolute top-4 right-4 p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg z-[51]"
+                                    >
+                                        <X className="w-6 h-6" />
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+
+                    {/* Quit Confirmation Dialog */}
+                    <AnimatePresence>
+                        {showQuitConfirmation && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[60] flex items-center justify-center"
+                            >
+                                <motion.div
+                                    initial={{ scale: 0.9, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.9, opacity: 0 }}
+                                    className="bg-white rounded-xl p-6 max-w-md w-full mx-4"
+                                >
+                                    <h3 className="text-xl font-bold mb-4">Quit Game?</h3>
+                                    <p className="text-gray-600 mb-6">
+                                        Are you sure you want to quit? Your current progress will be lost.
+                                    </p>
+                                    <div className="flex justify-end gap-4">
+                                        <button
+                                            onClick={() => setShowQuitConfirmation(false)}
+                                            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={handleQuitGame}
+                                            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                                        >
+                                            Quit Game
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     {/* Sidebar */}
                     <div className="w-1/3 space-y-6">
@@ -380,8 +493,8 @@ const GameDashboard = () => {
                                         whileTap={{ scale: 0.95 }}
                                         onClick={() => setActiveTab('progress')}
                                         className={`px-4 py-2 rounded-lg ${activeTab === 'progress'
-                                                ? 'bg-blue-100 text-blue-600'
-                                                : 'text-gray-600 hover:bg-gray-100'
+                                            ? 'bg-blue-100 text-blue-600'
+                                            : 'text-gray-600 hover:bg-gray-100'
                                             }`}
                                     >
                                         <BarChart className="w-5 h-5" />
@@ -391,8 +504,8 @@ const GameDashboard = () => {
                                         whileTap={{ scale: 0.95 }}
                                         onClick={() => setActiveTab('achievements')}
                                         className={`px-4 py-2 rounded-lg ${activeTab === 'achievements'
-                                                ? 'bg-blue-100 text-blue-600'
-                                                : 'text-gray-600 hover:bg-gray-100'
+                                            ? 'bg-blue-100 text-blue-600'
+                                            : 'text-gray-600 hover:bg-gray-100'
                                             }`}
                                     >
                                         <Trophy className="w-5 h-5" />
@@ -558,10 +671,10 @@ const GameDashboard = () => {
                                         {/* Game Mode Selection */}
                                         <div>
                                             <h4 className="text-lg font-semibold mb-4">Game Mode</h4>
-                                            <div className="grid grid-cols-2 gap-6">
+                                            <div className="grid grid-cols-3 gap-4">
                                                 <GameCard
                                                     title="ABAP Explorer"
-                                                    type="ABAPExplorer"
+                                                    type="learning based game"
                                                     description="Interactive exploration of ABAP concepts"
                                                     features={[
                                                         "Visual concept mapping",
@@ -579,7 +692,7 @@ const GameDashboard = () => {
                                                 />
                                                 <GameCard
                                                     title="ABAP Runner"
-                                                    type="ABAPRunner"
+                                                    type="runnig game"
                                                     description="Hands-on coding challenges"
                                                     features={[
                                                         "Live code execution",
@@ -592,6 +705,24 @@ const GameDashboard = () => {
                                                             setScore(0);
                                                         }
                                                         setCurrentGame('ABAPRunner');
+                                                        setShowSettings(false);
+                                                    }}
+                                                />
+                                                <GameCard
+                                                    title="AimABAP"
+                                                    type="shooting game"
+                                                    description="Realistic ABAP development simulation"
+                                                    features={[
+                                                        "Real-world scenarios",
+                                                        "Debugger practice",
+                                                        "System integration"
+                                                    ]}
+                                                    isActive={currentGame === 'AimABAP'}
+                                                    onClick={() => {
+                                                        if (currentGame !== 'AimABAP') {
+                                                            setScore(0);
+                                                        }
+                                                        setCurrentGame('AimABAP');
                                                         setShowSettings(false);
                                                     }}
                                                 />

@@ -10,6 +10,8 @@ import Navigation from './Components/Navbar';
 import QuizPage from './Pages/QuizPage';
 import CourseShop from './Pages/ShopPage';
 import GameDashboard from './Pages/GamePage';
+import RealisticShooterGame from './Games/ABAP/Module/ModuleOne/GameThree';
+import StudyMaterialsShop from './Pages/StudyMaterails';
 const PageLinks = () => {
     
 
@@ -27,6 +29,10 @@ const PageLinks = () => {
                     <Route path="/payment" element={<Checkout />} />
                     <Route path="/dashboard" element={<UserDashboard />} />
                     <Route path="/game" element={<GameDashboard />} />
+                    <Route path="/game2" element={<RealisticShooterGame />} />
+                    <Route path="/books" element={<StudyMaterialsShop />} />
+
+
 
                 </Routes>
             </Router>
