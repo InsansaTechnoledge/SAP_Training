@@ -9,7 +9,7 @@ const WishlistSchema = new mongoose.Schema({
         type: Date,
         required: true
     }
-})
+});
 
 const Wishlist = mongoose.model('Wishlist', WishlistSchema);
 export default Wishlist;
