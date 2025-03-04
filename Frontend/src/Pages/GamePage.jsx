@@ -15,6 +15,7 @@ const GameDashboard = () => {
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [showQuitConfirmation, setShowQuitConfirmation] = useState(false);
     const [animatingCard, setAnimatingCard] = useState(null);
+    const [resumeGame, setResumeGame] = useState(false);
 
     const [achievements, setAchievements] = useState([
         { id: 1, title: 'First Steps', description: 'Complete your first ABAP challenge', achieved: true },
@@ -91,27 +92,21 @@ const GameDashboard = () => {
 
     // Handle game selection and launch in fullscreen
     const handleGameSelect = (gameId) => {
-        setAnimatingCard(gameId);
+        // setAnimatingCard(gameId);
 
-        setTimeout(() => {
-            setCurrentGame(gameId);
-            setAnimatingCard(null);
+        setCurrentGame(gameId);
 
-            setTimeout(() => {
-                setIsFullScreen(true);
-                const element = document.documentElement;
-
-                if (element.requestFullscreen) {
-                    element.requestFullscreen();
-                } else if (element.mozRequestFullScreen) { // Firefox
-                    element.mozRequestFullScreen();
-                } else if (element.webkitRequestFullscreen) { // Chrome, Safari
-                    element.webkitRequestFullscreen();
-                } else if (element.msRequestFullscreen) { // IE/Edge
-                    element.msRequestFullscreen();
-                }
-            }, 300);
-        }, 500);
+        setIsFullScreen(true);
+        const element = document.documentElement;
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) { // Firefox
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) { // Chrome, Safari
+            element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) { // IE/Edge
+            element.msRequestFullscreen();
+        }
     };
 
     const renderGameContent = () => {
@@ -119,7 +114,7 @@ const GameDashboard = () => {
 
         return (
             <div className="absolute inset-0 flex items-center justify-center w-full h-full bg-black">
-                {currentGame === 'ABAPRunner' && <ABAPRunner score={score} setScore={setScore} audioSettings={audioSettings} />}
+                {currentGame === 'ABAPRunner' && <ABAPRunner score={score} setScore={setScore} audioSettings={audioSettings} resumeGame={resumeGame} />}
                 {currentGame === 'ABAPExplorer' && <ABAPExplorer score={score} setScore={setScore} />}
                 {currentGame === 'AimABAP' && <RealisticShooterGame score={score} setScore={setScore} audioSettings={audioSettings} isFullScreen={true} />}
             </div>
@@ -260,19 +255,19 @@ const GameDashboard = () => {
                             transition={{ delay: index * 0.1 }}
                             whileHover={{ scale: 1.01 }}
                             className={`p-4 rounded-xl transition-all ${question.status === 'current'
-                                    ? 'bg-blue-50 border border-blue-200'
-                                    : question.status === 'completed'
-                                        ? 'bg-emerald-50 border border-emerald-200'
-                                        : 'bg-gray-50 border border-gray-200'
+                                ? 'bg-blue-50 border border-blue-200'
+                                : question.status === 'completed'
+                                    ? 'bg-emerald-50 border border-emerald-200'
+                                    : 'bg-gray-50 border border-gray-200'
                                 }`}
                         >
                             <div className="flex justify-between items-center">
                                 <div>
                                     <p className={`text-sm ${question.status === 'current'
-                                            ? 'text-blue-600'
-                                            : question.status === 'completed'
-                                                ? 'text-emerald-600'
-                                                : 'text-gray-500'
+                                        ? 'text-blue-600'
+                                        : question.status === 'completed'
+                                            ? 'text-emerald-600'
+                                            : 'text-gray-500'
                                         }`}>{question.level}</p>
                                     <p className="font-medium text-gray-800">{question.title}</p>
                                 </div>
@@ -312,8 +307,8 @@ const GameDashboard = () => {
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ scale: 1.02 }}
                     className={`p-4 rounded-xl border ${achievement.achieved
-                            ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-amber-200'
-                            : 'bg-gray-50 border-gray-200'
+                        ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-amber-200'
+                        : 'bg-gray-50 border-gray-200'
                         }`}
                 >
                     <div className="flex items-center gap-4">
@@ -479,8 +474,8 @@ const GameDashboard = () => {
                                         whileTap={{ scale: 0.95 }}
                                         onClick={() => setActiveTab('progress')}
                                         className={`px-4 py-2 rounded-lg flex items-center gap-2 ${activeTab === 'progress'
-                                                ? 'bg-white text-blue-600 shadow-md'
-                                                : 'text-gray-600'
+                                            ? 'bg-white text-blue-600 shadow-md'
+                                            : 'text-gray-600'
                                             }`}
                                     >
                                         <BarChart className="w-5 h-5" />
@@ -491,8 +486,8 @@ const GameDashboard = () => {
                                         whileTap={{ scale: 0.95 }}
                                         onClick={() => setActiveTab('achievements')}
                                         className={`px-4 py-2 rounded-lg flex items-center gap-2 ${activeTab === 'achievements'
-                                                ? 'bg-white text-blue-600 shadow-md'
-                                                : 'text-gray-600'
+                                            ? 'bg-white text-blue-600 shadow-md'
+                                            : 'text-gray-600'
                                             }`}
                                     >
                                         <Trophy className="w-5 h-5" />
@@ -611,7 +606,11 @@ const GameDashboard = () => {
                                     <motion.button
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
-                                        onClick={() => setShowQuitConfirmation(false)}
+                                        onClick={() => {
+                                            setShowQuitConfirmation(false)
+                                            setResumeGame(true);
+                                            setTimeout(()=>setResumeGame(false),1000);
+                                        }}
                                         className="flex-1 py-3 border border-gray-200 rounded-xl text-gray-700 font-medium hover:bg-gray-50"
                                     >
                                         Resume
@@ -655,7 +654,11 @@ const GameDashboard = () => {
                                     <motion.button
                                         whileHover={{ scale: 1.1, rotate: 90 }}
                                         whileTap={{ scale: 0.9 }}
-                                        onClick={() => setShowSettings(false)}
+                                        onClick={() => {
+                                            setShowSettings(false);
+                                            setResumeGame(true);
+                                            setTimeout(()=>setResumeGame(false),1000);
+                                        }}
                                         className="p-2 rounded-full hover:bg-gray-100"
                                     >
                                         <X className="w-5 h-5 text-gray-600" />
@@ -675,8 +678,8 @@ const GameDashboard = () => {
                                         <button
                                             onClick={toggleMute}
                                             className={`px-3 py-1 rounded-full text-xs font-medium ${audioSettings.isMuted
-                                                    ? 'bg-red-100 text-red-600'
-                                                    : 'bg-blue-100 text-blue-600'
+                                                ? 'bg-red-100 text-red-600'
+                                                : 'bg-blue-100 text-blue-600'
                                                 }`}
                                         >
                                             {audioSettings.isMuted ? 'Muted' : 'Enabled'}
@@ -718,7 +721,13 @@ const GameDashboard = () => {
 
                                     <div className="pt-4 border-t border-gray-200">
                                         <button
-                                            onClick={() => setShowSettings(false)}
+                                            onClick={() => {
+                                                setShowSettings(false);
+                                                setResumeGame(true);
+                                                setTimeout(()=>setResumeGame(false),1000);
+
+                                            }
+                                            }
                                             className="w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-medium shadow-md hover:shadow-lg transform transition-all active:scale-95"
                                         >
                                             Save Settings

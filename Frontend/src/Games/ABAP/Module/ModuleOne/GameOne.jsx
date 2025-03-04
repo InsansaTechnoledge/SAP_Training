@@ -44,7 +44,7 @@ const sounds = {
     })
 };
 
-const ABAPRunner = ({ score, setScore, audioSettings }) => {
+const ABAPRunner = ({ score, setScore, audioSettings, resumeGame }) => {
     const [position, setPosition] = useState({ x: 1, y: 0 });
     const [isJumping, setIsJumping] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
@@ -320,6 +320,12 @@ const ABAPRunner = ({ score, setScore, audioSettings }) => {
 
     ];
 
+
+    useEffect(()=>{
+        if(resumeGame){
+            document.getElementById('game-container').focus();
+        }
+    },[resumeGame]);
     // Create celebration particles
     const createCelebrationEffect = useCallback(() => {
         const particles = [];

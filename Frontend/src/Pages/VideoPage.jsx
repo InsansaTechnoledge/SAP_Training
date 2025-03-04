@@ -193,15 +193,11 @@ const VideoPage = () => {
                             </p>
                         </div>
 
-                        {/* Notes Section */}
-                        <VideoNotes currentTime={currentTime} formatTime={formatTime} />
-
-                        {/* Discussion Section */}
-                        <VideoDiscussion />
+                        
                     </div>
 
                     {/* Sidebar */}
-                    <div className="space-y-6">
+                    <div className="space-y-6 lg:h-[35rem] lg:overflow-scroll overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200">
                         {/* Course Progress */}
                         <CourseContent />
 
@@ -213,6 +209,13 @@ const VideoPage = () => {
 
                         {/* Next Module */}
                         <NextModule />
+                    </div>
+                    <div className='gap-8 col-span-3 space-y-6'>
+                        {/* Notes Section */}
+                        <VideoNotes currentTime={currentTime} formatTime={formatTime} />
+
+                        {/* Discussion Section */}
+                        <VideoDiscussion />
                     </div>
                 </div>
             </div>
