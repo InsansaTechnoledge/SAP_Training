@@ -13,6 +13,7 @@ const initializeServer = async () => {
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         })
+
     }
     catch(err){
         console.log("Error in initializing server. Error : ",err);
