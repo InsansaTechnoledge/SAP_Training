@@ -3,8 +3,10 @@ import {
     Play, Pause, RotateCcw, RotateCw, Volume2, VolumeX, Maximize2, Minimize2, Settings, AlertTriangle,
     PictureInPicture, Layers, Lock, Unlock, Download, FileText, Bookmark, BookmarkCheck
 } from 'lucide-react';
+import ResumePopup
+ from './ResumePopUPCOntinue';
 
-const VideoPlayer = ({ videoBlobUrl, onTimeUpdate , encryptedSrc }) => {
+const VideoPlayer = ({ videoBlobUrl, onTimeUpdate, encryptedSrc }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -50,10 +52,17 @@ const VideoPlayer = ({ videoBlobUrl, onTimeUpdate , encryptedSrc }) => {
         return `${timestamp}-${randomPart}`;
     }, []);
 
+    const [showResumePopup, setShowResumePopup] = useState(false);
+    const [resumeTime, setResumeTime] = useState(null);
+
+
     const watermarkText = "Protected Content - Not for Distribution";
 
     const playbackSpeeds = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
     const qualityOptions = ['auto', '1080p', '720p', '480p', '360p'];
+
+    const resumeAlertShownRef = useRef(false); // 👈 Prevent multiple alerts
+
 
     const handlePlayPause = () => {
         handleResetBlur();
@@ -105,10 +114,13 @@ const VideoPlayer = ({ videoBlobUrl, onTimeUpdate , encryptedSrc }) => {
             const percentage = (videoRef.current.currentTime / videoRef.current.duration) * 100;
             setWatchHistory(Math.max(watchHistory, percentage));
 
-            // Save current time to localStorage for resume functionality
-            localStorage.setItem('videoPlayerLastTime', videoRef.current.currentTime);
+            // Save current time only when the video is playing
+            if (!videoRef.current.paused) {
+                localStorage.setItem('videoPlayerLastTime', videoRef.current.currentTime);
+            }
         }
     };
+
 
     const handleFullscreen = () => {
         handleResetBlur();
@@ -306,7 +318,7 @@ const VideoPlayer = ({ videoBlobUrl, onTimeUpdate , encryptedSrc }) => {
                     setIsPlaying(false);
                 }
             }
-        }, 1000); // Check every 1 second
+        }, 10000); // Check every 1 second
 
         return () => clearInterval(idleCheckInterval);
     }, [lastActiveTime, idleWarningShown, isPlaying]);
@@ -425,19 +437,8 @@ const VideoPlayer = ({ videoBlobUrl, onTimeUpdate , encryptedSrc }) => {
                 console.error("Error loading bookmarks:", e);
             }
         }
-
-        // Load last position if video has been watched before
-        const lastPosition = localStorage.getItem('videoPlayerLastTime');
-        if (lastPosition && videoRef.current) {
-            if (parseFloat(lastPosition) > 10) {
-                const shouldResume = window.confirm("Resume from where you left off?");
-                if (shouldResume) {
-                    videoRef.current.currentTime = parseFloat(lastPosition);
-                }
-            }
-        }
-
     }, []);
+
 
     useEffect(() => {
         const handleVisibilityChange = () => {
@@ -500,7 +501,7 @@ const VideoPlayer = ({ videoBlobUrl, onTimeUpdate , encryptedSrc }) => {
         }
 
         // Generate a deterministic but unique session ID that persists for the session
-       
+
 
         // Initialize canvas and start the watermark
         const initCanvas = () => {
@@ -903,32 +904,50 @@ const VideoPlayer = ({ videoBlobUrl, onTimeUpdate , encryptedSrc }) => {
             }
         };
 
-        // Set duration once metadata is loaded
-        const handleLoadedMetadata = () => {
-            if (videoElement) {
-                setDuration(videoElement.duration);
-            }
-        };
+        // if (videoElement) {
+        //     videoElement.addEventListener('timeupdate', handleTimeUpdate);
+        //     videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
 
-        if (videoElement) {
-            videoElement.addEventListener('timeupdate', handleTimeUpdate);
-            videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+        //     // Important security feature: prevent downloading via right-click
+        //     videoElement.addEventListener('contextmenu', (e) => e.preventDefault());
 
-            // Important security feature: prevent downloading via right-click
-            videoElement.addEventListener('contextmenu', (e) => e.preventDefault());
-
-            // Set encrypted source as a custom attribute for inspection
-            videoElement.setAttribute('data-src', encryptedSrc || 'encrypted');
-        }
+        //     // Set encrypted source as a custom attribute for inspection
+        //     videoElement.setAttribute('data-src', encryptedSrc || 'encrypted');
+        // }
 
         return () => {
             if (videoElement) {
                 videoElement.removeEventListener('timeupdate', handleTimeUpdate);
                 videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
                 videoElement.removeEventListener('contextmenu', (e) => e.preventDefault());
+                videoElement.setAttribute('data-src', encryptedSrc || 'encrypted');
+
             }
         };
     }, [videoBlobUrl, onTimeUpdate, encryptedSrc]);
+
+    const handleResumeVideo = () => {
+        if (resumeAlertShownRef.current) return; // Prevent duplicate pop-ups
+
+        const lastPosition = localStorage.getItem("videoPlayerLastTime");
+        if (lastPosition && videoRef.current) {
+            const lastTime = parseFloat(lastPosition);
+
+            if (lastTime > 10) {
+                setResumeTime(lastTime);
+                setShowResumePopup(true); // Show the popup
+            }
+        }
+
+        resumeAlertShownRef.current = true;
+    };
+
+    const handleLoadedMetadata = () => {
+        if (!resumeAlertShownRef.current) {
+            handleResumeVideo();
+        }
+    };
+
 
     return (
         <div
@@ -957,21 +976,47 @@ const VideoPlayer = ({ videoBlobUrl, onTimeUpdate , encryptedSrc }) => {
 
             <video
                 ref={videoRef}
-                className="w-full aspect-video"
+                className={`w-full h-full ${videoBlurred ? 'blur-xl' : ''} transition-all duration-300`}
                 src={videoBlobUrl}
+                onClick={handlePlayPause}
+                onContextMenu={(e) => e.preventDefault()}
                 playsInline
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
-                // Remove controlsList to prevent showing download button in some browsers
-                // Replace with our custom controls
+                onLoadedMetadata={handleLoadedMetadata} // ✅ Ensure resume runs only after metadata loads
+                onTimeUpdate={handleTimeUpdate}
                 controlsList="nodownload"
                 disablePictureInPicture
-                // Custom data attribute for the encrypted source (for inspection)
                 data-encrypted-src={encryptedSrc || 'encrypted'}
-                // Hide the real src from dev tools as much as possible
                 style={{ objectFit: 'contain' }}
+                draggable="false"
             />
 
+            {showResumePopup && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                    <ResumePopup
+                        resumeTime={resumeTime}
+                        formatTime={formatTime}
+                        onResume={(time) => {
+                            setResumeTime(time);
+                            if (videoRef.current) {
+                                videoRef.current.currentTime = time;
+                                videoRef.current.play();
+                            }
+                            setShowResumePopup(false);
+                        }}
+                        onCancel={() => {
+                            setResumeTime(0);
+                            if (videoRef.current) {
+                                videoRef.current.currentTime = 0;
+                                videoRef.current.play();
+                            }
+                            setShowResumePopup(false);
+                        }}
+                    />
+                </div>
+            )}
+            
             {/* Watermark overlay canvas */}
             <canvas
                 ref={watermarkCanvasRef}

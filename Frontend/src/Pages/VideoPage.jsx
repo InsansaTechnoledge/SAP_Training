@@ -10,12 +10,18 @@ import CourseContent from '../Components/VideoComponents/CourseContent';
 import VideoNotes from '../Components/VideoComponents/VideoNotes';
 import VideoPlayer from '../Components/VideoComponents/VideoPlayer';
 import CryptoJS from 'crypto-js';
+import { useNavigate } from "react-router-dom";
+import BreadcrumbNavigation from '../Components/VideoComponents/BreadCrumbs';
+
 
 const VideoPage = () => {
     const [currentTime, setCurrentTime] = useState(0);
     const [videoBlobUrl, setVideoBlobUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [videoKey, setVideoKey] = useState(Date.now().toString()); // Unique key for video element
+
+    const navigate = useNavigate();
+
 
     // Sample video data
     const currentVideo = {
@@ -151,6 +157,19 @@ const VideoPage = () => {
         };
     }, []);
 
+    const breadcrumbItems = [
+        {
+            label: "ABAP Fundamentals",
+            onClick: () => {
+                navigate('/course')
+                console.log('Navigate to ABAP Fundamentals module');
+            }
+        },
+        {
+            label: "Introduction to ABAP"
+        }
+    ];
+
     return (
         <div
             className="min-h-screen bg-theme-gradient"
@@ -159,11 +178,7 @@ const VideoPage = () => {
         >
             <div className="container mx-auto px-4 py-8 mt-20">
                 {/* Navigation Breadcrumb */}
-                <div className="flex items-center gap-2 text-sm text-secondary mb-6">
-                    <span>ABAP Fundamentals</span>
-                    <ChevronRight className="h-4 w-4" />
-                    <span className="text-blue">Introduction to ABAP</span>
-                </div>
+                <BreadcrumbNavigation items={breadcrumbItems}/>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Video Player Section */}
@@ -193,15 +208,11 @@ const VideoPage = () => {
                             </p>
                         </div>
 
-                        {/* Notes Section */}
-                        <VideoNotes currentTime={currentTime} formatTime={formatTime} />
-
-                        {/* Discussion Section */}
-                        <VideoDiscussion />
+                        
                     </div>
 
                     {/* Sidebar */}
-                    <div className="space-y-6">
+                    <div className="space-y-6 lg:h-[35rem] lg:overflow-scroll overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200">
                         {/* Course Progress */}
                         <CourseContent />
 
@@ -213,6 +224,13 @@ const VideoPage = () => {
 
                         {/* Next Module */}
                         <NextModule />
+                    </div>
+                    <div className='gap-8 lg:col-span-3 space-y-6'>
+                        {/* Notes Section */}
+                        <VideoNotes currentTime={currentTime} formatTime={formatTime} />
+
+                        {/* Discussion Section */}
+                        <VideoDiscussion />
                     </div>
                 </div>
             </div>
