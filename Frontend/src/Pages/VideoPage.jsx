@@ -225,7 +225,7 @@ const VideoPage = () => {
                         {/* Next Module */}
                         <NextModule />
                     </div>
-                    <div className='gap-8 col-span-3 space-y-6'>
+                    <div className='gap-8 lg:col-span-3 space-y-6'>
                         {/* Notes Section */}
                         <VideoNotes currentTime={currentTime} formatTime={formatTime} />
 
