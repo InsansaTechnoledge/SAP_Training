@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Lock, Unlock, Play, Trophy, Star, CheckCircle, Clock, ChevronRight, CreditCard, Zap, Users, Book, Code, Award, BarChart, Lightbulb } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import DashboardBannerComponent from '../Components/DashboardBanner';
+import CourseRoadmap from './CourseRoadmap';
 const ExamPage = () => {
     const navigate = useNavigate();
     const [activeModule, setActiveModule] = useState(null);
@@ -102,7 +103,7 @@ const ExamPage = () => {
 
     return (
 
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-blue-50">
             
             {/* Hero Section with Animated Background */}
             <div className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 overflow-hidden">
@@ -307,6 +308,8 @@ const ExamPage = () => {
                     </div>
                 </div>
             </div>
+
+            <CourseRoadmap/>
         </div>
     );
 };

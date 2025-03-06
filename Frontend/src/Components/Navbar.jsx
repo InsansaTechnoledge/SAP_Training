@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Heart, GraduationCap, Search, Menu, X, ChevronRight, User, LogIn, UserPlus, ChevronDown, Settings, LogOut, Sun, Moon } from 'lucide-react';
+import {
+    ShoppingCart, Heart, GraduationCap, Search, Menu, X, ChevronRight, User, LogIn, UserPlus, ChevronDown, Settings, LogOut, Sun, Moon, UsersRound
+} from 'lucide-react';
 import SearchOverlay from './SearchOverlay';
 import { useCart } from '../Context/CartContext';
 import { useWishlist } from '../Context/WishlistContext';
 import Wishlist from './Wishlist';
 import Cart from './Cart';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const Navigation = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -19,9 +23,12 @@ const Navigation = () => {
 
     const { cart, setIsCartOpen, isCartOpen } = useCart()
     const { wishlist, setIsWishlistOpen, isWishlistOpen } = useWishlist();
-    const location = useLocation();
+    // const location = useLocation();
 
     const fixed_navbar_in = ['/video', '/quiz', '/dashboard', '/shop', '/game'];
+
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         // Dark mode setup
@@ -140,7 +147,14 @@ const Navigation = () => {
                                         : 'text-white'}`} />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-xl sm:text-2xl font-bold text-white">Attainment</span>
+                                
+                                <span
+                                    onClick={() => navigate("/")}
+                                    className="text-xl sm:text-2xl font-bold text-white cursor-pointer">
+                                    Attainment
+                                </span>
+
+
                                 <span className={`text-xs transition-colors duration-300 ${scrolled ? 'text-blue-100' : 'text-white/90'
                                     }`}>
                                     Learn. Grow. Excel.
@@ -263,6 +277,10 @@ const Navigation = () => {
                                                 <a href="#settings" className="flex items-center px-4 py-2 text-blue-900 hover:bg-blue-50">
                                                     <Settings className="w-4 h-4 mr-2" />
                                                     Settings
+                                                </a>
+                                                <a href="#settings" className="flex items-center px-4 py-2 text-blue-900 hover:bg-blue-50">
+                                                    <UsersRound className="w-4 h-4 mr-2" />
+                                                    Community
                                                 </a>
                                                 <hr className="my-2 border-blue-100" />
                                                 <button

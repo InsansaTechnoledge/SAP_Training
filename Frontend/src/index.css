@@ -136,4 +136,26 @@
   color: transparent;
 }
 
+::-webkit-scrollbar:horizontal {
+    display: none; /* Completely hides horizontal scrollbar */
+}
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #e5e7eb; /* Light gray background */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3b82f6; /* Blue scrollbar handle */
+    border-radius: 10px;
+    transition: background 0.3s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1d4ed8; /* Darker blue on hover */
+}

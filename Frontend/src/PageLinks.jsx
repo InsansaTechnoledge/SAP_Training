@@ -12,6 +12,7 @@ import CourseShop from './Pages/ShopPage';
 import GameDashboard from './Pages/GamePage';
 import RealisticShooterGame from './Games/ABAP/Module/ModuleOne/GameThree';
 import StudyMaterialsShop from './Pages/StudyMaterails';
+import PromoCodeGenerator from './Components/PromocodeGenerator';
 const PageLinks = () => {
     
 
@@ -32,6 +33,9 @@ const PageLinks = () => {
                     <Route path="/game2" element={<RealisticShooterGame />} />
                     <Route path="/books" element={<StudyMaterialsShop />} />
 
+                    
+
+                    <Route path="/pc" element={<PromoCodeGenerator />} />
 
 
                 </Routes>

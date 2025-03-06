@@ -3,7 +3,7 @@ import { domAnimation, motion } from 'framer-motion';
 import {
     Cloud, Code, Database, Brain, ShoppingCart, Heart, Star,
     Users, Clock, ArrowRight, GraduationCap, Search, Filter,
-    BookOpen, Activity
+    BookOpen, Activity, Plus
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/CartContext';
@@ -13,10 +13,7 @@ import CCimage from '../assets/CC.jpg';
 import FSDimage from '../assets/FSD.jpg';
 import ABAPimage from '../assets/ABAP.jpg';
 
-
-
-
-const Courses = ({category}) => {
+const Courses = ({ category }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [hoveredCourse, setHoveredCourse] = useState(null);
     const { addToCart } = useCart();
@@ -25,64 +22,110 @@ const Courses = ({category}) => {
 
     const categories = [
         { id: 'all', label: 'All Courses' },
-        { id: 'enterprise', label: 'Enterprise' },
-        { id: 'cloud', label: 'Cloud Computing' },
-        { id: 'ai', label: 'AI & ML' },
-        { id: 'development', label: 'Development' }
+        { id: 'crash', label: 'Crash Courses' },
+        { id: 'standalone', label: 'Standalone Courses' },
+        { id: 'combined', label: 'Combined Courses' }
     ];
 
     const courses = [
+        // Crash Courses
+        {
+            title: 'AI Quick Start',
+            icon: <Brain className="w-8 h-8" />,
+            description: 'Accelerated AI/ML fundamentals in just 4 weeks.',
+            price: 1999,
+            category: 'crash',
+            students: 567,
+            rating: 4.6,
+            duration: '4 weeks',
+            image: AIimage,
+            features: ['Intensive', 'Quick Learning', 'Fundamentals'],
+            domain: 'crash'
+        },
+        {
+            title: 'Fullstack Quick Start',
+            icon: <Code className="w-8 h-8" />,
+            description: 'Accelerated Fullstack fundamentals in just 4 weeks.',
+            price: 2999,
+            category: 'crash',
+            students: 567,
+            rating: 4.6,
+            duration: '4 weeks',
+            image: FSDimage,
+            features: ['Intensive', 'Quick Learning', 'Fundamentals'],
+            domain: 'crash'
+        },
+        {
+            title: 'Cloud Essentials Crash Course',
+            icon: <Cloud className="w-8 h-8" />,
+            description: 'Rapid cloud computing fundamentals and deployment.',
+            price: 2499,
+            category: 'crash',
+            students: 412,
+            rating: 4.5,
+            duration: '3 weeks',
+            image: CCimage,
+            features: ['Accelerated', 'Practical', 'Certification Prep'],
+            domain: 'crash'
+        },
+        // Standalone Courses
         {
             title: 'SAP ABAP Development',
             icon: <Database className="w-8 h-8" />,
-            description: 'Master enterprise development with SAP ABAP and optimize business processes.',
-            price: 599,
-            category: 'enterprise',
+            description: 'Comprehensive enterprise development with SAP ABAP.',
+            price: 5999,
+            category: 'standalone',
             students: 1234,
             rating: 4.8,
             duration: '12 weeks',
             image: ABAPimage,
             features: ['24/7 Support', 'Certificate', 'Projects'],
-            domain: 'placement'
-        },
-        {
-            title: 'Cloud Computing',
-            icon: <Cloud className="w-8 h-8" />,
-            description: 'AWS, Azure, and Google Cloud with hands-on deployment scenarios.',
-            price: 499,
-            category: 'cloud',
-            students: 2156,
-            rating: 4.9,
-            duration: '10 weeks',
-            image: CCimage,
-            features: ['Live Projects', 'Cloud Credits', 'Certification'],
-            domain: 'placement'
-        },
-        {
-            title: 'AI Fundamentals',
-            icon: <Brain className="w-8 h-8" />,
-            description: 'Learn AI/ML concepts, build models, and deploy intelligent applications.',
-            price: 699,
-            category: 'ai',
-            students: 1789,
-            rating: 4.7,
-            duration: '14 weeks',
-            image: AIimage,
-            features: ['GPU Access', 'Datasets', 'ML Models'],
-            domain: 'placement'
+            domain: 'standalone'
         },
         {
             title: 'Full Stack Development',
             icon: <Code className="w-8 h-8" />,
             description: 'End-to-end development with React, Node.js, and databases.',
-            price: 799,
-            category: 'development',
+            price: 7999,
+            category: 'standalone',
             students: 3421,
             rating: 4.9,
             duration: '16 weeks',
             image: FSDimage,
             features: ['Code Reviews', 'Portfolio', 'Mentorship'],
-            domain: 'placement'
+            domain: 'standalone'
+        },
+        // Combined Courses
+        {
+            title: 'AI + Cloud Computing Combo',
+            icon: (
+                <div className="flex items-center">
+                    <Brain className="w-6 h-6 mr-1" />
+                    <Plus className="w-4 h-4 text-blue-500" />
+                    <Cloud className="w-6 h-6 ml-1" />
+                </div>
+            ),
+            description: 'Comprehensive AI and Cloud Computing learning path.',
+            price: 9999,
+            category: 'combined',
+            students: 256,
+            rating: 4.7,
+            duration: '20 weeks',
+            image: AIimage,
+            features: ['Dual Certification', 'Advanced Projects', 'Career Boost'],
+            domain: 'combined',
+            combinedCourses: [
+                {
+                    title: 'AI Fundamentals',
+                    price: 6999,
+                    duration: '14 weeks'
+                },
+                {
+                    title: 'Cloud Computing',
+                    price: 4999,
+                    duration: '10 weeks'
+                }
+            ]
         }
     ];
 
@@ -116,8 +159,8 @@ const Courses = ({category}) => {
         visible: { y: 0, opacity: 1 }
     };
 
-    if(filteredCourses.length===0){
-        return(
+    if (filteredCourses.length === 0) {
+        return (
             <div className='text-secondary text-lg text-center'>
                 New Courses coming soon!
             </div>
@@ -130,7 +173,7 @@ const Courses = ({category}) => {
                 {/* Header Section */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4 pb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-                        Explore {category} Courses  
+                        Explore {category} Courses
                     </h1>
                     <p className="text-primary text-lg max-w-2xl mx-auto">
                         Level up your skills with our industry-leading courses taught by expert instructors
@@ -149,21 +192,6 @@ const Courses = ({category}) => {
                             className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-secondary text-secondary focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                         />
                     </div>
-
-                    {/* <div className="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto">
-                        {categories.map((category) => (
-                            <button
-                                key={category.id}
-                                onClick={() => setActiveTab(category.id)}
-                                className={`px-6 py-3 rounded-xl font-medium whitespace-nowrap transition-all ${activeTab === category.id
-                                    ? 'bg-theme text-contrast shadow-lg'
-                                    : 'bg-secondary text-secondary hover:bg-blue-50 dark:hover:bg-gray-700'
-                                    }`}
-                            >
-                                {category.label}
-                            </button>
-                        ))}
-                    </div> */}
                 </div>
 
                 {/* Course Grid */}
@@ -212,6 +240,19 @@ const Courses = ({category}) => {
                                     {course.description}
                                 </p>
 
+                                {/* Combined Courses Details */}
+                                {course.combinedCourses && (
+                                    <div className="mb-4 bg-primary/10 rounded-lg p-3">
+                                        <h4 className="text-sm font-semibold mb-2 text-secondary">Combined Courses:</h4>
+                                        {course.combinedCourses.map((subCourse, index) => (
+                                            <div key={index} className="flex justify-between text-xs text-secondary">
+                                                <span>{subCourse.title}</span>
+                                                <span>₹{subCourse.price} | {subCourse.duration}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
                                 <div className="flex flex-wrap gap-2 mb-4">
                                     {course.features.map((feature, index) => (
                                         <span
@@ -243,7 +284,7 @@ const Courses = ({category}) => {
                                         <div className="flex flex-col">
                                             <span className="text-sm text-gray-500 dark:text-gray-400">Price</span>
                                             <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                                            ₹{course.price}
+                                                ₹{course.price}
                                             </span>
                                         </div>
                                         <motion.button
@@ -257,24 +298,21 @@ const Courses = ({category}) => {
                                         </motion.button>
                                     </div>
 
-                                        <motion.div
-                                            whileHover={{ scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            className="w-full text-center bg-contrast hover:bg-gray-200 dark:hover:bg-gray-600 text-contrast px-6 py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors duration-200"
-                                            onClick={() => {navigate('/course')}}
-                                        >
-                                            <span>Explore for Free</span>
-                                            <BookOpen className="w-4 h-4" />
-                                        </motion.div>
-
+                                    <motion.div
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className="w-full text-center bg-contrast hover:bg-gray-200 dark:hover:bg-gray-600 text-contrast px-6 py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors duration-200"
+                                        onClick={() => { navigate('/course') }}
+                                    >
+                                        <span>Explore for Free</span>
+                                        <BookOpen className="w-4 h-4" />
+                                    </motion.div>
                                 </div>
                             </div>
                         </motion.div>
                     ))}
                 </motion.div>
             </div>
-
-
         </div>
     );
 };

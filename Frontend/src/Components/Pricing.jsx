@@ -133,13 +133,13 @@ const Pricing = () => {
             step: 3,
             title: 'Interview Prep',
             description: 'Targeted preparation for technical interviews',
-            color: 'indigo'
+            color: 'blue'
         },
         {
             step: 4,
             title: 'Job Placement',
             description: 'Direct connections with hiring partners',
-            color: 'purple'
+            color: 'green'
         }
     ];
 
@@ -196,8 +196,8 @@ const Pricing = () => {
     };
 
     return (
-        <div className={`py-16 px-4 bg-primary min-h-screen flex flex-col items-center overflow-hidden transition-colors duration-300`}>
-            <div className="max-w-6xl mx-auto w-full relative">
+        <div className={`px-4 bg-primary min-h-screen flex flex-col items-center overflow-hidden transition-colors duration-300`}>
+            <div className="max-w-6xl bg-blue-50 mx-auto w-full relative">
                
                 <div className={`text-center mb-12 transition-all duration-1000 transform ${animateIn ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
                     <h2 className="text-4xl font-extrabold text-primary mb-3">Flexible Pricing Options</h2>
