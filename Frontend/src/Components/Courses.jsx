@@ -214,7 +214,7 @@ const Courses = ({ category }) => {
                             variants={courseVariants}
                             onHoverStart={() => setHoveredCourse(course.title)}
                             onHoverEnd={() => setHoveredCourse(null)}
-                            className="bg-secondary rounded-2xl shadow-md shadow-gray-500 hover:shadow-lg transition-all duration-300 overflow-hidden"
+                            className="relative bg-secondary rounded-2xl shadow-md shadow-gray-500 hover:shadow-lg transition-all duration-300 overflow-hidden"
                         >
                             <div className="relative">
                                 <img
@@ -241,81 +241,85 @@ const Courses = ({ category }) => {
                                 </div>
                             </div>
 
-                            <div className="p-6">
-                                <h3 className="text-xl font-bold mb-2 text-secondary">{course.title}</h3>
-                                <p className="text-secondary text-sm mb-4">
-                                    {course.description}
-                                </p>
+                            <div className="p-6 flex flex-col justify-between border">
+                                <div>
+                                    <h3 className="text-xl font-bold mb-2 text-secondary">{course.title}</h3>
+                                    <p className="text-secondary text-sm mb-4">
+                                        {course.description}
+                                    </p>
 
-                                {/* Combined Courses Details */}
-                                {course.combinedCourses && (
-                                    <div className="mb-4 bg-primary/10 rounded-lg p-3">
-                                        <h4 className="text-sm font-semibold mb-2 text-secondary">Combined Courses:</h4>
-                                        {course.combinedCourses.map((subCourse, index) => (
-                                            <div key={index} className="flex justify-between text-xs text-secondary">
-                                                <span>{subCourse.title}</span>
-                                                <span>₹{subCourse.price} | {subCourse.duration}</span>
-                                            </div>
+                                    {/* Combined Courses Details */}
+                                    {course.combinedCourses && (
+                                        <div className="mb-4 bg-primary/10 rounded-lg p-3">
+                                            <h4 className="text-sm font-semibold mb-2 text-secondary">Combined Courses:</h4>
+                                            {course.combinedCourses.map((subCourse, index) => (
+                                                <div key={index} className="flex justify-between text-xs text-secondary">
+                                                    <span>{subCourse.title}</span>
+                                                    <span>₹{subCourse.price} | {subCourse.duration}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {course.features.map((feature, index) => (
+                                            <span
+                                                key={index}
+                                                className="text-xs px-3 py-1 bg-primary text-primary rounded-full"
+                                            >
+                                                {feature}
+                                            </span>
                                         ))}
                                     </div>
-                                )}
-
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                    {course.features.map((feature, index) => (
-                                        <span
-                                            key={index}
-                                            className="text-xs px-3 py-1 bg-primary text-primary rounded-full"
-                                        >
-                                            {feature}
-                                        </span>
-                                    ))}
                                 </div>
-
-                                <div className="flex items-center justify-between mb-4 text-sm">
-                                    <div className="flex items-center space-x-1">
-                                        <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                                        <span className="font-medium text-primary">{course.rating}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-1">
-                                        <Users className="w-5 h-5 text-gray-400" />
-                                        <span className='text-primary'>{course.students.toLocaleString()}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-1">
-                                        <Clock className="w-5 h-5 text-gray-400" />
-                                        <span className='text-primary'>{course.duration}</span>
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col gap-3">
-                                    <div className="flex justify-between items-center">
-                                        <div className="flex flex-col">
-                                            <span className="text-sm text-gray-500 dark:text-gray-400">Price</span>
-                                            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                                                ₹{course.price}
-                                            </span>
+                                <div className='bottom-0'>
+                                    <div className="flex items-center justify-between mb-4 text-sm">
+                                        <div className="flex items-center space-x-1">
+                                            <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                                            <span className="font-medium text-primary">{course.rating}</span>
                                         </div>
-                                        <motion.button
-                                            whileHover={{ scale: 1.05 }}
-                                            whileTap={{ scale: 0.95 }}
-                                            onClick={() => addInCart(course)}
-                                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center space-x-2 shadow-lg"
-                                        >
-                                            <span>Enroll Now</span>
-                                            <ArrowRight className="w-4 h-4" />
-                                        </motion.button>
+                                        <div className="flex items-center space-x-1">
+                                            <Users className="w-5 h-5 text-gray-400" />
+                                            <span className='text-primary'>{course.students.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex items-center space-x-1">
+                                            <Clock className="w-5 h-5 text-gray-400" />
+                                            <span className='text-primary'>{course.duration}</span>
+                                        </div>
                                     </div>
 
-                                    <motion.div
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        className="w-full text-center bg-contrast hover:bg-gray-200 dark:hover:bg-gray-600 text-contrast px-6 py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors duration-200"
-                                        onClick={() => { navigate(`/course?id=${course.$id}`) }}
-                                    >{!course.$id ?
-                                        <span>Coming soon!!</span>
-                                        :
-                                        <span>Explore for Free</span>}
-                                        <BookOpen className="w-4 h-4" />
-                                    </motion.div>
+                                    <div className="flex flex-col gap-3">
+                                        <div className="flex justify-between items-center">
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-gray-500 dark:text-gray-400">Price</span>
+                                                <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                                                    ₹{course.price}
+                                                </span>
+                                            </div>
+                                            <motion.button
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                onClick={() => addInCart(course)}
+                                                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center space-x-2 shadow-lg"
+                                            >
+                                                <span>Enroll Now</span>
+                                                <ArrowRight className="w-4 h-4" />
+                                            </motion.button>
+                                        </div>
+
+                                        <motion.div
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+
+                                            className="w-full text-center bg-contrast hover:bg-gray-200 dark:hover:bg-gray-600 text-contrast px-6 py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors duration-200"
+                                            onClick={() => { if (course.$id) { navigate(`/course?id=${course.$id}`) } }}
+                                        >{!course.$id ?
+                                            <span>Coming soon!!</span>
+                                            :
+                                            <span>Explore for Free</span>}
+                                            <BookOpen className="w-4 h-4" />
+                                        </motion.div>
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>

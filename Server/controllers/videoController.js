@@ -12,6 +12,7 @@ export const getVideoById = async (req, res) => {
             process.env.APPWRITE_DBC_Video,
             [Query.equal('contentId', id)]
         );
+
         res.status(200).json(video.documents[0]);
     }
     catch (err) {

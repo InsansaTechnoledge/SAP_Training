@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { List, CheckCircle, Play } from 'lucide-react';
 
-const CourseContent = () => {
-    const moduleVideos = [
-        { id: 1, title: "Introduction to ABAP", duration: "10:00", completed: true },
-        { id: 2, title: "Data Types & Variables", duration: "8:00", completed: false },
-        { id: 3, title: "Control Structures", duration: "12:00", completed: false }
-    ];
+const CourseContent = ({content}) => {
+    const [moduleVideos, setModuleVideos] = useState([]);
+    
+    useEffect(()=> {
+        if(content){
+            setModuleVideos(content);
+        }
+    },[content]);
+
+    // const moduleVideos = [
+    //     { id: 1, title: "Introduction to ABAP", duration: "10:00", completed: true },
+    //     { id: 2, title: "Data Types & Variables", duration: "8:00", completed: false },
+    //     { id: 3, title: "Control Structures", duration: "12:00", completed: false }
+    // ];
 
     return (
         <div className="bg-card rounded-xl p-6 shadow-sm">
@@ -20,12 +28,12 @@ const CourseContent = () => {
                     <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div
                             className="h-full bg-blue-600 rounded-full"
-                            style={{ width: '40%' }}
+                            style={{ width: '0%' }}
                         ></div>
                     </div>
-                    <span className="text-sm font-medium text-blue-600">40%</span>
+                    <span className="text-sm font-medium text-blue-600">0%</span>
                 </div>
-                <p className="text-sm text-gray-500">4 of 10 videos completed</p>
+                <p className="text-sm text-gray-500">0 of {content.length} videos completed</p>
             </div>
 
             {/* Module Videos */}
@@ -41,7 +49,7 @@ const CourseContent = () => {
                         </div>
                         <div className="flex-1">
                             <h3 className="font-medium text-secondary">{video.title}</h3>
-                            <p className="text-sm text-gray-500">{video.duration}</p>
+                            <p className="text-sm text-gray-500">{parseInt(video.duration/60)} min</p>
                         </div>
                     </div>
                 ))}

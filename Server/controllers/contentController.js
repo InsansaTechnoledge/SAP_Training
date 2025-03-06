@@ -7,7 +7,7 @@ export const getVideoContent=async(req,res)=>{
         const details=await(AppwriteDB.getDocument(process.env.Appwrite_DBID,process.env.APPWRITE_DBC_Module,id,
             [Query.select(["$id","name","contentId.*"])]
         ));
-        console.log(details);
+        // console.log(details);
         const content=details.contentId.filter(content => content.type === "video").map(content =>({
             $id:content.$id,
             title:content.title,

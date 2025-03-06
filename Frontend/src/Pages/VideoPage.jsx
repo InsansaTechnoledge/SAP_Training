@@ -35,7 +35,8 @@ const VideoPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [searchParams] = useSearchParams();
-    const {module, moduleId} = location.state;
+    // const {module, moduleId} = location.state;
+    const [module,setModule] = useState();
 
     useEffect(() => {
         const videoId = searchParams.get('videoId');
@@ -45,8 +46,14 @@ const VideoPage = () => {
 
                 const response = await axios.get(`${API_BASE_URL}/api/v1/videos/video?id=${videoId}`);
                 if (response.status === 200) {
-                    console.log(response);
+                    // console.log(response);
                     setVideo(response.data);
+                }
+
+                const response2 = await axios.get(`${API_BASE_URL}/api/v1/contents/video?id=${moduleId}`);
+                if (response2.status === 200) {
+                    console.log(response2.data);
+                    setModule(response2.data);
                 }
             }
             catch (err) {
@@ -72,12 +79,14 @@ const VideoPage = () => {
                 module: "",
                 source: video.source
             });
+        }
 
+        if(module){
             setBreadcrumbItems([
                 {
-                    label: `${module}`,
+                    label: `${module.name}`,
                     onClick: () => {
-                        navigate(`/course?id=${moduleId}`)
+                        navigate(`/course?id=${module.$id}`)
                         console.log('Navigate to ABAP Fundamentals module');
                     }
                 },
@@ -86,7 +95,7 @@ const VideoPage = () => {
                 }
             ]);
         }
-    }, [video]);
+    }, [video, module]);
 
     useEffect(()=>{
         if(currentVideo.title!=''){
@@ -231,7 +240,7 @@ const VideoPage = () => {
 
     
 
-    if (!video) {
+    if (!video || !module) {
         return <div>
             Loaidng...
         </div>
@@ -286,7 +295,7 @@ const VideoPage = () => {
                 transition-all duration-300">  
 
                         {/* Course Progress */}
-                        <CourseContent />
+                        <CourseContent content={module.contentId}/>
 
                         {/* Schedule a Call */}
                         <ScheduleCall />

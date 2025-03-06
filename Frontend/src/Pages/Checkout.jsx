@@ -13,6 +13,7 @@ import {
     AlertCircle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -31,6 +32,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     const [errors, setErrors] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
+    const navigate = useNavigate();
 
     const {
         cart,
@@ -551,12 +553,12 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                                     </p>
                                 </div>
                             </div>
-                            <a
-                                href="#"
-                                className="bg-blue-100 dark:bg-blue-900/20 hover:bg-blue-200 dark:hover:bg-blue-900/30 text-blue-600 text-sm px-3 py-1 rounded-full transition-colors"
+                            <button
+                                onClick={()=>(navigate(`/course?id=${item.$id}`))}
+                                className="bg-blue-100 dark:bg-blue-900/20 hover:bg-blue-200 dark:hover:bg-blue-900/30 text-blue-600 text-sm px-3 py-1 rounded-full transition-colors hover:cursor-pointer"
                             >
                                 Start Learning
-                            </a>
+                            </button>
                         </div>
                     ))}
                 </div>

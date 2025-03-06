@@ -48,22 +48,28 @@ const QuizPage = () => {
         module: "ABAP Fundamentals",
         totalQuestions: 10
     });
-    const [quizEnd, setQuizEnd] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [score, setScore] = useState(0);
 
     const [searchParams] = useSearchParams();
+    // const [moduleProgress, setModuleProgress] = useState();
 
     const quizId = searchParams.get('quizId');
     const moduleId = searchParams.get('moduleId');
 
     useEffect(() => {
+        alert("FGT");
 
         const fetchQuiz = async () => {
             const response = await axios.get(`${API_BASE_URL}/api/v1/quizzes/quiz?id=${quizId}`);
             if (response.status === 200) {
-                console.log(response.data);
                 setQuizData(response.data);
+                alert("RT");
+            }
+
+            const response2 = await axios.get(`${API_BASE_URL}/api/v1/contents/quiz?id=${moduleId}`);
+            if(response2.status === 200){
+                // setModuleProgress(response2.data);
             }
         }
 
@@ -79,7 +85,8 @@ const QuizPage = () => {
             });
 
             setQuestions(quizData.questionId);
-            
+
+
             setIsLoading(false);
         }
     }, [quizData]);
@@ -146,7 +153,6 @@ const QuizPage = () => {
 
     const handleNextQuestion = () => {
         if(currentQuestionIndex==questions.length-1){
-            setQuizEnd(true);
             alert(`Quiz has ended.\nYou final score : ${score}/${questions.length}`);
             return;
         }
@@ -204,7 +210,7 @@ const QuizPage = () => {
         }
     ]);
 
-    if (isLoading) {
+    if (isLoading && !moduleProgress) {
         return (
             <div>Loading...</div>
         )

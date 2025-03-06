@@ -358,7 +358,7 @@ const ExamPage = () => {
                 </div>
             </div>
 
-            <CourseRoadmap/>
+            {/* <CourseRoadmap/> */}
         </div>
     );
 };
