@@ -38,7 +38,8 @@ const VideoPage = () => {
     const {module, moduleId} = location.state;
 
     useEffect(() => {
-        const videoId = searchParams.get('id');
+        const videoId = searchParams.get('videoId');
+        const moduleId = searchParams.get('moduleId');
         const fetchVideo = async () => {
             try {
 
@@ -46,7 +47,6 @@ const VideoPage = () => {
                 if (response.status === 200) {
                     console.log(response);
                     setVideo(response.data);
-                    
                 }
             }
             catch (err) {
@@ -54,7 +54,12 @@ const VideoPage = () => {
             }
         }
 
-        fetchVideo();
+        const fetchModuleDetails = async () => {
+            // const response = await axios.get(`${API_BASE_URL}/api/v1`)
+        }
+
+        fetchVideo();       
+        fetchModuleDetails();
     }, []);
 
     useEffect(() => {

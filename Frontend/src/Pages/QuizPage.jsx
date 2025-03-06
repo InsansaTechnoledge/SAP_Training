@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     BookOpen,
     Check,
@@ -27,9 +27,13 @@ import {
 } from 'lucide-react';
 
 import QuizStartOverlay from './QuizOverlay';
+import { useSearchParams } from 'react-router-dom';
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const QuizPage = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [questions, setQuestions] = useState([]);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
     const [notes, setNotes] = useState([]);
@@ -38,30 +42,71 @@ const QuizPage = () => {
     const [showCallForm, setShowCallForm] = useState(false);
     const [remainingTime, setRemainingTime] = useState(300); // 5 minutes per question
     const [showStartOverlay, setShowStartOverlay] = useState(true);
-
-    // Sample quiz data
-    const currentQuiz = {
-        title: "ABAP Fundamentals Quiz",
+    const [quizData, setQuizData] = useState();
+    const [currentQuiz, setCurrentQuiz] = useState({
+        title: "",
         module: "ABAP Fundamentals",
         totalQuestions: 10
-    };
+    });
+    const [quizEnd, setQuizEnd] = useState();
+    const [isLoading, setIsLoading] = useState(true);
+    const [score, setScore] = useState(0);
+
+    const [searchParams] = useSearchParams();
+
+    const quizId = searchParams.get('quizId');
+    const moduleId = searchParams.get('moduleId');
+
+    useEffect(() => {
+
+        const fetchQuiz = async () => {
+            const response = await axios.get(`${API_BASE_URL}/api/v1/quizzes/quiz?id=${quizId}`);
+            if (response.status === 200) {
+                console.log(response.data);
+                setQuizData(response.data);
+            }
+        }
+
+        fetchQuiz();
+    }, []);
+
+    useEffect(() => {
+        if (quizData) {
+            setCurrentQuiz({
+                title: quizData.title,
+                module: "",
+                totalQuestions: quizData.questionId.length
+            });
+
+            setQuestions(quizData.questionId);
+            
+            setIsLoading(false);
+        }
+    }, [quizData]);
+
+    // Sample quiz data
+    // const currentQuiz = {
+    //     title: "ABAP Fundamentals Quiz",
+    //     module: "ABAP Fundamentals",
+    //     totalQuestions: 10
+    // };
 
     // Sample question data
-    const questions = [
-        {
-            id: 1,
-            question: "Which of the following is the correct syntax for declaring a variable in ABAP?",
-            options: [
-                "DATA: variable TYPE string.",
-                "VAR variable AS string",
-                "DECLARE variable STRING",
-                "SET variable TYPE string"
-            ],
-            correctAnswer: 0,
-            explanation: "In ABAP, variables are declared using the DATA statement. The correct syntax is 'DATA: variable TYPE string.' where TYPE specifies the data type."
-        }
-        // Add more questions as needed
-    ];
+    // const questions = [
+    //     {
+    //         id: 1,
+    //         question: "Which of the following is the correct syntax for declaring a variable in ABAP?",
+    //         options: [
+    //             "DATA: variable TYPE string.",
+    //             "VAR variable AS string",
+    //             "DECLARE variable STRING",
+    //             "SET variable TYPE string"
+    //         ],
+    //         correctOption: 0,
+    //         explanation: "In ABAP, variables are declared using the DATA statement. The correct syntax is 'DATA: variable TYPE string.' where TYPE specifies the data type."
+    //     }
+    //     // Add more questions as needed
+    // ];
 
     // Quiz progress tracking
     const moduleProgress = [
@@ -90,7 +135,22 @@ const QuizPage = () => {
         }
     };
 
+    useEffect(()=>{
+        if(selectedAnswer){
+            if(selectedAnswer===questions[currentQuestionIndex].correctOption){
+                setScore(score+1);
+                console.log('score',score+1);
+            }
+        }
+    },[selectedAnswer]);
+
     const handleNextQuestion = () => {
+        if(currentQuestionIndex==questions.length-1){
+            setQuizEnd(true);
+            alert(`Quiz has ended.\nYou final score : ${score}/${questions.length}`);
+            return;
+        }
+        console.log(currentQuestionIndex);
         setCurrentQuestionIndex(prev => Math.min(prev + 1, questions.length - 1));
         setSelectedAnswer(null);
         setIsAnswerSubmitted(false);
@@ -144,6 +204,12 @@ const QuizPage = () => {
         }
     ]);
 
+    if (isLoading) {
+        return (
+            <div>Loading...</div>
+        )
+    }
+
     return (
         <div className="min-h-screen bg-theme-gradient">
             {showStartOverlay && (
@@ -175,11 +241,11 @@ const QuizPage = () => {
                             <div className="p-6 border-b">
                                 <div className="flex justify-between items-center mb-4">
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm text-gray-400">Question {currentQuestionIndex + 1} of {questions.length}</span>
+                                        <span className="text-sm text-gray-400">Question {currentQuestionIndex + 1} of {currentQuiz.totalQuestions}</span>
                                         <div className="h-2 w-32 bg-gray-200 rounded-full">
                                             <div
                                                 className="h-full bg-blue-600 rounded-full"
-                                                style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+                                                style={{ width: `${((currentQuestionIndex + 1) / currentQuiz.totalQuestions) * 100}%` }}
                                             />
                                         </div>
                                     </div>
@@ -189,45 +255,134 @@ const QuizPage = () => {
                                     </div>
                                 </div>
                                 <h2 className="text-xl font-semibold text-secondary">
-                                    {questions[currentQuestionIndex].question}
+                                    {questions.length > 0 && questions[currentQuestionIndex].question}
                                 </h2>
                             </div>
 
                             {/* Answer Options */}
                             <div className="p-6 space-y-4">
-                                {questions[currentQuestionIndex].options.map((option, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => !isAnswerSubmitted && setSelectedAnswer(index)}
-                                        className={`text-secondary w-full p-4 rounded-lg border text-left transition-all ${selectedAnswer === index
-                                                ? isAnswerSubmitted
-                                                    ? index === questions[currentQuestionIndex].correctAnswer
-                                                        ? 'border-green-500 '
-                                                        : 'border-red-500 '
-                                                    : 'border-blue-500 '
-                                                : 'border-gray-200 hover:border-blue-200'
-                                            }`}
-                                        disabled={isAnswerSubmitted}
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center ${selectedAnswer === index
-                                                    ? isAnswerSubmitted
-                                                        ? index === questions[currentQuestionIndex].correctAnswer
-                                                            ? 'bg-green-500 text-white'
-                                                            : 'bg-red-500 text-white'
-                                                        : 'bg-blue-500 text-white'
-                                                    : 'border border-gray-300'
-                                                }`}>
-                                                {isAnswerSubmitted && selectedAnswer === index && (
-                                                    index === questions[currentQuestionIndex].correctAnswer
-                                                        ? <Check className="h-4 w-4" />
-                                                        : <X className="h-4 w-4" />
-                                                )}
-                                            </div>
-                                            <span className="flex-1">{option}</span>
+                                <button
+                                    onClick={() => !isAnswerSubmitted && setSelectedAnswer("option1")}
+                                    className={`text-secondary w-full p-4 rounded-lg border text-left transition-all ${selectedAnswer === "option1"
+                                        ? isAnswerSubmitted
+                                            ? "option1" === questions[currentQuestionIndex].correctOption
+                                                ? 'border-green-500 '
+                                                : 'border-red-500 '
+                                            : 'border-blue-500 '
+                                        : 'border-gray-200 hover:border-blue-200'
+                                        }`}
+                                    disabled={isAnswerSubmitted}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${selectedAnswer === "option1"
+                                            ? isAnswerSubmitted
+                                                ? "option1" === questions[currentQuestionIndex].correctOption
+                                                    ? 'bg-green-500 text-white'
+                                                    : 'bg-red-500 text-white'
+                                                : 'bg-blue-500 text-white'
+                                            : 'border border-gray-300'
+                                            }`}>
+                                            {isAnswerSubmitted && selectedAnswer === "option1" && (
+                                                "option1" === questions[currentQuestionIndex].correctOption
+                                                    ? <Check className="h-4 w-4" />
+                                                    : <X className="h-4 w-4" />
+                                            )}
                                         </div>
-                                    </button>
-                                ))}
+                                        <span className="flex-1">{questions[currentQuestionIndex].option1}</span>
+                                    </div>
+                                </button>
+                                <button
+                                    onClick={() => !isAnswerSubmitted && setSelectedAnswer("option2")}
+                                    className={`text-secondary w-full p-4 rounded-lg border text-left transition-all ${selectedAnswer === "option2"
+                                        ? isAnswerSubmitted
+                                            ? "option2" === questions[currentQuestionIndex].correctOption
+                                                ? 'border-green-500 '
+                                                : 'border-red-500 '
+                                            : 'border-blue-500 '
+                                        : 'border-gray-200 hover:border-blue-200'
+                                        }`}
+                                    disabled={isAnswerSubmitted}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${selectedAnswer === "option2"
+                                            ? isAnswerSubmitted
+                                                ? "option2" === questions[currentQuestionIndex].correctOption
+                                                    ? 'bg-green-500 text-white'
+                                                    : 'bg-red-500 text-white'
+                                                : 'bg-blue-500 text-white'
+                                            : 'border border-gray-300'
+                                            }`}>
+                                            {isAnswerSubmitted && selectedAnswer === "option2" && (
+                                                "option2" === questions[currentQuestionIndex].correctOption
+                                                    ? <Check className="h-4 w-4" />
+                                                    : <X className="h-4 w-4" />
+                                            )}
+                                        </div>
+                                        <span className="flex-1">{questions[currentQuestionIndex].option2}</span>
+                                    </div>
+                                </button>
+                                <button
+                                    onClick={() => !isAnswerSubmitted && setSelectedAnswer("option3")}
+                                    className={`text-secondary w-full p-4 rounded-lg border text-left transition-all ${selectedAnswer === "option3"
+                                        ? isAnswerSubmitted
+                                            ? "option3" === questions[currentQuestionIndex].correctOption
+                                                ? 'border-green-500 '
+                                                : 'border-red-500 '
+                                            : 'border-blue-500 '
+                                        : 'border-gray-200 hover:border-blue-200'
+                                        }`}
+                                    disabled={isAnswerSubmitted}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${selectedAnswer === "option3"
+                                            ? isAnswerSubmitted
+                                                ? "option3" === questions[currentQuestionIndex].correctOption
+                                                    ? 'bg-green-500 text-white'
+                                                    : 'bg-red-500 text-white'
+                                                : 'bg-blue-500 text-white'
+                                            : 'border border-gray-300'
+                                            }`}>
+                                            {isAnswerSubmitted && selectedAnswer === "option3" && (
+                                                "option3" === questions[currentQuestionIndex].correctOption
+                                                    ? <Check className="h-4 w-4" />
+                                                    : <X className="h-4 w-4" />
+                                            )}
+                                        </div>
+                                        <span className="flex-1">{questions[currentQuestionIndex].option3}</span>
+                                    </div>
+                                </button>
+                                <button
+                                    onClick={() => !isAnswerSubmitted && setSelectedAnswer("option4")}
+                                    className={`text-secondary w-full p-4 rounded-lg border text-left transition-all ${selectedAnswer === "option4"
+                                        ? isAnswerSubmitted
+                                            ? "option4" === questions[currentQuestionIndex].correctOption
+                                                ? 'border-green-500 '
+                                                : 'border-red-500 '
+                                            : 'border-blue-500 '
+                                        : 'border-gray-200 hover:border-blue-200'
+                                        }`}
+                                    disabled={isAnswerSubmitted}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${selectedAnswer === "option4"
+                                            ? isAnswerSubmitted
+                                                ? "option4" === questions[currentQuestionIndex].correctOption
+                                                    ? 'bg-green-500 text-white'
+                                                    : 'bg-red-500 text-white'
+                                                : 'bg-blue-500 text-white'
+                                            : 'border border-gray-300'
+                                            }`}>
+                                            {isAnswerSubmitted && selectedAnswer === "option4" && (
+                                                "option4" === questions[currentQuestionIndex].correctOption
+                                                    ? <Check className="h-4 w-4" />
+                                                    : <X className="h-4 w-4" />
+                                            )}
+                                        </div>
+                                        <span className="flex-1">{questions[currentQuestionIndex].option4}</span>
+                                    </div>
+                                </button>
+
+                               
                             </div>
 
                             {/* Answer Explanation */}
@@ -383,198 +538,198 @@ const QuizPage = () => {
                                 Unlock for ${nextModule.price}
                             </button>
                         </div>
-                        </div>
-                      
                     </div>
 
-                    {/* Resources Section */}
-                    <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
-                        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
-                            <FileText className="h-5 w-5 text-blue" />
-                            Study Resources
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {resources.map(resource => (
-                                <div
-                                    key={resource.id}
-                                    className="flex items-center justify-between p-4 border-contrast rounded-lg hover:border-blue-200 transition-all"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-primary rounded-lg">
-                                            <FileText className="h-5 w-5 text-blue" />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-medium text-secondary">{resource.title}</h3>
-                                            <p className="text-sm text-gray-400">{resource.type} • {resource.size}</p>
-                                        </div>
+                </div>
+
+                {/* Resources Section */}
+                <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
+                    <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
+                        <FileText className="h-5 w-5 text-blue" />
+                        Study Resources
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {resources.map(resource => (
+                            <div
+                                key={resource.id}
+                                className="flex items-center justify-between p-4 border-contrast rounded-lg hover:border-blue-200 transition-all"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-primary rounded-lg">
+                                        <FileText className="h-5 w-5 text-blue" />
                                     </div>
-                                    <button className="p-2 text-blue hover:bg-blue-50 rounded-lg transition-colors">
-                                        <Download className="h-5 w-5" />
-                                    </button>
+                                    <div>
+                                        <h3 className="font-medium text-secondary">{resource.title}</h3>
+                                        <p className="text-sm text-gray-400">{resource.type} • {resource.size}</p>
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Community Discussion Section */}
-                    <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
-                        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
-                            <MessageSquare className="h-5 w-5 text-blue" />
-                            Discussion Forum
-                        </h2>
-
-                        {/* Add Comment */}
-                        <div className="flex gap-4 mb-8">
-                            <img
-                                src="/api/placeholder/40/40"
-                                alt="User"
-                                className="w-10 h-10 rounded-full"
-                            />
-                            <div className="flex-1">
-                                <textarea
-                                    value={newComment}
-                                    onChange={(e) => setNewComment(e.target.value)}
-                                    placeholder="Ask a question about this quiz..."
-                                    className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] text-secondary"
-                                />
-                                <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors flex items-center gap-2">
-                                    <Send className="h-4 w-4" />
-                                    Post Question
+                                <button className="p-2 text-blue hover:bg-blue-50 rounded-lg transition-colors">
+                                    <Download className="h-5 w-5" />
                                 </button>
                             </div>
-                        </div>
+                        ))}
+                    </div>
+                </div>
 
-                        {/* Comments List */}
-                        <div className="space-y-6">
-                            {comments.map(comment => (
-                                <div key={comment.id} className="space-y-4">
-                                    {/* Main Comment */}
-                                    <div className="flex gap-4">
+                {/* Community Discussion Section */}
+                <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
+                    <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-secondary">
+                        <MessageSquare className="h-5 w-5 text-blue" />
+                        Discussion Forum
+                    </h2>
+
+                    {/* Add Comment */}
+                    <div className="flex gap-4 mb-8">
+                        <img
+                            src="/api/placeholder/40/40"
+                            alt="User"
+                            className="w-10 h-10 rounded-full"
+                        />
+                        <div className="flex-1">
+                            <textarea
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                                placeholder="Ask a question about this quiz..."
+                                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] text-secondary"
+                            />
+                            <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors flex items-center gap-2">
+                                <Send className="h-4 w-4" />
+                                Post Question
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Comments List */}
+                    <div className="space-y-6">
+                        {comments.map(comment => (
+                            <div key={comment.id} className="space-y-4">
+                                {/* Main Comment */}
+                                <div className="flex gap-4">
+                                    <img
+                                        src={comment.avatar}
+                                        alt={comment.user}
+                                        className="w-10 h-10 rounded-full"
+                                    />
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <h3 className="font-medium text-secondary">{comment.user}</h3>
+                                            <span className="text-sm text-gray-400">{comment.timestamp}</span>
+                                        </div>
+                                        <p className="text-secondary mb-2">{comment.content}</p>
+                                        <div className="flex items-center gap-4">
+                                            <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
+                                                <ThumbsUp className="h-4 w-4" />
+                                                {comment.likes}
+                                            </button>
+                                            <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
+                                                <Reply className="h-4 w-4" />
+                                                Reply
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Replies */}
+                                {comment.replies.map(reply => (
+                                    <div key={reply.id} className="flex gap-4 ml-12">
                                         <img
-                                            src={comment.avatar}
-                                            alt={comment.user}
-                                            className="w-10 h-10 rounded-full"
+                                            src={reply.avatar}
+                                            alt={reply.user}
+                                            className="w-8 h-8 rounded-full"
                                         />
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-1">
-                                                <h3 className="font-medium text-secondary">{comment.user}</h3>
-                                                <span className="text-sm text-gray-400">{comment.timestamp}</span>
+                                                <h3 className="font-medium text-secondary">{reply.user}</h3>
+                                                <span className="text-sm text-gray-400">{reply.timestamp}</span>
                                             </div>
-                                            <p className="text-secondary mb-2">{comment.content}</p>
-                                            <div className="flex items-center gap-4">
-                                                <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
-                                                    <ThumbsUp className="h-4 w-4" />
-                                                    {comment.likes}
-                                                </button>
-                                                <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
-                                                    <Reply className="h-4 w-4" />
-                                                    Reply
-                                                </button>
-                                            </div>
+                                            <p className="text-secondary mb-2">{reply.content}</p>
+                                            <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
+                                                <ThumbsUp className="h-4 w-4" />
+                                                {reply.likes}
+                                            </button>
                                         </div>
                                     </div>
-
-                                    {/* Replies */}
-                                    {comment.replies.map(reply => (
-                                        <div key={reply.id} className="flex gap-4 ml-12">
-                                            <img
-                                                src={reply.avatar}
-                                                alt={reply.user}
-                                                className="w-8 h-8 rounded-full"
-                                            />
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <h3 className="font-medium text-secondary">{reply.user}</h3>
-                                                    <span className="text-sm text-gray-400">{reply.timestamp}</span>
-                                                </div>
-                                                <p className="text-secondary mb-2">{reply.content}</p>
-                                                <button className="flex items-center gap-1 text-gray-400 hover:text-blue-600">
-                                                    <ThumbsUp className="h-4 w-4" />
-                                                    {reply.likes}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Request Tutoring Section */}
-                    <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-semibold flex items-center gap-2 text-secondary">
-                                <Phone className="h-5 w-5 text-blue" />
-                                Need Help with ABAP?
-                            </h2>
-                        </div>
-
-                        {!showCallForm ? (
-                            <div className="text-center">
-                                <p className="text-gray-400 mb-4">
-                                    Schedule a 1-on-1 tutoring session with our ABAP experts to improve your understanding.
-                                </p>
-                                <button
-                                    onClick={() => setShowCallForm(true)}
-                                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors flex items-center gap-2 mx-auto"
-                                >
-                                    <Calendar className="h-5 w-5" />
-                                    Schedule Tutoring
-                                </button>
+                                ))}
                             </div>
-                        ) : (
-                            <form className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-secondary mb-1">
-                                        Preferred Date
-                                    </label>
-                                    <input
-                                        type="date"
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-secondary"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-secondary mb-1">
-                                        Preferred Time
-                                    </label>
-                                    <select className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-secondary">
-                                        <option>09:00 AM</option>
-                                        <option>10:00 AM</option>
-                                        <option>11:00 AM</option>
-                                        <option>02:00 PM</option>
-                                        <option>03:00 PM</option>
-                                        <option>04:00 PM</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-secondary mb-1">
-                                        Topics Needing Help
-                                    </label>
-                                    <textarea
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] text-secondary"
-                                        placeholder="Describe the topics you'd like to review..."
-                                    />
-                                </div>
-                                <div className="flex gap-3">
-                                    <button
-                                        type="submit"
-                                        className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
-                                    >
-                                        Request Tutoring
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowCallForm(false)}
-                                        className="px-6 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-secondary"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
-                        )}
+                        ))}
                     </div>
                 </div>
+
+                {/* Request Tutoring Section */}
+                <div className="bg-card rounded-xl p-6 shadow-sm mt-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg font-semibold flex items-center gap-2 text-secondary">
+                            <Phone className="h-5 w-5 text-blue" />
+                            Need Help with ABAP?
+                        </h2>
+                    </div>
+
+                    {!showCallForm ? (
+                        <div className="text-center">
+                            <p className="text-gray-400 mb-4">
+                                Schedule a 1-on-1 tutoring session with our ABAP experts to improve your understanding.
+                            </p>
+                            <button
+                                onClick={() => setShowCallForm(true)}
+                                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors flex items-center gap-2 mx-auto"
+                            >
+                                <Calendar className="h-5 w-5" />
+                                Schedule Tutoring
+                            </button>
+                        </div>
+                    ) : (
+                        <form className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-secondary mb-1">
+                                    Preferred Date
+                                </label>
+                                <input
+                                    type="date"
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-secondary"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-secondary mb-1">
+                                    Preferred Time
+                                </label>
+                                <select className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-secondary">
+                                    <option>09:00 AM</option>
+                                    <option>10:00 AM</option>
+                                    <option>11:00 AM</option>
+                                    <option>02:00 PM</option>
+                                    <option>03:00 PM</option>
+                                    <option>04:00 PM</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-secondary mb-1">
+                                    Topics Needing Help
+                                </label>
+                                <textarea
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] text-secondary"
+                                    placeholder="Describe the topics you'd like to review..."
+                                />
+                            </div>
+                            <div className="flex gap-3">
+                                <button
+                                    type="submit"
+                                    className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
+                                >
+                                    Request Tutoring
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowCallForm(false)}
+                                    className="px-6 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-secondary"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    )}
+                </div>
             </div>
+        </div>
     );
 };
 

@@ -8,7 +8,7 @@ import { API_BASE_URL } from '../config';
 const ExamPage = () => {
     const navigate = useNavigate();
     const [activeModule, setActiveModule] = useState(null);
-    const [unlockedModules, setUnlockedModules] = useState([1]);
+    const [unlockedModules, setUnlockedModules] = useState(localStorage.getItem('unlockedModules').split(','));
     const [course, setCourse] = useState();
     const [stats,setStats] = useState([]);
     const [modules, setModules] = useState([]);
@@ -118,6 +118,8 @@ const ExamPage = () => {
     const handleUnlockModule = (moduleId) => {
         alert(`Processing payment for module ${moduleId}`);
         setUnlockedModules([...unlockedModules, moduleId]);
+        localStorage.setItem('unlockedModules', [...unlockedModules, moduleId]);
+        
     };
 
     const handleVideoClick = (moduleId, subModuleId) => {
@@ -126,16 +128,16 @@ const ExamPage = () => {
         }
     };
 
-    const handleContentClick = (module, subModule) => {
+    const handleContentClick = (module, content) => {
         if (isModuleUnlocked(module.$id)) {
-            if (subModule.type === "quiz") {
-                navigate('/quiz');
+            if (content.type === "quiz") {
+                navigate(`/quiz?moduleId=${module.$id}&quizId=${content.$id}`);
             } 
-            else if (subModule.type === "game" ){
+            else if (content.type === "game" ){
                 navigate('/game');
             }
             else {
-                navigate(`/video?id=${subModule.$id}`, {state: {module: module.name, moduleId: module.$id}});
+                navigate(`/video?moduleId=${module.$id}&videoId=${content.$id}`, {state: {module: module.name, moduleId: module.$id}});
             }
         }
     };
