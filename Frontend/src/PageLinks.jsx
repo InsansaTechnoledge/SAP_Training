@@ -32,6 +32,8 @@ const PageLinks = () => {
                     <Route path="/game" element={<GameDashboard />} />
                     <Route path="/game2" element={<RealisticShooterGame />} />
                     <Route path="/books" element={<StudyMaterialsShop />} />
+                    <Route path="/checkout" element={<Checkout />} />
+
 
                     
 
