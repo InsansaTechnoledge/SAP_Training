@@ -4,9 +4,9 @@ import {
     PictureInPicture, Layers, Lock, Unlock, Download, FileText, Bookmark, BookmarkCheck
 } from 'lucide-react';
 import ResumePopup
- from './ResumePopUPCOntinue';
+    from './ResumePopUPCOntinue';
 
-const VideoPlayer = ({ videoBlobUrl, onTimeUpdate, encryptedSrc }) => {
+const VideoPlayer = ({ videoBlobUrl, onTimeUpdate, encryptedSrc, setProgress }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -109,7 +109,7 @@ const VideoPlayer = ({ videoBlobUrl, onTimeUpdate, encryptedSrc }) => {
     const handleTimeUpdate = () => {
         if (videoRef.current) {
             setCurrentTime(videoRef.current.currentTime);
-
+            setProgress(videoRef.current.currentTime);
             // Calculate and update watch history
             const percentage = (videoRef.current.currentTime / videoRef.current.duration) * 100;
             setWatchHistory(Math.max(watchHistory, percentage));
@@ -973,7 +973,6 @@ const VideoPlayer = ({ videoBlobUrl, onTimeUpdate, encryptedSrc }) => {
                 controlsList="nodownload"
                 playsInline
             /> */}
-
             <video
                 ref={videoRef}
                 className={`w-full h-full ${videoBlurred ? 'blur-xl' : ''} transition-all duration-300`}
@@ -1016,7 +1015,7 @@ const VideoPlayer = ({ videoBlobUrl, onTimeUpdate, encryptedSrc }) => {
                     />
                 </div>
             )}
-            
+
             {/* Watermark overlay canvas */}
             <canvas
                 ref={watermarkCanvasRef}
