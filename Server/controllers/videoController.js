@@ -5,7 +5,7 @@ export const getVideoById = async (req, res) => {
     try {
 
         const id = req.query.id;
-        console.log(id);
+        // console.log(id);
 
         const video = await AppwriteDB.listDocuments(
             process.env.APPWRITE_DBID,

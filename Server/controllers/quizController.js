@@ -10,6 +10,6 @@ export const getQuizById = async (req, res) => {
         [Query.equal('contentId', id)]
     );
 
-    console.log(quiz.documents[0]);
+    // console.log(quiz.documents[0]);
     res.status(200).json(quiz.documents[0]);
 }

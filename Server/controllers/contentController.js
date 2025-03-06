@@ -30,10 +30,10 @@ export const getQuizContent=async(req,res)=>{
         const details=await(AppwriteDB.getDocument(process.env.Appwrite_DBID,process.env.APPWRITE_DBC_Module,id,
             [Query.select(["$id","name","contentId.*"])]
         ));
-        console.log(details);
         const content=details.contentId.filter(content => content.type === "quiz").map(content =>({
             $id:content.$id,
             title:content.title,
+            // questions: content.questionId,
             position:content.position,
             duration:content.duration
         })

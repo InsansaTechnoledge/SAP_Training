@@ -52,25 +52,24 @@ const QuizPage = () => {
     const [score, setScore] = useState(0);
 
     const [searchParams] = useSearchParams();
-    // const [moduleProgress, setModuleProgress] = useState();
+    const [moduleProgress, setModuleProgress] = useState(null);
 
     const quizId = searchParams.get('quizId');
     const moduleId = searchParams.get('moduleId');
 
     useEffect(() => {
-        alert("FGT");
-
         const fetchQuiz = async () => {
+            const response2 = await axios.get(`${API_BASE_URL}/api/v1/contents/quiz?id=${moduleId}`);
+            if(response2.status === 200){
+                console.log(response2.data);
+                setModuleProgress(response2.data);
+            }
+
             const response = await axios.get(`${API_BASE_URL}/api/v1/quizzes/quiz?id=${quizId}`);
             if (response.status === 200) {
                 setQuizData(response.data);
-                alert("RT");
             }
 
-            const response2 = await axios.get(`${API_BASE_URL}/api/v1/contents/quiz?id=${moduleId}`);
-            if(response2.status === 200){
-                // setModuleProgress(response2.data);
-            }
         }
 
         fetchQuiz();
@@ -116,11 +115,11 @@ const QuizPage = () => {
     // ];
 
     // Quiz progress tracking
-    const moduleProgress = [
-        { id: 1, title: "Basic Syntax", questionsCount: 10, completed: true },
-        { id: 2, title: "Data Types", questionsCount: 8, completed: false },
-        { id: 3, title: "Control Structures", questionsCount: 12, completed: false }
-    ];
+    // const moduleProgress = [
+    //     { id: 1, title: "Basic Syntax", questionsCount: 10, completed: true },
+    //     { id: 2, title: "Data Types", questionsCount: 8, completed: false },
+    //     { id: 3, title: "Control Structures", questionsCount: 12, completed: false }
+    // ];
 
     // Next module data
     const nextModule = {
@@ -210,7 +209,8 @@ const QuizPage = () => {
         }
     ]);
 
-    if (isLoading && !moduleProgress) {
+    if (isLoading || !moduleProgress) {
+        
         return (
             <div>Loading...</div>
         )
@@ -486,8 +486,9 @@ const QuizPage = () => {
                                 <List className="h-5 w-5 text-blue" />
                                 Quiz Progress
                             </h2>
+                            {console.log(moduleProgress.contentId)}
                             <div className="space-y-4">
-                                {moduleProgress.map(section => (
+                                {moduleProgress.contentId.map(section => (
                                     <div
                                         key={section.id}
                                         className={`
@@ -501,7 +502,7 @@ const QuizPage = () => {
                                                 <h3 className="font-medium text-secondary mb-1">{section.title}</h3>
                                                 <div className="flex items-center text-sm text-secondary">
                                                     <HelpCircle className="h-4 w-4 mr-1" />
-                                                    {section.questionsCount} questions
+                                                    {section.duration/60} min
                                                 </div>
                                             </div>
                                             {section.completed && (
