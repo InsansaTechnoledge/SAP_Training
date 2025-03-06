@@ -1,6 +1,7 @@
 import App from "./app.js";
 const PORT = process.env.PORT || 5000;
 
+
 const initializeServer = async () => {
     try{
 
@@ -13,6 +14,7 @@ const initializeServer = async () => {
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         })
+
     }
     catch(err){
         console.log("Error in initializing server. Error : ",err);

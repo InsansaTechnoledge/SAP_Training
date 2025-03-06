@@ -10,8 +10,10 @@ import CourseContent from '../Components/VideoComponents/CourseContent';
 import VideoNotes from '../Components/VideoComponents/VideoNotes';
 import VideoPlayer from '../Components/VideoComponents/VideoPlayer';
 import CryptoJS from 'crypto-js';
-import { useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import BreadcrumbNavigation from '../Components/VideoComponents/BreadCrumbs';
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 
 const VideoPage = () => {
@@ -19,18 +21,82 @@ const VideoPage = () => {
     const [videoBlobUrl, setVideoBlobUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [videoKey, setVideoKey] = useState(Date.now().toString()); // Unique key for video element
+    const [video, setVideo] = useState();
+    const [currentVideo, setCurrentVideo] = useState({
+        title: '',
+        duration: '',
+        progress: 0,
+        module: "",
+        src: ''
+    });
+    const [breadcrumbItems, setBreadcrumbItems] = useState([]);
+    const [progress, setProgress] = useState(0);
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const [searchParams] = useSearchParams();
+    const {module, moduleId} = location.state;
 
+    useEffect(() => {
+        const videoId = searchParams.get('id');
+        const fetchVideo = async () => {
+            try {
+
+                const response = await axios.get(`${API_BASE_URL}/api/v1/videos/video?id=${videoId}`);
+                if (response.status === 200) {
+                    console.log(response);
+                    setVideo(response.data);
+                    
+                }
+            }
+            catch (err) {
+                console.log("error fetching video", err);
+            }
+        }
+
+        fetchVideo();
+    }, []);
+
+    useEffect(() => {
+        if (video) {
+
+            setCurrentVideo({
+                title: video.contentId.title,
+                duration: video.contentId.duration,
+                progress: progress,
+                module: "",
+                source: video.source
+            });
+
+            setBreadcrumbItems([
+                {
+                    label: `${module}`,
+                    onClick: () => {
+                        navigate(`/course?id=${moduleId}`)
+                        console.log('Navigate to ABAP Fundamentals module');
+                    }
+                },
+                {
+                    label: `${video.contentId.title}`
+                }
+            ]);
+        }
+    }, [video]);
+
+    useEffect(()=>{
+        if(currentVideo.title!=''){
+            setIsLoading(false);
+        }
+    },[currentVideo])
 
     // Sample video data
-    const currentVideo = {
-        title: "Introduction to ABAP",
-        duration: "10:00",
-        progress: 40,
-        module: "ABAP Fundamentals",
-        src: Video2
-    };
+    // const currentVideo = {
+    //     title: "Introduction to ABAP",
+    //     duration: "10:00",
+    //     progress: 40,
+    //     module: "ABAP Fundamentals",
+    //     src: Video2
+    // };
 
     // Encryption key (should be stored securely and fetched from backend)
     // In production, NEVER expose this in client-side code
@@ -53,68 +119,69 @@ const VideoPage = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    useEffect(() => {
-        // In a real application, this encrypted URL would come from your backend API
-        // rather than being encrypted in the frontend
-        const videoUrl = "https://res.cloudinary.com/dgapvegsq/video/upload/v1739252871/ydjmvohvg00e2dxnbojo.mp4";
+    // useEffect(() => {
+    //     // In a real application, this encrypted URL would come from your backend API
+    //     // rather than being encrypted in the frontend
+    //     const videoUrl = "https://res.cloudinary.com/dgapvegsq/video/upload/v1739252871/ydjmvohvg00e2dxnbojo.mp4";
 
-        // Encrypt the URL
-        const encryptedUrl = encryptUrl(videoUrl);
-        console.log("Encrypted URL (this should only be visible during development):", encryptedUrl);
+    //     // Encrypt the URL
+    //     const encryptedUrl = encryptUrl(videoUrl);
+    //     console.log("Encrypted URL (this should only be visible during development):", encryptedUrl);
 
-        // Instead of storing the full decrypted URL, we'll use a short-lived token approach
-        const fetchVideo = async () => {
-            try {
-                setIsLoading(true);
+    //     // Instead of storing the full decrypted URL, we'll use a short-lived token approach
+    //     const fetchVideo = async () => {
+    //         try {
+    //             setIsLoading(true);
 
-                // In a production environment, this should be a secure API call
-                // that validates user session/permissions before returning the video
-                const decryptedUrl = decryptUrl(encryptedUrl);
+    //             // In a production environment, this should be a secure API call
+    //             // that validates user session/permissions before returning the video
+    //             const decryptedUrl = decryptUrl(encryptedUrl);
 
-                // Add a unique token or timestamp to prevent caching and make the URL harder to extract
-                const tokenizedUrl = `${decryptedUrl}${decryptedUrl.includes('?') ? '&' : '?'}token=${Date.now()}`;
+    //             // Add a unique token or timestamp to prevent caching and make the URL harder to extract
+    //             const tokenizedUrl = `${decryptedUrl}${decryptedUrl.includes('?') ? '&' : '?'}token=${Date.now()}`;
 
-                const response = await fetch(tokenizedUrl, {
-                    method: "GET",
-                    headers: {
-                        // Add custom headers that your server can validate
-                        'X-Secure-Request': 'true',
-                        'X-Request-Timestamp': Date.now().toString()
-                    },
-                });
+    //             const response = await fetch(tokenizedUrl, {
+    //                 method: "GET",
+    //                 headers: {
+    //                     // Add custom headers that your server can validate
+    //                     'X-Secure-Request': 'true',
+    //                     'X-Request-Timestamp': Date.now().toString()
+    //                 },
+    //             });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+    //             if (!response.ok) {
+    //                 throw new Error(`HTTP error! Status: ${response.status}`);
+    //             }
 
-                const blob = await response.blob();
+    //             const blob = await response.blob();
 
-                // Create a blob URL but don't expose it directly
-                const blobUrl = URL.createObjectURL(blob);
-                setVideoBlobUrl(blobUrl);
+    //             // Create a blob URL but don't expose it directly
+    //             const blobUrl = URL.createObjectURL(blob);
+    //             setVideoBlobUrl(blobUrl);
 
-                // Generate a new key to force the video element to re-render
-                // This helps prevent inspection of the previous source
-                setVideoKey(Date.now().toString());
-            } catch (error) {
-                console.error("Error fetching video:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+    //             // Generate a new key to force the video element to re-render
+    //             // This helps prevent inspection of the previous source
+    //             setVideoKey(Date.now().toString());
+    //         } catch (error) {
+    //             console.error("Error fetching video:", error);
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     };
 
-        fetchVideo();
+    //     fetchVideo();
 
-        // Clean up function to revoke the blob URL when component unmounts
-        return () => {
-            if (videoBlobUrl) {
-                URL.revokeObjectURL(videoBlobUrl);
-                setVideoBlobUrl(null);
-            }
-        };
-    }, []);
+    //     // Clean up function to revoke the blob URL when component unmounts
+    //     return () => {
+    //         if (videoBlobUrl) {
+    //             URL.revokeObjectURL(videoBlobUrl);
+    //             setVideoBlobUrl(null);
+    //         }
+    //     };
+    // }, []);
 
     // Additional security measures
+    
     useEffect(() => {
         // Disable right-click menu on the whole page
         const handleContextMenu = (e) => e.preventDefault();
@@ -157,18 +224,13 @@ const VideoPage = () => {
         };
     }, []);
 
-    const breadcrumbItems = [
-        {
-            label: "ABAP Fundamentals",
-            onClick: () => {
-                navigate('/course')
-                console.log('Navigate to ABAP Fundamentals module');
-            }
-        },
-        {
-            label: "Introduction to ABAP"
-        }
-    ];
+    
+
+    if (!video) {
+        return <div>
+            Loaidng...
+        </div>
+    }
 
     return (
         <div
@@ -178,7 +240,7 @@ const VideoPage = () => {
         >
             <div className="container mx-auto px-4 py-8 mt-20">
                 {/* Navigation Breadcrumb */}
-                <BreadcrumbNavigation items={breadcrumbItems}/>
+                <BreadcrumbNavigation items={breadcrumbItems} />
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Video Player Section */}
@@ -192,9 +254,10 @@ const VideoPage = () => {
                             // Pass the key to force re-render and use the modified VideoPlayer
                             <VideoPlayer
                                 key={videoKey}
-                                videoBlobUrl={videoBlobUrl}
+                                videoBlobUrl={currentVideo.source}
                                 onTimeUpdate={(time) => setCurrentTime(time)}
-                                encryptedSrc={encryptUrl(videoBlobUrl || "")} // This is what will show in inspected elements
+                                encryptedSrc={encryptUrl(currentVideo.source || "")} // This is what will show in inspected elements
+                                setProgress={setProgress}
                             />
                         )}
 
@@ -208,7 +271,7 @@ const VideoPage = () => {
                             </p>
                         </div>
 
-                        
+
                     </div>
 
                     {/* Sidebar */}
