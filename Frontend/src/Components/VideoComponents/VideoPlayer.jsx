@@ -976,7 +976,7 @@ const VideoPlayer = ({ videoBlobUrl, onTimeUpdate, encryptedSrc, setProgress }) 
             <video
                 ref={videoRef}
                 className={`w-full h-full ${videoBlurred ? 'blur-xl' : ''} transition-all duration-300`}
-                src={videoBlobUrl}
+                src="https://www.dropbox.com/scl/fi/05gqtw3o96yz88r6hgqln/02-1-_DataTypes-and-Variables.mp4?rlkey=7h29o2i7g4lrsw2ovnauikj8e&st=p0vyf3mw&raw=1"
                 onClick={handlePlayPause}
                 onContextMenu={(e) => e.preventDefault()}
                 playsInline

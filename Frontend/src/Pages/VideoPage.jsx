@@ -280,7 +280,11 @@ const VideoPage = () => {
                     </div>
 
                     {/* Sidebar */}
-                    <div className="space-y-6 lg:h-[35rem] lg:overflow-scroll overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200">
+                    <div className="space-y-6 lg:h-[35rem] lg:overflow-scroll overflow-x-hidden 
+                scrollbar-thin scrollbar-track-gray-200
+                scrollbar-thumb-blue-500 hover:scrollbar-thumb-blue-700 
+                transition-all duration-300">  
+
                         {/* Course Progress */}
                         <CourseContent />
 

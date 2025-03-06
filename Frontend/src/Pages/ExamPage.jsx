@@ -148,7 +148,7 @@ const ExamPage = () => {
 
     return (
 
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-blue-50">
             
             {/* Hero Section with Animated Background */}
             <div className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 overflow-hidden">
@@ -357,6 +357,8 @@ const ExamPage = () => {
                     </div>
                 </div>
             </div>
+
+            <CourseRoadmap/>
         </div>
     );
 };
