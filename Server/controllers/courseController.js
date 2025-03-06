@@ -10,7 +10,7 @@ export const getCoursCard=async(req,res)=>{
         const courseCard=await AppwriteDB.listDocuments(
             process.env.APPWRITE_DBID,
             process.env.APPWRITE_DBC_Course,
-           [ Query.select(["title",'description','price','category','stars','validity','image'])]
+           [ Query.select(["title",'description','price','category','stars','validity','image','moduleCourseFeatureId'])]
         );
         console.log(courseCard.documents);
          res.status(200).json(courseCard.documents);
