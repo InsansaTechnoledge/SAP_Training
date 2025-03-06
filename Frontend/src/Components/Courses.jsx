@@ -3,7 +3,8 @@ import { domAnimation, motion } from 'framer-motion';
 import {
     Cloud, Code, Database, Brain, ShoppingCart, Heart, Star,
     Users, Clock, ArrowRight, GraduationCap, Search, Filter,
-    BookOpen, Activity, Plus
+    BookOpen, Activity, Plus,
+    CornerUpLeftIcon
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/CartContext';
@@ -30,6 +31,7 @@ const Courses = ({ category }) => {
     const courses = [
         // Crash Courses
         {
+            $id: '1',
             title: 'AI Quick Start',
             icon: <Brain className="w-8 h-8" />,
             description: 'Accelerated AI/ML fundamentals in just 4 weeks.',
@@ -43,6 +45,7 @@ const Courses = ({ category }) => {
             domain: 'crash'
         },
         {
+            $id: '',
             title: 'Fullstack Quick Start',
             icon: <Code className="w-8 h-8" />,
             description: 'Accelerated Fullstack fundamentals in just 4 weeks.',
@@ -56,6 +59,7 @@ const Courses = ({ category }) => {
             domain: 'crash'
         },
         {
+            $id: '67c831550006cb081c51',
             title: 'Cloud Essentials Crash Course',
             icon: <Cloud className="w-8 h-8" />,
             description: 'Rapid cloud computing fundamentals and deployment.',
@@ -70,9 +74,10 @@ const Courses = ({ category }) => {
         },
         // Standalone Courses
         {
-            title: 'SAP ABAP Development',
+            $id: '67c6e04e00365c934681',
+            title: 'ABAP Mastery Program',
             icon: <Database className="w-8 h-8" />,
-            description: 'Comprehensive enterprise development with SAP ABAP.',
+            description: 'A Comprehensive Learning Path for ABAP Developers .',
             price: 5999,
             category: 'standalone',
             students: 1234,
@@ -83,6 +88,7 @@ const Courses = ({ category }) => {
             domain: 'standalone'
         },
         {
+            $id: ' ',
             title: 'Full Stack Development',
             icon: <Code className="w-8 h-8" />,
             description: 'End-to-end development with React, Node.js, and databases.',
@@ -97,6 +103,7 @@ const Courses = ({ category }) => {
         },
         // Combined Courses
         {
+            $id: '4',
             title: 'AI + Cloud Computing Combo',
             icon: (
                 <div className="flex items-center">
@@ -302,9 +309,11 @@ const Courses = ({ category }) => {
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         className="w-full text-center bg-contrast hover:bg-gray-200 dark:hover:bg-gray-600 text-contrast px-6 py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors duration-200"
-                                        onClick={() => { navigate('/course') }}
-                                    >
-                                        <span>Explore for Free</span>
+                                        onClick={() => { navigate(`/course?id=${course.$id}`) }}
+                                    >{!course.$id ?
+                                        <span>Coming soon!!</span>
+                                        :
+                                        <span>Explore for Free</span>}
                                         <BookOpen className="w-4 h-4" />
                                     </motion.div>
                                 </div>
