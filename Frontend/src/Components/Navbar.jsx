@@ -7,7 +7,7 @@ import { useCart } from '../Context/CartContext';
 import { useWishlist } from '../Context/WishlistContext';
 import Wishlist from './Wishlist';
 import Cart from './Cart';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 
@@ -23,7 +23,7 @@ const Navigation = () => {
 
     const { cart, setIsCartOpen, isCartOpen } = useCart()
     const { wishlist, setIsWishlistOpen, isWishlistOpen } = useWishlist();
-    // const location = useLocation();
+    const location = useLocation();
 
     const fixed_navbar_in = ['/video', '/quiz', '/dashboard', '/shop', '/game'];
 

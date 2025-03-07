@@ -43,6 +43,7 @@ const QuizPage = () => {
     const [remainingTime, setRemainingTime] = useState(300); // 5 minutes per question
     const [showStartOverlay, setShowStartOverlay] = useState(true);
     const [quizData, setQuizData] = useState();
+    const [quizEnd, setQuizEnd] = useState();
     const [currentQuiz, setCurrentQuiz] = useState({
         title: "",
         module: "ABAP Fundamentals",
@@ -60,7 +61,7 @@ const QuizPage = () => {
     useEffect(() => {
         const fetchQuiz = async () => {
             const response2 = await axios.get(`${API_BASE_URL}/api/v1/contents/quiz?id=${moduleId}`);
-            if(response2.status === 200){
+            if (response2.status === 200) {
                 console.log(response2.data);
                 setModuleProgress(response2.data);
             }
@@ -84,7 +85,7 @@ const QuizPage = () => {
             });
 
             setQuestions(quizData.questionId);
-
+            setRemainingTime(60 * quizData.questionId.length);
 
             setIsLoading(false);
         }
@@ -141,17 +142,23 @@ const QuizPage = () => {
         }
     };
 
-    useEffect(()=>{
-        if(selectedAnswer){
-            if(selectedAnswer===questions[currentQuestionIndex].correctOption){
-                setScore(score+1);
-                console.log('score',score+1);
+    useEffect(() => {
+        if (selectedAnswer) {
+            if (selectedAnswer === questions[currentQuestionIndex].correctOption) {
+                setScore(score + 1);
+                console.log('score', score + 1);
             }
         }
-    },[selectedAnswer]);
+    }, [selectedAnswer]);
+
+    useEffect(() => {
+        if (quizEnd) {
+            alert(`Quiz has ended.\nYou final score : ${score}/${questions.length}`);
+        }
+    }, [quizEnd]);
 
     const handleNextQuestion = () => {
-        if(currentQuestionIndex==questions.length-1){
+        if (currentQuestionIndex == questions.length - 1) {
             alert(`Quiz has ended.\nYou final score : ${score}/${questions.length}`);
             return;
         }
@@ -209,8 +216,20 @@ const QuizPage = () => {
         }
     ]);
 
+    const setTimer = () => {
+        setRemainingTime(prev => {
+            if (prev <= 0) { // Stop decrementing at 0
+                setQuizEnd(true);
+                return 0; // Ensures state stays at 0
+            }
+            return prev - 1; // Otherwise, decrement
+        });
+    
+        setTimeout(setTimer, 1000);
+    }
+
     if (isLoading || !moduleProgress) {
-        
+
         return (
             <div>Loading...</div>
         )
@@ -220,7 +239,11 @@ const QuizPage = () => {
         <div className="min-h-screen bg-theme-gradient">
             {showStartOverlay && (
                 <QuizStartOverlay
-                    onStart={() => setShowStartOverlay(false)}
+                    onStart={() => {
+                        setShowStartOverlay(false)
+                        setTimer();
+                    }
+                    }
                     onPostpone={() => {
                         // Handle postpone action - could redirect to another page
                         // or show a confirmation dialog
@@ -257,7 +280,10 @@ const QuizPage = () => {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Clock className="h-4 w-4 text-gray-400" />
-                                        <span className="text-sm text-gray-400">{Math.floor(remainingTime / 60)}:{(remainingTime % 60).toString().padStart(2, '0')}</span>
+                                        <span className="text-sm text-gray-400">
+                                            {Math.floor(remainingTime / 60)}:{(remainingTime % 60).toString().padStart(2, '0')}
+                                            {/* {remainingTime} */}
+                                            </span>
                                     </div>
                                 </div>
                                 <h2 className="text-xl font-semibold text-secondary">
@@ -388,7 +414,7 @@ const QuizPage = () => {
                                     </div>
                                 </button>
 
-                               
+
                             </div>
 
                             {/* Answer Explanation */}
@@ -502,7 +528,7 @@ const QuizPage = () => {
                                                 <h3 className="font-medium text-secondary mb-1">{section.title}</h3>
                                                 <div className="flex items-center text-sm text-secondary">
                                                     <HelpCircle className="h-4 w-4 mr-1" />
-                                                    {section.duration/60} min
+                                                    {section.duration / 60} min
                                                 </div>
                                             </div>
                                             {section.completed && (

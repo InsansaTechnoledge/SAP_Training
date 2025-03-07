@@ -8,7 +8,7 @@ export const getVideoContent=async(req,res)=>{
         const details=await(AppwriteDB.getDocument(process.env.Appwrite_DBID,process.env.APPWRITE_DBC_Module,id,
             [Query.select(["$id","name","contentId.*"])]
         ));
-        // console.log(details);
+        console.log(details);
         const content=details.contentId.filter(content => content.type === "video").map(content =>({
             $id:content.$id,
             title:content.title,
@@ -17,6 +17,7 @@ export const getVideoContent=async(req,res)=>{
         })
         );
         details.contentId=content;
+        // console.log(details);
         res.status(200).json(details);
     }catch(err){
         console.log("error fetching video",err);

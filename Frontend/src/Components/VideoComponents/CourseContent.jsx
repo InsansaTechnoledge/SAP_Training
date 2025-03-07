@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { List, CheckCircle, Play } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const CourseContent = ({content}) => {
+const CourseContent = ({content,moduleId}) => {
     const [moduleVideos, setModuleVideos] = useState([]);
-    
+    const navigate = useNavigate();
+
     useEffect(()=> {
         if(content){
             setModuleVideos(content);
@@ -38,8 +40,11 @@ const CourseContent = ({content}) => {
 
             {/* Module Videos */}
             <div className="space-y-3">
+                {console.log(moduleVideos)}
                 {moduleVideos.map(video => (
-                    <div key={video.id} className="flex items-center p-3 rounded-lg border-contrast hover:bg-gray-50 transition-colors">
+                    <div 
+                    onClick={()=>navigate(`/video?moduleId=${moduleId}&videoId=${video.$id}`)}
+                    key={video.$id} className="flex items-center p-3 rounded-lg border-contrast hover:bg-gray-50 transition-colors">
                         <div className="mr-3">
                             {video.completed ? (
                                 <CheckCircle className="h-5 w-5 text-green-500" />

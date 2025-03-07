@@ -31,7 +31,7 @@ const Courses = ({ category }) => {
     const courses = [
         // Crash Courses
         {
-            $id: '1',
+            $id: '67c9947c00368902ed56',
             title: 'AI Quick Start',
             icon: <Brain className="w-8 h-8" />,
             description: 'Accelerated AI/ML fundamentals in just 4 weeks.',

@@ -168,7 +168,9 @@ const Cart = () => {
                                         <motion.button
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
-                                            onClick={() => setIsCartOpen(false)}
+                                            onClick={() => {setIsCartOpen(false)
+                                                navigate('/shop');
+                                            }}
                                             className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors"
                                         >
                                             Browse Courses
@@ -229,7 +231,7 @@ const Cart = () => {
                                             placeholder="Enter Promo Code"
                                             value={promoCode}
                                             onChange={(e) => setPromoCode(e.target.value)}
-                                            className="w-full p-2 pl-10 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                                            className="w-full text-secondary p-2 pl-10 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                                         />
                                         <Tags className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                     </div>

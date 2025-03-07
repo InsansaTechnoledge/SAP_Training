@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
+import axios from 'axios';
 
 const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -170,6 +172,28 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
 
             // Handle successful payment
             setIsComplete(true);
+            var purchasedModules = localStorage.getItem('unlockedModules');
+            console.log(checkoutData.cart);
+            const responses = await Promise.all(
+                checkoutData.cart.map(course => 
+                    axios.get(`${API_BASE_URL}/api/v1/modules?id=${course.$id}`) // Replace with your actual API endpoint
+                )
+            );
+
+            var newModules = [];
+            responses.map(response => {
+                const moduleIds = response.data.map(mod => mod.$id);
+                newModules = [...newModules,...moduleIds];
+            })
+
+            console.log(newModules);
+            if(!purchasedModules){
+                localStorage.setItem('unlockedModules', newModules);
+            }
+            else{
+                purchasedModules = purchasedModules.split(',');
+                localStorage.setItem('unlockedModules',[...purchasedModules,...newModules]);
+            }
 
             // In a real application, you would:
             // 1. Send the payment info to your backend
@@ -181,6 +205,8 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
             setErrors({
                 payment: 'Payment processing failed. Please try again.'
             });
+
+            console.log(error);
         } finally {
             setIsProcessing(false);
         }
@@ -240,7 +266,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                         name="fullName"
                         value={formData.fullName}
                         onChange={handleInputChange}
-                        className={`w-full p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.fullName ? 'border-red-500' : 'border-gray-300'
+                        className={`w-full p-3 text-secondary pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.fullName ? 'border-red-500' : 'border-gray-300'
                             }`}
                         placeholder="John Doe"
                     />
@@ -261,7 +287,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className={`w-full p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.email ? 'border-red-500' : 'border-gray-300'
+                        className={`w-full text-secondary p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.email ? 'border-red-500' : 'border-gray-300'
                             }`}
                         placeholder="your@email.com"
                     />
@@ -282,7 +308,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className={`w-full p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.phone ? 'border-red-500' : 'border-gray-300'
+                        className={`w-full text-secondary p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.phone ? 'border-red-500' : 'border-gray-300'
                             }`}
                         placeholder="9876543210"
                     />
@@ -351,7 +377,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                                 name="cardNumber"
                                 value={formData.cardNumber}
                                 onChange={handleInputChange}
-                                className={`w-full p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.cardNumber ? 'border-red-500' : 'border-gray-300'
+                                className={`w-full text-secondary p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.cardNumber ? 'border-red-500' : 'border-gray-300'
                                     }`}
                                 placeholder="4242 4242 4242 4242"
                                 maxLength="19"
@@ -372,7 +398,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                                 name="cardExpiry"
                                 value={formData.cardExpiry}
                                 onChange={handleInputChange}
-                                className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.cardExpiry ? 'border-red-500' : 'border-gray-300'
+                                className={`w-full p-3 text-secondary border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.cardExpiry ? 'border-red-500' : 'border-gray-300'
                                     }`}
                                 placeholder="MM/YY"
                                 maxLength="5"
@@ -391,7 +417,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                                 name="cardCvv"
                                 value={formData.cardCvv}
                                 onChange={handleInputChange}
-                                className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.cardCvv ? 'border-red-500' : 'border-gray-300'
+                                className={`w-full p-3 text-secondary border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.cardCvv ? 'border-red-500' : 'border-gray-300'
                                     }`}
                                 placeholder="123"
                                 maxLength="3"
@@ -411,7 +437,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                             name="nameOnCard"
                             value={formData.nameOnCard}
                             onChange={handleInputChange}
-                            className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.nameOnCard ? 'border-red-500' : 'border-gray-300'
+                            className={`w-full p-3 text-secondary border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.nameOnCard ? 'border-red-500' : 'border-gray-300'
                                 }`}
                             placeholder="John Doe"
                         />
@@ -439,7 +465,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                             <input
                                 type="text"
                                 name="upiId"
-                                className="w-full p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 border-gray-300"
+                                className="w-full text-secondary p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 border-gray-300"
                                 placeholder="yourname@upi"
                             />
                         </div>

@@ -41,7 +41,7 @@ const QuizStartOverlay = ({ onStart, onPostpone }) => {
                 {/* Time Information */}
                 <div className="flex items-center justify-center gap-2 text-gray-600">
                     <Clock className="h-5 w-5" />
-                    <span>Time allowed: 5 minutes per question</span>
+                    <span>Time allowed: 1 minute per question</span>
                 </div>
 
                 {/* Action Buttons */}

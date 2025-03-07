@@ -295,7 +295,7 @@ const VideoPage = () => {
                 transition-all duration-300">  
 
                         {/* Course Progress */}
-                        <CourseContent content={module.contentId}/>
+                        <CourseContent content={module.contentId} moduleId={module.$id}/>
 
                         {/* Schedule a Call */}
                         <ScheduleCall />

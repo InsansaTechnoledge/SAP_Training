@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Lock, Unlock, Play, Trophy, Star, CheckCircle, Clock, ChevronRight, CreditCard, Zap, Users, Book, Code, Award, BarChart, Lightbulb } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import DashboardBannerComponent from '../Components/DashboardBanner';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
@@ -8,16 +8,17 @@ import { API_BASE_URL } from '../config';
 const ExamPage = () => {
     const navigate = useNavigate();
     const [activeModule, setActiveModule] = useState(null);
-    const [unlockedModules, setUnlockedModules] = useState(localStorage.getItem('unlockedModules').split(','));
+    const [unlockedModules, setUnlockedModules] = useState(localStorage.getItem('unlockedModules') ?  localStorage.getItem('unlockedModules').split(',') : []);
     const [course, setCourse] = useState();
     const [stats,setStats] = useState([]);
     const [modules, setModules] = useState([]);
-
+    const [searchParams] = useSearchParams();
+    const courseId = searchParams.get("id");
     useEffect(()=> {
         const fetchCourse = async () => {
             try{
 
-                const courseId = '67c6e04e00365c934681';
+                // const courseId = '67c6e04e00365c934681';
                 const response = await axios.get(`${API_BASE_URL}/api/v1/courses/course?id=${courseId}`);
                 if(response.status===200){
                 console.log(response.data);
