@@ -241,7 +241,7 @@ const Courses = ({ category }) => {
                                 </div>
                             </div>
 
-                            <div className="p-6 flex flex-col justify-between border">
+                            <div className="p-6 flex flex-col justify-between">
                                 <div>
                                     <h3 className="text-xl font-bold mb-2 text-secondary">{course.title}</h3>
                                     <p className="text-secondary text-sm mb-4">
