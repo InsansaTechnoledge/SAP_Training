@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { X, Mail, Lock, UserPlus, LogIn, ChevronRight, Eye, EyeOff } from 'lucide-react';
+import { X, Mail, Lock, UserPlus, LogIn, ChevronRight, Eye, EyeOff, User, Type, User2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
+import { useUser } from '../Context/UserContext';
 
 const AuthBanner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -8,6 +11,14 @@ const AuthBanner = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+    const [registerDetails, setRegisterDetails] = useState({
+        fname: 'Jay',
+        lname: 'Fanse',
+        email: 'jayf29112003@gmail.com',
+        password: '12345678',
+        confPassword: '12345678'
+    })
+    const {user, setUser} = useUser();
 
     // Animation variants
     const containerVariants = {
@@ -72,47 +83,49 @@ const AuthBanner = () => {
         );
     };
 
-    const InputField = ({ icon: Icon, type, id, placeholder, isPassword }) => {
+    const InputField = ({ icon: Icon, type, id, placeholder, isPassword, onChange, value }) => {
         const [showPassword, setShowPassword] = useState(false);
         const actualType = isPassword ? (showPassword ? "text" : "password") : type;
 
-        return(
-        <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={itemVariants}
-            className="relative group"
-        >
-            <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
-            <input
-                type={actualType}
-                id={id}
-                className="block w-full pl-10 pr-10 py-3 bg-secondary rounded-xl text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out"
-                placeholder={placeholder}
-            />
-            {isPassword && (
-                <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-500 "
-                >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </motion.button>
-            )}
-        </motion.div>
+        return (
+            <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={itemVariants}
+                className="relative group"
+            >
+                <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                <input
+                    type={actualType}
+                    id={id}
+                    value={value}
+                    onChange={onChange}
+                    className="block w-full pl-10 pr-10 py-3 bg-secondary rounded-xl text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out"
+                    placeholder={placeholder}
+                />
+                {isPassword && (
+                    <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-500 "
+                    >
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </motion.button>
+                )}
+            </motion.div>
         )
     };
 
     const handleGoogleLogin = async () => {
         setIsGoogleLoading(true);
         try {
-            // Simulated Google login delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            console.log('Google login clicked');
-            // Here you would implement actual Google OAuth logic
-        } catch (error) {
+            window.location.href = "http://localhost:3000/api/v1/auth/google";
+            // if(response.status===200){
+            //     console.log(response.data);
+            // }
+        } catch (error) {   
             console.error('Google login error:', error);
         } finally {
             setIsGoogleLoading(false);
@@ -139,7 +152,122 @@ const AuthBanner = () => {
             />
         </svg>
     );
-    
+
+    const handleAuth = async (type) => {
+        if (type === 'login') {
+            const details = {
+                email: registerDetails.email.trim(),
+                password: registerDetails.password.trim(),
+                rememberMe: false
+            }
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailRegex.test(details.email)) {
+                console.log("email");
+                alert("not valid email");
+                return
+            }
+
+            if (!details.email || !details.password
+                || details.email.includes('\u200E') || details.password.includes('\u200E') || details.email.length > 50) {
+                alert("invalid details");
+                return;
+            }
+
+            try {
+                const response = await axios.post(`${API_BASE_URL}/api/v1/auth/login`, details, {
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    withCredentials: true
+                });
+
+                if (response.status === 200) {
+                    alert("User Logged in successfully");
+                    setRegisterDetails({
+                        fname: '',
+                        lname: '',
+                        email: '',
+                        password: '',
+                        confPassword: ''
+                    })
+                    setUser(response.data.user);
+                    console.log(response.data);
+                }
+
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
+        else {
+
+            if (registerDetails.password !== registerDetails.confPassword) {
+                alert("Password does not match");
+                return;
+            }
+
+            const details = {
+                name: registerDetails.fname.trim() + registerDetails.lname.trim(),
+                email: registerDetails.email.trim(),
+                password: registerDetails.password.trim()
+            }
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailRegex.test(details.email)) {
+                console.log("email");
+                alert("not valid email");
+                return
+            }
+
+            if (!details.name || !details.email || !details.password
+                || details.name.includes('\u200E') || details.email.includes('\u200E') || details.password.includes('\u200E') || details.email.length > 50) {
+                alert("invalid details");
+                return;
+            }
+
+            try {
+
+                const response = await axios.post(`${API_BASE_URL}/api/v1/auth/register`, details,
+                    {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+
+                );
+                if (response.status === 200) {
+                    alert("User registered successfully");
+                    setRegisterDetails({
+                        fname: '',
+                        lname: '',
+                        email: '',
+                        password: '',
+                        confPassword: ''
+                    })
+                }
+                else {
+                    console.log("something went wrong");
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+    }
+
+    const handleRegisterChangeDetails = (e, field) => {
+        const value = e.target.value;
+        setRegisterDetails({
+            ...registerDetails,
+            [field]: value
+        })
+
+        console.log(registerDetails);
+    }
+
     const AuthForm = ({ type }) => (
         <motion.form
             initial="hidden"
@@ -187,23 +315,52 @@ const AuthBanner = () => {
                 </div>
             </div>
 
+            {
+                type == 'signup' && (
+                    <motion.div variants={itemVariants}>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3'>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-500 mb-1.5">
+                                    First Name
+                                </label>
+                                <InputField
+                                    value={registerDetails.fname}
+                                    onChange={(e) => handleRegisterChangeDetails(e, 'fname')} icon={User2} type="text" id="fname" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-500 mb-1.5">
+                                    Last Name
+                                </label>
+                                <InputField
+                                    value={registerDetails.lname}
+                                    onChange={(e) => handleRegisterChangeDetails(e, 'lname')} icon={User2} type="text" id="lname" />
+
+                            </div>
+                        </div>
+
+                    </motion.div>
+                )
+            }
             <motion.div variants={itemVariants}>
                 <label className="block text-sm font-medium text-gray-500 mb-1.5">
                     Email
                 </label>
-                <InputField icon={Mail} type="email" id="email" placeholder="your@email.com" />
+                <InputField
+                    value={registerDetails.email}
+                    onChange={(e) => handleRegisterChangeDetails(e, 'email')} icon={Mail} type="email" id="email" placeholder="your@email.com" />
             </motion.div>
 
             <motion.div variants={itemVariants}>
                 <label className="block text-sm font-medium text-gray-500 mb-1.5">
                     Password
                 </label>
-                <InputField
+                <InputField onChange={(e) => handleRegisterChangeDetails(e, 'password')}
                     icon={Lock}
                     type={showPassword ? "text" : "password"}
                     id="password"
                     placeholder="••••••••"
                     isPassword
+                    value={registerDetails.password}
                 />
             </motion.div>
 
@@ -212,10 +369,11 @@ const AuthBanner = () => {
                     <label className="block text-sm font-medium text-gray-500 mb-1.5">
                         Confirm Password
                     </label>
-                    <InputField
+                    <InputField onChange={(e) => handleRegisterChangeDetails(e, 'confPassword')}
+                        value={registerDetails.confPassword}
                         icon={Lock}
                         type={showPassword ? "text" : "password"}
-                        id="confirmPassword"
+                        id="confPassword"
                         placeholder="••••••••"
                         isPassword
                     />
@@ -226,7 +384,8 @@ const AuthBanner = () => {
                 variants={itemVariants}
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                type="submit"
+                type="button"
+                onClick={() => handleAuth(type)}
                 className="w-full px-4 py-3 mt-6 flex items-center justify-center space-x-2 text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
                 {type === 'login' ? (

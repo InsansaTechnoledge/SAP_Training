@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import LandingPage from './Pages/LandingPage';
 import ExamPage from './Pages/ExamPage';
@@ -13,8 +13,33 @@ import GameDashboard from './Pages/GamePage';
 import RealisticShooterGame from './Games/ABAP/Module/ModuleOne/GameThree';
 import StudyMaterialsShop from './Pages/StudyMaterails';
 import PromoCodeGenerator from './Components/PromocodeGenerator';
+import { useUser } from './Context/UserContext';
+import axios from 'axios';
+import { API_BASE_URL } from './config';
 const PageLinks = () => {
+    const {user, setUser} = useUser();
     
+    useEffect(()=>{
+        const checkAuth = async () => {
+            try{
+
+                const response = await axios.get(`${API_BASE_URL}/api/v1/auth/checkAuth`,{
+                    withCredentials: true
+                });
+                
+                if(response.status===200){
+                    console.log(response.data);
+                    setUser(response.data.user);
+                }
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
+
+        checkAuth();
+    },[]);
+
 
     return (
         <>

@@ -8,6 +8,10 @@ import { useWishlist } from '../Context/WishlistContext';
 import Wishlist from './Wishlist';
 import Cart from './Cart';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
+import { useUser } from '../Context/UserContext';
+import AuthBanner from './AuthComponent';
 
 
 
@@ -17,14 +21,13 @@ const Navigation = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    // const [user &&, setuser] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState();
     const [isMobileView, setIsMobileView] = useState(false);
-
     const { cart, setIsCartOpen, isCartOpen } = useCart()
     const { wishlist, setIsWishlistOpen, isWishlistOpen } = useWishlist();
     const location = useLocation();
-
+    const {user, setUser} = useUser();
     const fixed_navbar_in = ['/video', '/quiz', '/dashboard', '/shop', '/game'];
 
     const navigate = useNavigate();
@@ -92,15 +95,30 @@ const Navigation = () => {
     };
 
     const handleLogin = () => {
-        setIsAuthenticated(true);
+        // setuser &&(true);
         setIsUserMenuOpen(false);
         setIsMenuOpen(false); // Close mobile menu after login
     };
 
-    const handleLogout = () => {
-        setIsAuthenticated(false);
+    const handleLogout = async () => {
+        // setuser &&(false);
         setIsUserMenuOpen(false);
         setIsMenuOpen(false); // Close mobile menu after logout
+
+        try{
+
+            const response = await axios.get(`${API_BASE_URL}/api/v1/auth/logout`, {
+                withCredentials: true
+            });
+
+            if(response.status===200){
+                console.log(response.data.message);
+                setUser(null);
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
     };
 
     const toggleTheme = () => {
@@ -124,6 +142,7 @@ const Navigation = () => {
 
     return (
         <>
+        
             <nav className={`fixed top-0 left-0 right-0 transition-all duration-300 z-50 
                 ${scrolled
                     ? 'nav-theme-gradient shadow-lg'
@@ -252,7 +271,7 @@ const Navigation = () => {
                                         : 'bg-white/10 hover:bg-white/20'
                                         }`}
                                 >
-                                    {isAuthenticated ? (
+                                    {user ? (
                                         <>
                                             <User className="w-5 h-5 text-white" />
                                             <ChevronDown className="w-4 h-4 text-white" />
@@ -268,7 +287,7 @@ const Navigation = () => {
                                 {/* User Dropdown Menu - Desktop */}
                                 {isUserMenuOpen && (
                                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50">
-                                        {isAuthenticated ? (
+                                        {user ? (
                                             <>
                                                 <a href="#profile" className="flex items-center px-4 py-2 text-blue-900 hover:bg-blue-50">
                                                     <User className="w-4 h-4 mr-2" />
@@ -351,7 +370,7 @@ const Navigation = () => {
 
                         {/* User Section in Mobile Menu */}
                         <div className="p-4 border-b border-blue-100">
-                            {isAuthenticated ? (
+                            {user ? (
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center space-x-3 mb-2">
                                         <div className="p-2 bg-blue-100 rounded-full">
@@ -447,7 +466,7 @@ const Navigation = () => {
                         </nav>
 
                         {/* Bottom actions */}
-                        {isAuthenticated && (
+                        {user && (
                             <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-blue-100 bg-white">
                                 <button
                                     onClick={handleLogout}
