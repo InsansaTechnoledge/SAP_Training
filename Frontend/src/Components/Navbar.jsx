@@ -12,6 +12,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '../config';
 import { useUser } from '../Context/UserContext';
 import AuthBanner from './AuthComponent';
+import AuthForm from './AuthForm';
 
 
 
@@ -25,9 +26,11 @@ const Navigation = () => {
     const [isDarkMode, setIsDarkMode] = useState();
     const [isMobileView, setIsMobileView] = useState(false);
     const { cart, setIsCartOpen, isCartOpen } = useCart()
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const { wishlist, setIsWishlistOpen, isWishlistOpen } = useWishlist();
     const location = useLocation();
     const {user, setUser} = useUser();
+    const [activeTab, setActiveTab] = useState('login');
     const fixed_navbar_in = ['/video', '/quiz', '/dashboard', '/shop', '/game'];
 
     const navigate = useNavigate();
@@ -96,6 +99,16 @@ const Navigation = () => {
 
     const handleLogin = () => {
         // setuser &&(true);
+        setActiveTab('login');
+        setIsModalOpen(true);
+        setIsUserMenuOpen(false);
+        setIsMenuOpen(false); // Close mobile menu after login
+    };
+    
+    const handleSignup = () => {
+        // setuser &&(true);
+        setActiveTab('signup');
+        setIsModalOpen(true);
         setIsUserMenuOpen(false);
         setIsMenuOpen(false); // Close mobile menu after login
     };
@@ -118,6 +131,7 @@ const Navigation = () => {
         }
         catch(err){
             console.log(err);
+            alert(err.response.data.message);
         }
     };
 
@@ -142,8 +156,14 @@ const Navigation = () => {
 
     return (
         <>
-        
-            <nav className={`fixed top-0 left-0 right-0 transition-all duration-300 z-50 
+            {
+                isModalOpen
+                ?
+                <AuthForm activeTab={activeTab} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+                :
+                null
+            }
+            <nav className={`fixed top-0 left-0 right-0 transition-all duration-300 z-40 
                 ${scrolled
                     ? 'nav-theme-gradient shadow-lg'
                     : 'bg-transparent'}`}>
@@ -319,10 +339,12 @@ const Navigation = () => {
                                                     <LogIn className="w-4 h-4 mr-2" />
                                                     Login
                                                 </button>
-                                                <a href="#signup" className="flex items-center px-4 py-2 text-blue-900 hover:bg-blue-50">
+                                                <button
+                                                onClick={handleSignup}
+                                                className="flex items-center px-4 py-2 text-blue-900 hover:bg-blue-50">
                                                     <UserPlus className="w-4 h-4 mr-2" />
                                                     Sign Up
-                                                </a>
+                                                </button>
                                             </>
                                         )}
                                     </div>
