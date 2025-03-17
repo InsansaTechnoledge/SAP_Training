@@ -319,6 +319,8 @@ const AuthForm = (props) => {
                         password: '',
                         confPassword: ''
                     })
+
+                    setActiveTab('login');
                 }
                 else {
                     console.log("something went wrong");
@@ -433,7 +435,7 @@ const AuthForm = (props) => {
                     icon={Lock}
                     type={showPassword ? "text" : "password"}
                     id="password"
-                    placeholder="••••••••"
+                    placeholder="Enter yout password"
                     isPassword
                     value={registerDetails.password}
                 />
@@ -449,7 +451,7 @@ const AuthForm = (props) => {
                         icon={Lock}
                         type={showPassword ? "text" : "password"}
                         id="confPassword"
-                        placeholder="••••••••"
+                        placeholder="Re-enter your password"
                         isPassword
                     />
                 </motion.div>

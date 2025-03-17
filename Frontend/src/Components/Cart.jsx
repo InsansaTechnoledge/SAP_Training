@@ -158,7 +158,7 @@ const Cart = () => {
                                         <div className="relative">
                                             <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full opacity-75 blur"></div>
                                             <div className="relative bg-primary p-6 rounded-full">
-                                                <ShoppingBag className="w-16 h-16 text-blue-600 dark:text-blue-400" />
+                                                <ShoppingBag className="w-16 h-16 text-blue" />
                                             </div>
                                         </div>
                                         <div>
@@ -168,7 +168,8 @@ const Cart = () => {
                                         <motion.button
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
-                                            onClick={() => {setIsCartOpen(false)
+                                            onClick={() => {
+                                                setIsCartOpen(false)
                                                 navigate('/shop');
                                             }}
                                             className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors"
@@ -185,16 +186,16 @@ const Cart = () => {
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -20 }}
-                                                className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700"
+                                                className="bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700"
                                             >
                                                 <div className="flex justify-between items-start">
                                                     <div className="flex-1">
                                                         <div className="flex items-center space-x-3">
-                                                            <div className="bg-blue-100 dark:bg-blue-900/50 p-2 rounded-lg">
-                                                                <Package2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                                            <div className="bg-blue p-2 rounded-lg">
+                                                                <Package2 className="w-5 h-5 text-white" />
                                                             </div>
                                                             <div>
-                                                                <h3 className="font-medium dark:text-white">{item.title}</h3>
+                                                                <h3 className="font-medium text-primary">{item.title}</h3>
                                                                 <p className="text-sm text-gray-500 dark:text-gray-400">
                                                                     ₹{item.price} per course
                                                                 </p>
@@ -223,7 +224,7 @@ const Cart = () => {
                         </div>
 
                         {cart.length > 0 && (
-                            <div className="border-t dark:border-gray-800 p-6 bg-white dark:bg-gray-900">
+                            <div className="p-6 bg-secondary">
                                 <div className="mb-4 flex items-center space-x-2">
                                     <div className="flex-1 relative">
                                         <input
@@ -231,7 +232,7 @@ const Cart = () => {
                                             placeholder="Enter Promo Code"
                                             value={promoCode}
                                             onChange={(e) => setPromoCode(e.target.value)}
-                                            className="w-full text-secondary p-2 pl-10 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                                            className="w-full text-secondary p-2 pl-10 border rounded-lg bg-primary dark:border-gray-700"
                                         />
                                         <Tags className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                     </div>
@@ -257,12 +258,12 @@ const Cart = () => {
 
                                 <div className="mb-4 space-y-4">
                                     <div className="flex justify-between items-center">
-                                        <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
-                                        <span className="font-medium dark:text-white">₹{subtotal.toFixed(2)}</span>
+                                        <span className="text-secondary">Subtotal</span>
+                                        <span className="font-medium text-secondary">₹{subtotal.toFixed(2)}</span>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <span className="text-gray-600 dark:text-gray-400">GST (18%)</span>
-                                        <span className="font-medium dark:text-white">₹{gst.toFixed(2)}</span>
+                                        <span className="text-secondary">GST (18%)</span>
+                                        <span className="font-medium text-secondary">₹{gst.toFixed(2)}</span>
                                     </div>
                                     {promoDiscount > 0 && (
                                         <div className="flex justify-between items-center text-green-600">
@@ -276,7 +277,7 @@ const Cart = () => {
                                     </div>
                                     <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent" />
                                     <div className="flex justify-between items-center">
-                                        <span className="font-bold text-lg dark:text-white">Total</span>
+                                        <span className="font-bold text-lg text-secondary">Total</span>
                                         <span className="font-bold text-lg text-blue-600 dark:text-blue-400">
                                             ₹{finalTotal.toFixed(2)}
                                         </span>
