@@ -400,7 +400,7 @@ const AuthForm = (props) => {
                                 </label>
                                 <InputField
                                     value={registerDetails.fname}
-                                    onChange={(e) => handleRegisterChangeDetails(e, 'fname')} icon={User2} type="text" id="fname" />
+                                    icon={User2} type="text" id="fname" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-500 mb-1.5">
@@ -408,7 +408,7 @@ const AuthForm = (props) => {
                                 </label>
                                 <InputField
                                     value={registerDetails.lname}
-                                    onChange={(e) => handleRegisterChangeDetails(e, 'lname')} icon={User2} type="text" id="lname" />
+                                    icon={User2} type="text" id="lname" />
 
                             </div>
                         </div>
@@ -422,14 +422,14 @@ const AuthForm = (props) => {
                 </label>
                 <InputField
                     value={registerDetails.email}
-                    onChange={(e) => handleRegisterChangeDetails(e, 'email')} icon={Mail} type="email" id="email" placeholder="your@email.com" />
+                    icon={Mail} type="email" id="email" placeholder="your@email.com" />
             </motion.div>
 
             <motion.div variants={itemVariants}>
                 <label className="block text-sm font-medium text-gray-500 mb-1.5">
                     Password
                 </label>
-                <InputField onChange={(e) => handleRegisterChangeDetails(e, 'password')}
+                <InputField
                     icon={Lock}
                     type={showPassword ? "text" : "password"}
                     id="password"
@@ -444,7 +444,7 @@ const AuthForm = (props) => {
                     <label className="block text-sm font-medium text-gray-500 mb-1.5">
                         Confirm Password
                     </label>
-                    <InputField onChange={(e) => handleRegisterChangeDetails(e, 'confPassword')}
+                    <InputField
                         value={registerDetails.confPassword}
                         icon={Lock}
                         type={showPassword ? "text" : "password"}
