@@ -66,7 +66,6 @@ export const loginUser = async (req, res, next) => {
 
 export const checkAuth = async (req, res) => {
 
-    console.log(req.user);
     if (req.user) {
         return res.status(200).json({ message: "session found", user: req.user }); // User is authenticated, continue to next middleware or route
     } else {

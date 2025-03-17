@@ -9,7 +9,6 @@ if(process.env.NODE_ENV !== 'production'){
 
 const LocalStrategry = passportLocal.Strategy;
 const GoogleStrategy = passportGoogle.Strategy;
-console.log("TTT");
 
 passport.use(
     new LocalStrategry({ usernameField: "email"}, async (email, password, done) => {
@@ -51,7 +50,6 @@ passport.use(
     },
     async (req, accessToken, refreshToken, profile, done) => {
         try{
-            console.log("TFty");
             let user = await User.findOne({googleId: profile.id});
             if(!user){
                 // check for local signin

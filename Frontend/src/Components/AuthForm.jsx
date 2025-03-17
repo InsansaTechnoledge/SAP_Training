@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { X, Mail, Lock, UserPlus, LogIn, ChevronRight, Eye, EyeOff, User, Type, User2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
@@ -19,11 +19,11 @@ const AuthForm = (props) => {
     })
     const { user, setUser } = useUser();
 
-    useEffect(()=>{
-        if(props){
+    useEffect(() => {
+        if (props) {
             setActiveTab(props.activeTab);
         }
-    },[props])
+    }, [props])
 
     // Animation variants
     const containerVariants = {
@@ -48,9 +48,8 @@ const AuthForm = (props) => {
         }
     };
 
-    const Modal = ({ isOpen, onClose, children }) => {
+    const Modal = memo(({ isOpen, onClose}) => {
         if (!isOpen) return null;
-        alert("Tt");
         return (
             <AnimatePresence>
                 <motion.div
@@ -72,7 +71,69 @@ const AuthForm = (props) => {
                         transition={{ type: "spring", duration: 0.5 }}
                         className="relative z-50 w-full max-w-md bg-white rounded-2xl shadow-2xl"
                     >
-                        {children}
+                        <div className="w-full">
+                            {/* Tabs */}
+                            <div className="flex p-1.5 bg-primary rounded-t-2xl">
+                                {['login', 'signup'].map((tab) => (
+                                    <motion.button
+                                        key={tab}
+                                        className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center space-x-2
+                                    ${activeTab === tab
+                                                ? 'bg-secondary text-secondary shadow-sm'
+                                                : 'text-gray-600 hover:text-gray-500'
+                                            }`}
+                                        onClick={() => setActiveTab(tab)}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        {tab === 'login' ? (
+                                            <>
+                                                <LogIn className="w-5 h-5" />
+                                                <span>Login</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <UserPlus className="w-5 h-5" />
+                                                <span>Sign Up</span>
+                                            </>
+                                        )}
+                                    </motion.button>
+                                ))}
+                            </div>
+
+                            {/* Form */}
+                            <AuthForm type={activeTab} />
+
+                            {/* Additional Links */}
+                            <motion.div
+                                variants={itemVariants}
+                                className="px-6 pb-6 text-center text-sm text-secondary bg-primary rounded-b-2xl"
+                            >
+                                {activeTab === 'login' ? (
+                                    <p>
+                                        Don't have an account?{' '}
+                                        <motion.button
+                                            whileHover={{ scale: 1.05 }}
+                                            onClick={() => setActiveTab('signup')}
+                                            className="text-blue-600 hover:text-blue-700 font-medium"
+                                        >
+                                            Sign up here
+                                        </motion.button>
+                                    </p>
+                                ) : (
+                                    <p>
+                                        Already have an account?{' '}
+                                        <motion.button
+                                            whileHover={{ scale: 1.05 }}
+                                            onClick={() => setActiveTab('login')}
+                                            className="text-blue-600 hover:text-blue-700 font-medium"
+                                        >
+                                            Login here
+                                        </motion.button>
+                                    </p>
+                                )}
+                            </motion.div>
+                        </div>
                         <motion.button
                             whileHover={{ scale: 1.1, rotate: 90 }}
                             whileTap={{ scale: 0.9 }}
@@ -86,7 +147,9 @@ const AuthForm = (props) => {
                 </motion.div>
             </AnimatePresence>
         );
-    };
+    });
+
+
 
     const InputField = ({ icon: Icon, type, id, placeholder, isPassword, onChange, value }) => {
         const [showPassword, setShowPassword] = useState(false);
@@ -130,7 +193,7 @@ const AuthForm = (props) => {
             // if(response.status===200){
             //     console.log(response.data);
             // }
-        } catch (error) {   
+        } catch (error) {
             console.error('Google login error:', error);
         } finally {
             setIsGoogleLoading(false);
@@ -203,7 +266,7 @@ const AuthForm = (props) => {
                 }
 
             }
-            catch(err){
+            catch (err) {
                 console.log(err);
                 alert(err.response.data.message);
             }
@@ -276,7 +339,7 @@ const AuthForm = (props) => {
         console.log(registerDetails);
     }
 
-    const AuthForm = ({ type }) => (
+    const AuthForm = memo(({ type }) => (
         <motion.form
             initial="hidden"
             animate="visible"
@@ -410,77 +473,13 @@ const AuthForm = (props) => {
                 <ChevronRight className="w-5 h-5" />
             </motion.button>
         </motion.form>
-    );
+    ));
 
     return (
-       <>
-        {/* Auth Modal */}
-        <Modal isOpen={props.isModalOpen} onClose={() => props.setIsModalOpen(false)}>
-                <div className="w-full">
-                    {/* Tabs */}
-                    <div className="flex p-1.5 bg-primary rounded-t-2xl">
-                        {['login', 'signup'].map((tab) => (
-                            <motion.button
-                                key={tab}
-                                className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center space-x-2
-                                    ${activeTab === tab
-                                        ? 'bg-secondary text-secondary shadow-sm'
-                                        : 'text-gray-600 hover:text-gray-500'
-                                    }`}
-                                onClick={() => setActiveTab(tab)}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                {tab === 'login' ? (
-                                    <>
-                                        <LogIn className="w-5 h-5" />
-                                        <span>Login</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <UserPlus className="w-5 h-5" />
-                                        <span>Sign Up</span>
-                                    </>
-                                )}
-                            </motion.button>
-                        ))}
-                    </div>
-
-                    {/* Form */}
-                    <AuthForm type={activeTab} />
-
-                    {/* Additional Links */}
-                    <motion.div
-                        variants={itemVariants}
-                        className="px-6 pb-6 text-center text-sm text-secondary bg-primary rounded-b-2xl"
-                    >
-                        {activeTab === 'login' ? (
-                            <p>
-                                Don't have an account?{' '}
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    onClick={() => setActiveTab('signup')}
-                                    className="text-blue-600 hover:text-blue-700 font-medium"
-                                >
-                                    Sign up here
-                                </motion.button>
-                            </p>
-                        ) : (
-                            <p>
-                                Already have an account?{' '}
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    onClick={() => setActiveTab('login')}
-                                    className="text-blue-600 hover:text-blue-700 font-medium"
-                                >
-                                    Login here
-                                </motion.button>
-                            </p>
-                        )}
-                    </motion.div>
-                </div>
-            </Modal>
-       </>
+        <>
+            {/* Auth Modal */}
+            <Modal isOpen={props.isModalOpen} onClose={() => props.setIsModalOpen(false)} />
+        </>
     )
 }
 
