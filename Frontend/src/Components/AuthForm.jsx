@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { X, Mail, Lock, UserPlus, LogIn, ChevronRight, Eye, EyeOff, User, Type, User2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
@@ -11,11 +11,11 @@ const AuthForm = (props) => {
     const [showPassword, setShowPassword] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const [registerDetails, setRegisterDetails] = useState({
-        fname: 'Jay',
-        lname: 'Fanse',
-        email: 'jayf29112003@gmail.com',
-        password: '12345678',
-        confPassword: '12345678'
+        fname: '',
+        lname: '',
+        email: '',
+        password: '',
+        confPassword: ''
     })
     const { user, setUser } = useUser();
 
@@ -48,7 +48,7 @@ const AuthForm = (props) => {
         }
     };
 
-    const Modal = memo(({ isOpen, onClose}) => {
+    const Modal = memo(({ isOpen, onClose }) => {
         if (!isOpen) return null;
         return (
             <AnimatePresence>
@@ -154,6 +154,7 @@ const AuthForm = (props) => {
     const InputField = ({ icon: Icon, type, id, placeholder, isPassword, onChange, value }) => {
         const [showPassword, setShowPassword] = useState(false);
         const actualType = isPassword ? (showPassword ? "text" : "password") : type;
+        const inputRef = useRef(null);
 
         return (
             <motion.div
@@ -164,10 +165,11 @@ const AuthForm = (props) => {
             >
                 <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
                 <input
+                    ref={inputRef}
                     type={actualType}
                     id={id}
-                    value={value}
-                    onChange={onChange}
+                    defaultValue={value}
+                    onChange={(e) => handleRegisterChangeDetails(e, id, inputRef)}
                     className="block w-full pl-10 pr-10 py-3 bg-secondary rounded-xl text-secondary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out"
                     placeholder={placeholder}
                 />
@@ -329,12 +331,14 @@ const AuthForm = (props) => {
         }
     }
 
-    const handleRegisterChangeDetails = (e, field) => {
-        const value = e.target.value;
-        setRegisterDetails({
-            ...registerDetails,
-            [field]: value
-        })
+    const handleRegisterChangeDetails = (e, field, inputRef) => {
+        // const value = e.target.value;
+        // setRegisterDetails({
+        //     ...registerDetails,
+        //     [field]: value
+        // })
+
+        registerDetails[field] = inputRef.current.value;
 
         console.log(registerDetails);
     }
