@@ -59,6 +59,7 @@ passport.use(
                 console.log(existingUser);
                 
                 if(existingUser){
+                    // return done(null, false, { message: "Existing local account found. Do you want to link it with Google?" });
                     const updatedUser = await User.findOneAndUpdate({email: existingUser.email}, {googleId: profile.id});
                     console.log(updatedUser);
                     return done(null, updatedUser, `google sign in set for ${profile.emails[0].value}`); 
