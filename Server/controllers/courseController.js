@@ -1,8 +1,5 @@
 import {AppwriteDB} from '../config/db.js';
 import {Query} from 'node-appwrite';
-if(process.env.NODE_ENV !== "production"){
-    (await import ("dotenv")).config();
-}
 
 export const getCoursCard=async(req,res)=>{
     try{

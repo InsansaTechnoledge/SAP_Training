@@ -154,7 +154,8 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     const handleContinue = () => {
         if (currentStep === 1) {
             if (validateStep1()) {
-                setCurrentStep(2);
+                // setCurrentStep(2);
+                //here i have to add the payment method step
             }
         } else if (currentStep === 2) {
             if (validateStep2()) {

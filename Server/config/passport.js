@@ -3,9 +3,6 @@ import passportLocal from "passport-local";
 import passportGoogle from "passport-google-oauth20";
 import User from "../models/UserModel.js";
 import bcrypt from "bcryptjs";
-if(process.env.NODE_ENV !== 'production'){
-    (await import('dotenv')).config();
-}
 
 const LocalStrategry = passportLocal.Strategy;
 const GoogleStrategy = passportGoogle.Strategy;
