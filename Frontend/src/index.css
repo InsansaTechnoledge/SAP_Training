@@ -26,6 +26,13 @@
   --color-text-gradient-start: #eff6ff ;
   --color-text-gradient-mid: oklch(0.962 0.018 272.314) ;
   --color-text-gradient-end: #ffffff;
+
+  --color-gradient-blue-start:oklch(0.623 0.214 259.815);
+  --color-gradient-blue-end:oklch(0.809 0.105 251.813);
+
+  --color-card-blue:oklch(0.882 0.059 254.128);
+  --color-card-green:#b9f8cf;
+  --color-card-amber:#fee685;
 }
 
 .dark {
@@ -53,6 +60,14 @@
 
   --color-card-gradient-start:#364153;
   --color-card-gradient-end:#172135;
+
+  --color-gradient-blue-start:#1c398e;
+  --color-gradient-blue-end:#1447e6;
+
+  --color-card-blue:#1447e6;
+  --color-card-green:oklch(0.527 0.154 150.069);
+  --color-card-amber:oklch(0.555 0.163 48.998);
+
 }
 
 .bg-primary {
@@ -76,6 +91,16 @@
 
 .bg-blue {
   background-color: var(--color-text-blue);
+}
+
+.bg-card-blue {
+  background-color: var(--color-card-blue);
+}
+.bg-card-green {
+  background-color: var(--color-card-green);
+}
+.bg-card-amber {
+  background-color: var(--color-card-amber);
 }
 
 .bg-card {
@@ -108,6 +133,10 @@
 
 .bg-theme-gradient {
   background: linear-gradient(to right, var(--color-gradient-start), var(--color-gradient-end));
+}
+
+.bg-gradient-blue {
+  background: linear-gradient(to right, var(--color-gradient-blue-start), var(--color-gradient-blue-end));
 }
 
 .card-green {
