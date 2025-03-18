@@ -1,10 +1,6 @@
 import expressApp from './config/express.js'
 import {connectMongoDB, connectAppwriteDB} from './config/db.js'
 
-if(process.env.NODE_ENV!== 'production'){
-    (await import('dotenv')).config();
-}
-
 const App = async () => {
     try{
         await connectMongoDB();

@@ -1,8 +1,5 @@
 import mongoose from "mongoose";
 import sdk from "node-appwrite";
-if (process.env.NODE_ENV !== "production") {
-    (await import("dotenv")).config();
-}
 
 export let AppwriteDB='';
 const setter=(databases)=>{
