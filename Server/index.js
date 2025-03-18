@@ -1,4 +1,10 @@
-import App from "./app.js";
+const environment = process.env.NODE_ENV || 'development';
+if(environment !== 'production'){
+    const dotenv = await import('dotenv');
+    dotenv.config({ path: `./config/.env.local.${environment}` });
+}
+
+const App= (await import ('./app.js')).default;
 const PORT = process.env.PORT || 5000;
 
 

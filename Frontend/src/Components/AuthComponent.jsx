@@ -114,7 +114,7 @@ const AuthBanner = () => {
             {
                 isModalOpen
                     ?
-                    <AuthForm activeTab={activeTab} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+                    <AuthForm activeTab={activeTab} setActiveTab={setActiveTab} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
                     :
                     null
             }

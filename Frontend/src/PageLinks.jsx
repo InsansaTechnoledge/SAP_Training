@@ -16,37 +16,40 @@ import PromoCodeGenerator from './Components/PromocodeGenerator';
 import { useUser } from './Context/UserContext';
 import axios from 'axios';
 import { API_BASE_URL } from './config';
+import LoginLanding from './Pages/LoginLanding';
 const PageLinks = () => {
-    const {user, setUser} = useUser();
-    
-    useEffect(()=>{
-        const checkAuth = async () => {
-            try{
+    const { user, setUser } = useUser();
 
-                const response = await axios.get(`${API_BASE_URL}/api/v1/auth/checkAuth`,{
-                    withCredentials: true
-                });
-                
-                if(response.status===200){
-                    console.log(response.data);
-                    setUser(response.data.user);
+    useEffect(() => {
+        const checkAuth = async () => {
+            if (!user) {
+                try {
+
+                    const response = await axios.get(`${API_BASE_URL}/api/v1/auth/checkAuth`, {
+                        withCredentials: true
+                    });
+
+                    if (response.status === 200) {
+                        console.log(response.data);
+                        setUser(response.data.user);
+                    }
                 }
-            }
-            catch(err){
-                console.log(err);
+                catch (err) {
+                    console.log(err);
+                }
             }
         }
 
         checkAuth();
-    },[]);
+    }, []);
 
 
     return (
         <>
             <Router>
-            <Navigation />
+                <Navigation />
                 <Routes>
-                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/" element={user ? <LoginLanding /> : <LandingPage />} />
                     <Route path="/course" element={<ExamPage />} />
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/video" element={<VideoPage />} />
@@ -60,7 +63,7 @@ const PageLinks = () => {
                     <Route path="/checkout" element={<Checkout />} />
 
 
-                    
+
 
                     <Route path="/pc" element={<PromoCodeGenerator />} />
 

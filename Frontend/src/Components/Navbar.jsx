@@ -31,10 +31,21 @@ const Navigation = () => {
     const location = useLocation();
     const {user, setUser} = useUser();
     const [activeTab, setActiveTab] = useState('login');
-    const fixed_navbar_in = ['/video', '/quiz', '/dashboard', '/shop', '/game'];
+    const [fixedNavbarIn, setFixedNavbarIn] = useState(['/video', '/quiz', '/dashboard', '/shop', '/game']);
 
     const navigate = useNavigate();
 
+   useEffect(()=>{
+    if(user){
+        setFixedNavbarIn([
+            ...fixedNavbarIn,
+            '/'
+        ])
+    }
+    else{
+        setFixedNavbarIn(fixedNavbarIn.filter(nav => nav!=='/'));
+    }
+   },[user])
 
     useEffect(() => {
         // Dark mode setup
@@ -61,14 +72,14 @@ const Navigation = () => {
             setScrolled(isScrolled);
         };
 
-        if (!fixed_navbar_in.includes(location.pathname)) {
+        if (!fixedNavbarIn.includes(location.pathname)) {
             setScrolled(false);
             window.addEventListener('scroll', handleScroll);
             return () => window.removeEventListener('scroll', handleScroll);
         } else {
             setScrolled(true);
         }
-    }, [location]);
+    }, [location, user]);
 
     useEffect(() => {
         if (isMenuOpen || isSearchOpen) {

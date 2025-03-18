@@ -154,7 +154,8 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     const handleContinue = () => {
         if (currentStep === 1) {
             if (validateStep1()) {
-                setCurrentStep(2);
+                // setCurrentStep(2);
+                //here i have to add the payment method step
             }
         } else if (currentStep === 2) {
             if (validateStep2()) {
@@ -213,23 +214,23 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     };
 
     const renderOrderSummary = () => (
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+        <div className="bg-secondary rounded-lg p-4">
             <h3 className="font-medium mb-3 text-secondary">Order Summary</h3>
             <div className="space-y-2 mb-3">
                 {cart.map((item) => (
                     <div key={item.title} className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">{item.title}</span>
+                        <span className="text-secondary">{item.title}</span>
                         <span className="font-medium text-secondary">₹{(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                 ))}
             </div>
             <div className="space-y-2 text-sm border-t pt-2 border-gray-200 dark:border-gray-700">
                 <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+                    <span className="text-secondary">Subtotal</span>
                     <span className="text-secondary">₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">GST (18%)</span>
+                    <span className="text-secondary">GST (18%)</span>
                     <span className="text-secondary">₹{gst.toFixed(2)}</span>
                 </div>
                 {promoDiscount > 0 && (
@@ -256,17 +257,17 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         <div className="space-y-4">
             <h2 className="text-xl font-bold text-secondary">Personal Information</h2>
             <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-secondary mb-1">
                     Full Name
                 </label>
                 <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary w-5 h-5" />
                     <input
                         type="text"
                         name="fullName"
                         value={formData.fullName}
                         onChange={handleInputChange}
-                        className={`w-full p-3 text-secondary pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.fullName ? 'border-red-500' : 'border-gray-300'
+                        className={`w-full p-3 text-secondary pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 bg-secondary  ${errors.fullName ? 'border-red-500' : 'border-gray-300'
                             }`}
                         placeholder="John Doe"
                     />
@@ -277,17 +278,17 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-secondary mb-1">
                     Email Address
                 </label>
                 <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary w-5 h-5" />
                     <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className={`w-full text-secondary p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.email ? 'border-red-500' : 'border-gray-300'
+                        className={`w-full text-secondary p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 bg-secondary ${errors.email ? 'border-red-500' : 'border-gray-300'
                             }`}
                         placeholder="your@email.com"
                     />
@@ -298,17 +299,17 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-secondary mb-1">
                     Phone Number
                 </label>
                 <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary w-5 h-5" />
                     <input
                         type="tel"
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className={`w-full text-secondary p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.phone ? 'border-red-500' : 'border-gray-300'
+                        className={`w-full text-secondary p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 bg-secondary ${errors.phone ? 'border-red-500' : 'border-gray-300'
                             }`}
                         placeholder="9876543210"
                     />
@@ -618,23 +619,23 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                 <div className="flex justify-between items-center mb-6">
                     <div className="flex space-x-2">
                         <div className={`flex items-center justify-center w-8 h-8 rounded-full ${currentStep >= 1
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                            ? 'bg-theme text-contrast'
+                            : 'bg-secondary text-secondary'
                             }`}>
                             <span className="text-sm font-medium">1</span>
                         </div>
                         <div className={`h-1 w-8 mt-4 ${currentStep > 1
-                            ? 'bg-blue-600'
-                            : 'bg-gray-200 dark:bg-gray-700'
+                            ? 'bg-theme'
+                            : 'bg-secondary'
                             }`} />
                         <div className={`flex items-center justify-center w-8 h-8 rounded-full ${currentStep >= 2
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                            ? 'bg-theme text-contrast'
+                            : 'bg-secondary text-secondary'
                             }`}>
                             <span className="text-sm font-medium">2</span>
                         </div>
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-secondary">
                         {currentStep === 1 && 'Personal Information'}
                         {currentStep === 2 && 'Payment Details'}
                     </div>

@@ -1,8 +1,5 @@
 import express from 'express'
 import routes from '../routes/routes.js';
-if(process.env.NODE_ENV !== 'production'){
-    (await import('dotenv')).config();
-}
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
@@ -11,7 +8,7 @@ import passport from './passport.js';
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.CLIENT_BASE_URL,
     credentials: true
 }));
 
