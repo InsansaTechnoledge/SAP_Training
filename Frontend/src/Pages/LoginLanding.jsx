@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { useUser } from '../Context/UserContext'
 import loginLanding from '../assets/loginLanding.png'
 import { Book, Clock, Medal } from 'lucide-react';
@@ -7,11 +7,25 @@ import InterestBasedCourses from '../Components/LoginLandingComponents/InterestB
 import ExploreCategories from '../Components/LoginLandingComponents/ExploreCategories';
 import PurchasedCourse from '../Components/LoginLandingComponents/PurchasedCourse';
 import CertificatesEarned from '../Components/LoginLandingComponents/CertificatesEarned';
+import LoginInterestForm from '../Components/LoginLandingComponents/LoginInterestForm';
 
 const LoginLanding = () => {
     const { user } = useUser();
+    const [showInterestForm, setShowInterestForm] = useState(false);
+
+    useEffect(() => {
+        if (user) {
+            setShowInterestForm(true);
+        }
+    }, [user]);
+
     return (
         <>
+
+        {showInterestForm && (
+                <LoginInterestForm onClose={() => setShowInterestForm(false)} />
+            )}
+
             <div className='px-6 md:px-12 lg:px-24 xl:36 pb-10 bg-theme-gradient pt-24'>
                 <div className='p-3 bg-gradient-blue flex flex-col md:flex-row justify-center text-center mb-5 rounded-xl'>
                     <div className='flex flex-col content-center my-auto'>
