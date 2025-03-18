@@ -34,6 +34,11 @@ const Navigation = () => {
 
     const navigate = useNavigate();
 
+    const handleScroll = () => {
+        const isScrolled = window.scrollY > 50;
+        setScrolled(isScrolled);
+    };
+
    useEffect(()=>{
     if(user){
         setFixedNavbarIn([
@@ -42,7 +47,7 @@ const Navigation = () => {
         ])
     }
     else{
-        alert("JU");
+        // alert("JU");
         setFixedNavbarIn(fixedNavbarIn.filter(nav => nav!=='/'));
     }
    },[user])
@@ -67,10 +72,7 @@ const Navigation = () => {
     }, [user]);
 
     useEffect(() => {
-        const handleScroll = () => {
-            const isScrolled = window.scrollY > 50;
-            setScrolled(isScrolled);
-        };
+        
 
         if (!fixedNavbarIn.includes(location.pathname)) {
             setScrolled(false);
@@ -79,7 +81,7 @@ const Navigation = () => {
         } else {
             setScrolled(true);
         }
-    }, [location, user]);
+    }, [location, user, fixedNavbarIn]);
 
     useEffect(() => {
         if (isMenuOpen || isSearchOpen) {

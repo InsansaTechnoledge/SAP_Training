@@ -76,8 +76,9 @@ export const checkAuth = async (req, res) => {
 export const googleAuth = passport.authenticate("google", { scope: ["profile", "email"], session: true });
 
 export const googleCallback = passport.authenticate("google",{
-    successRedirect:`/api/v1/auth/profile`,
-    failureRedirect: '/',
+    // successRedirect:`${process.env.CLIENT_BASE_URL}`,
+    successRedirect:`${process.env.BACKEND_URL}/api/v1/auth/profile`,
+    failureRedirect: `${process.env.CLIENT_BASE_URL}`,
     session: true
 })
 
@@ -86,7 +87,7 @@ export const googleProfile = (req,res) => {
         return res.status(401).json({ message: "Unauthorized" });
     }
     
-    res.redirect(`${process.env.CLIENT_BASE_URL_LOCAL}`);
+    res.redirect(`${process.env.CLIENT_BASE_URL}`);
     // return res.json(req.user); // Return user profile
 }
 
