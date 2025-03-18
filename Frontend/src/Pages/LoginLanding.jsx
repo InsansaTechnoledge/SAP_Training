@@ -1,10 +1,8 @@
 import React from 'react'
 import { useUser } from '../Context/UserContext'
-import MyCourses from '../Components/LoginLandingComponents/MyCourses';
 import loginLanding from '../assets/loginLanding.png'
 import { Book, Clock, Medal } from 'lucide-react';
 import ContinueWatching from '../Components/LoginLandingComponents/ContinueWatching';
-import Courses from '../Components/Courses';
 import InterestBasedCourses from '../Components/LoginLandingComponents/InterestBasedCourses';
 import ExploreCategories from '../Components/LoginLandingComponents/ExploreCategories';
 import PurchasedCourse from '../Components/LoginLandingComponents/PurchasedCourse';
@@ -85,7 +83,7 @@ const LoginLanding = () => {
                             </div>
                             <div>
                                 <h2 className='mt-8 mb-5 text-3xl font-bold text-secondary'>
-                                    My Certificates
+                                    My certificates
                                 </h2>
                                 <div className='grid lg:grid-cols-2 xl:grid-cols-3 gap-8 max-h-[27rem] overflow-auto p-5'>
                                     <CertificatesEarned />

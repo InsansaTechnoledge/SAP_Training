@@ -33,6 +33,8 @@
   --color-card-blue:oklch(0.882 0.059 254.128);
   --color-card-green:#b9f8cf;
   --color-card-amber:#fee685;
+
+  --color-text-gray: #6a7282;
 }
 
 .dark {
@@ -68,6 +70,7 @@
   --color-card-green:oklch(0.527 0.154 150.069);
   --color-card-amber:oklch(0.555 0.163 48.998);
 
+  --color-text-gray: #99a1af;
 }
 
 .bg-primary {
@@ -109,6 +112,10 @@
 
 .text-primary {
   color: var(--color-primary);
+}
+
+.text-gray{
+  color: var(--color-text-gray);
 }
 
 .text-blue {
