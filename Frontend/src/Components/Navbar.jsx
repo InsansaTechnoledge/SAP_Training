@@ -15,7 +15,6 @@ import AuthBanner from './AuthComponent';
 import AuthForm from './AuthForm';
 
 
-
 const Navigation = () => {
     const [scrolled, setScrolled] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -43,6 +42,7 @@ const Navigation = () => {
         ])
     }
     else{
+        alert("JU");
         setFixedNavbarIn(fixedNavbarIn.filter(nav => nav!=='/'));
     }
    },[user])
@@ -64,7 +64,7 @@ const Navigation = () => {
         // Add resize listener
         window.addEventListener('resize', checkMobileView);
         return () => window.removeEventListener('resize', checkMobileView);
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         const handleScroll = () => {
