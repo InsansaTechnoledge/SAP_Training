@@ -78,7 +78,7 @@ const ContinueWatching = () => {
           >
             Resume
           </button>
-          <div className="text-xs text-gray-400">valid till 17-04-2025</div>
+          <div className="text-xs text-gray">valid till 17-04-2025</div>
         </div>
       </div>
     </div>
