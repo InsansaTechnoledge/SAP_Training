@@ -1,7 +1,7 @@
 const environment = process.env.NODE_ENV || 'development';
 if(environment !== 'production'){
     const dotenv = await import('dotenv');
-    dotenv.config({ path: `./config/.env.local.${environment}` });
+    dotenv.config({ path: `./config/.env.${environment}.local` });
 }
 
 const App= (await import ('./app.js')).default;
