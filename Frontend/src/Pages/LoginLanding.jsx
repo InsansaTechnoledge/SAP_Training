@@ -14,21 +14,21 @@ const LoginLanding = () => {
     const { user } = useUser();
     return (
         <>
-            <div className='mx-36 mb-10'>
-                <div className='bg-blue-400 bg-gradient-to-r from-blue-500 to-blue-300 mt-24 flex justify-center text-center mb-5 rounded-xl'>
-                    <div className='flex flex-col content-center  my-auto'>
+            <div className='mx-6 md:mx-12 lg:mx-24 xl:36 mb-10'>
+                <div className='p-3 bg-blue-400 bg-gradient-to-r from-blue-500 to-blue-300 mt-24 flex flex-col md:flex-row justify-center text-center mb-5 rounded-xl'>
+                    <div className='flex flex-col content-center my-auto'>
                         <h1 className='font-bold text-5xl mb-5  my-auto text-left'>
                             Hey {user.name} 👋,
                         </h1>
-                        <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla earum repellat deserunt sit aliquid laborum. </h3>
+                        <h3 className='text-left'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla earum repellat deserunt sit aliquid laborum. </h3>
                     </div>
                     <img
-                        className='w-xs'
+                        className='w-full sm:w-xs mx-auto'
                         src={loginLanding} />
                 </div>
-                <div className='grid grid-cols-4 gap-8'>
-                    <div className='col-span-4'>
-                        <div className='grid grid-cols-3 gap-8 '>
+                <div className='gap-8'>
+                    <div className=''>
+                        <div className='grid md:grid-cols-3 gap-8 '>
                             <div className='p-5 rounded-lg text-lg bg-amber-200'>
                                 <div className='flex gap-2 font-medium mb-3'>
                                     <Book /> Courses purchased
@@ -59,7 +59,7 @@ const LoginLanding = () => {
                         </div>
 
                         <h2 className='mt-8 mb-5 text-3xl font-bold'>Continue watching</h2>
-                        <div className='grid grid-cols-2 gap-8 p-5'>
+                        <div className='grid lg:grid-cols-2 gap-8 p-5'>
                             <ContinueWatching />
                             <ContinueWatching />
                             <ContinueWatching />
@@ -70,7 +70,7 @@ const LoginLanding = () => {
                                 <h2 className='mt-8 mb-5 text-3xl font-bold'>
                                     My courses
                                 </h2>
-                                <div className='grid grid-cols-4 gap-10 max-h-[28rem] overflow-auto p-5'>
+                                <div className='grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 max-h-[28rem] overflow-auto p-5'>
                                     <PurchasedCourse />
                                     <PurchasedCourse />
                                     <PurchasedCourse />
@@ -87,7 +87,7 @@ const LoginLanding = () => {
                                 <h2 className='mt-8 mb-5 text-3xl font-bold'>
                                     My Certificates
                                 </h2>
-                                <div className='grid grid-cols-3 gap-8 max-h-[27rem] overflow-auto p-5'>
+                                <div className='grid lg:grid-cols-2 xl:grid-cols-3 gap-8 max-h-[27rem] overflow-auto p-5'>
                                     <CertificatesEarned />
                                     <CertificatesEarned />
                                     <CertificatesEarned />
@@ -96,14 +96,14 @@ const LoginLanding = () => {
                         </div>
 
                         <h2 className='mt-8 mb-5 text-3xl font-bold'>Courses based on your interest</h2>
-                        <div className='grid grid-cols-3 gap-8'>
+                        <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
                             <InterestBasedCourses />
                             <InterestBasedCourses />
                             <InterestBasedCourses />
                         </div>
 
                         <h2 className='mt-8 mb-5 text-3xl font-bold'>Explore new topics</h2>
-                        <div className='grid grid-cols-3 gap-8'>
+                        <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
                             <ExploreCategories />
                             <ExploreCategories />
                             <ExploreCategories />
