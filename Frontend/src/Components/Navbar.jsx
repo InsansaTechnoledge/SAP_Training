@@ -42,6 +42,7 @@ const Navigation = () => {
         ])
     }
     else{
+        alert("JU");
         setFixedNavbarIn(fixedNavbarIn.filter(nav => nav!=='/'));
     }
    },[user])
