@@ -36,7 +36,7 @@ export const Paynow=async(paymentData)=>{
                     response=await axios.post(`${API_BASE_URL}/api/v1/payment/verifyPayment`,paymentData);
                     console.log(response);
                     if(response.status===200){
-                        resolve( {status:response.status,message:"Payment successfull"});
+                        resolve( {status:response.status,message:"Payment successfull",payment:response.data.payment});
                     }
                     else{
                         

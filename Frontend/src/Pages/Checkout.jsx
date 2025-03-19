@@ -1,16 +1,16 @@
+//change the css at final render
 import React, { useState,useEffect } from 'react';
 import {
-    CreditCard,
     CheckCircle,
-    X,
+    
     Shield,
     Gift,
     User,
     Mail,
     Phone,
-    ChevronRight,
+    
     Lock,
-    AlertCircle
+    
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -20,18 +20,23 @@ import { Paynow } from '../Components/paymentFunction';
 import {useUser} from '../Context/UserContext';
 
 const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
-    const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
         phone: '',
     });
-    const [paymentMethod, setPaymentMethod] = useState('card');
+    // const [paymentMethod, setPaymentMethod] = useState('card');
     const [errors, setErrors] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
     const navigate = useNavigate();
     const {user}=useUser();
+    const [paymentInvoice,setPaymentInvoice]=useState({
+        paymentMethod:'',
+        orderId:'',
+        paymentId:'',
+        receiptNo:'',
+});
 
     const {
         cart,
@@ -43,45 +48,10 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         finalTotal
     } = checkoutData;
 
-    const formatCardNumber = (value) => {
-        const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-        const matches = v.match(/\d{4,16}/g);
-        const match = matches && matches[0] || '';
-        const parts = [];
-
-        for (let i = 0, len = match.length; i < len; i += 4) {
-            parts.push(match.substring(i, i + 4));
-        }
-
-        if (parts.length) {
-            return parts.join(' ');
-        } else {
-            return value;
-        }
-    };
-
-    const formatExpiryDate = (value) => {
-        const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-
-        if (v.length >= 2) {
-            return `${v.substring(0, 2)}/${v.substring(2, 4)}`;
-        }
-
-        return v;
-    };
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
         let processedValue = value;
-
-        if (name === 'cardNumber') {
-            processedValue = formatCardNumber(value);
-        } else if (name === 'cardExpiry') {
-            processedValue = formatExpiryDate(value);
-        } else if (name === 'cardCvv') {
-            processedValue = value.replace(/[^\d]/g, '').slice(0, 3);
-        }
-
         setFormData({
             ...formData,
             [name]: type === 'checkbox' ? checked : processedValue,
@@ -119,34 +89,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const validateStep2 = () => {
-        const newErrors = {};
-
-        if (paymentMethod === 'card') {
-            if (!formData.cardNumber.trim() || formData.cardNumber.replace(/\s/g, '').length < 16) {
-                newErrors.cardNumber = 'Valid card number is required';
-            }
-
-            if (!formData.cardExpiry.trim() || formData.cardExpiry.length < 5) {
-                newErrors.cardExpiry = 'Valid expiry date is required';
-            }
-
-            if (!formData.cardCvv.trim() || formData.cardCvv.length < 3) {
-                newErrors.cardCvv = 'Valid CVV is required';
-            }
-
-            if (!formData.nameOnCard.trim()) {
-                newErrors.nameOnCard = 'Name on card is required';
-            }
-        }
-
-        if (!formData.agreeToTerms) {
-            newErrors.agreeToTerms = 'You must agree to the terms and conditions';
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
+   
     const loadScript = (src) => {
         return new Promise((resolve) => {
           const script = document.createElement('script')
@@ -165,17 +108,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
       }, [])
 
     const handleContinue = async () => {
-        // if (currentStep === 1) {
-        //     if (validateStep1()) {
-        //         setCurrentStep(2);
-        //         //here i have to add the payment method step
-        //     }
-        // } else if (currentStep === 2) {
-        //     if (validateStep2()) {
-        //         processPayment();
-        //     }
-        // }
-
+if(validateStep1()){
           const generateReceiptNumber = () => {
     const now = new Date();
     const formattedDate = now.toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
@@ -190,26 +123,16 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         console.log(formData);
 
         try{
-        const result =await Paynow(formData);
+        const result =await Paynow(formData);//what to do for the result
         console.log(result);
+        paymentInvoice.paymentId=result.payment.transactionId;
+        paymentInvoice.orderId=result.payment.orderId;
+        paymentInvoice.paymentMethod=result.payment.paymentMethod;
+        paymentInvoice.receiptNo=formData.receipt;
+        
         alert(result.message);
-        }catch(error){
-            console.error("Payment Error:", error);
-            alert(error.message || "Payment failed");
-        }
 
-
-    };
-
-    const processPayment = async () => {
-        setIsProcessing(true);
-
-        try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Handle successful payment
-            setIsComplete(true);
+        setIsComplete(true);
             var purchasedModules = localStorage.getItem('unlockedModules');
             console.log(checkoutData.cart);
             const responses = await Promise.all(
@@ -217,7 +140,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                     axios.get(`${API_BASE_URL}/api/v1/modules?id=${course.$id}`) // Replace with your actual API endpoint
                 )
             );
-
+            console.log(responses);
             var newModules = [];
             responses.map(response => {
                 const moduleIds = response.data.map(mod => mod.$id);
@@ -233,22 +156,19 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                 localStorage.setItem('unlockedModules',[...purchasedModules,...newModules]);
             }
 
-            // In a real application, you would:
-            // 1. Send the payment info to your backend
-            // 2. Process the payment using a payment processor
-            // 3. Update user's account with purchased courses
-            // 4. Display confirmation
 
-        } catch (error) {
+        }catch(error){
+            console.error("Payment Error:", error);
             setErrors({
                 payment: 'Payment processing failed. Please try again.'
             });
-
-            console.log(error);
-        } finally {
+        }finally {
             setIsProcessing(false);
         }
+
+    }
     };
+
 
     const renderOrderSummary = () => (
         <div className="bg-secondary rounded-lg p-4">
@@ -360,201 +280,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         </div>
     );
 
-    const renderStep2 = () => (
-        <div className="space-y-4">
-            <h2 className="text-xl font-bold text-secondary">Payment Method</h2>
 
-            <div className="grid grid-cols-2 gap-3">
-                <button
-                    type="button"
-                    onClick={() => setPaymentMethod('card')}
-                    className={`border rounded-lg p-4 flex items-center justify-center space-x-2 transition-all ${paymentMethod === 'card'
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                        : 'border-gray-300 dark:border-gray-700'
-                        }`}
-                >
-                    <CreditCard className={`w-5 h-5 ${paymentMethod === 'card' ? 'text-blue-500' : 'text-gray-500 dark:text-gray-400'
-                        }`} />
-                    <span className={paymentMethod === 'card' ? 'text-blue-600 font-medium' : 'text-gray-600 dark:text-gray-400'}>
-                        Credit Card
-                    </span>
-                </button>
-
-                <button
-                    type="button"
-                    onClick={() => setPaymentMethod('upi')}
-                    className={`border rounded-lg p-4 flex items-center justify-center space-x-2 transition-all ${paymentMethod === 'upi'
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                        : 'border-gray-300 dark:border-gray-700'
-                        }`}
-                >
-                    <svg
-                        viewBox="0 0 24 24"
-                        className={`w-5 h-5 ${paymentMethod === 'upi' ? 'text-blue-500' : 'text-gray-500 dark:text-gray-400'
-                            }`}
-                        fill="currentColor"
-                    >
-                        <path d="M14.65,8.96L9.37,15.09H14.68L9.38,21.48L21.17,12.33H15.85L21.16,2.52L9.38,12.33H14.64" />
-                    </svg>
-                    <span className={paymentMethod === 'upi' ? 'text-blue-600 font-medium' : 'text-gray-600 dark:text-gray-400'}>
-                        UPI
-                    </span>
-                </button>
-            </div>
-
-            {paymentMethod === 'card' && (
-                <div className="space-y-4 mt-2">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Card Number
-                        </label>
-                        <div className="relative">
-                            <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                            <input
-                                type="text"
-                                name="cardNumber"
-                                value={formData.cardNumber}
-                                onChange={handleInputChange}
-                                className={`w-full text-secondary p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.cardNumber ? 'border-red-500' : 'border-gray-300'
-                                    }`}
-                                placeholder="4242 4242 4242 4242"
-                                maxLength="19"
-                            />
-                        </div>
-                        {errors.cardNumber && (
-                            <p className="text-red-500 text-sm mt-1">{errors.cardNumber}</p>
-                        )}
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Expiry Date
-                            </label>
-                            <input
-                                type="text"
-                                name="cardExpiry"
-                                value={formData.cardExpiry}
-                                onChange={handleInputChange}
-                                className={`w-full p-3 text-secondary border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.cardExpiry ? 'border-red-500' : 'border-gray-300'
-                                    }`}
-                                placeholder="MM/YY"
-                                maxLength="5"
-                            />
-                            {errors.cardExpiry && (
-                                <p className="text-red-500 text-sm mt-1">{errors.cardExpiry}</p>
-                            )}
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                CVV
-                            </label>
-                            <input
-                                type="text"
-                                name="cardCvv"
-                                value={formData.cardCvv}
-                                onChange={handleInputChange}
-                                className={`w-full p-3 text-secondary border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.cardCvv ? 'border-red-500' : 'border-gray-300'
-                                    }`}
-                                placeholder="123"
-                                maxLength="3"
-                            />
-                            {errors.cardCvv && (
-                                <p className="text-red-500 text-sm mt-1">{errors.cardCvv}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Name on Card
-                        </label>
-                        <input
-                            type="text"
-                            name="nameOnCard"
-                            value={formData.nameOnCard}
-                            onChange={handleInputChange}
-                            className={`w-full p-3 text-secondary border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 ${errors.nameOnCard ? 'border-red-500' : 'border-gray-300'
-                                }`}
-                            placeholder="John Doe"
-                        />
-                        {errors.nameOnCard && (
-                            <p className="text-red-500 text-sm mt-1">{errors.nameOnCard}</p>
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {paymentMethod === 'upi' && (
-                <div className="space-y-4 mt-2">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            UPI ID
-                        </label>
-                        <div className="relative">
-                            <svg
-                                viewBox="0 0 24 24"
-                                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"
-                                fill="currentColor"
-                            >
-                                <path d="M14.65,8.96L9.37,15.09H14.68L9.38,21.48L21.17,12.33H15.85L21.16,2.52L9.38,12.33H14.64" />
-                            </svg>
-                            <input
-                                type="text"
-                                name="upiId"
-                                className="w-full text-secondary p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 dark:bg-gray-800 dark:border-gray-700 border-gray-300"
-                                placeholder="yourname@upi"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                        <div className="flex space-x-3">
-                            <AlertCircle className="text-yellow-500 w-5 h-5 flex-shrink-0" />
-                            <p className="text-sm text-yellow-700 dark:text-yellow-400">
-                                After clicking "Pay Now", you'll receive a payment request on your UPI app.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            <div className="flex items-start mt-4">
-                <div className="flex items-center h-5">
-                    <input
-                        id="terms"
-                        name="agreeToTerms"
-                        type="checkbox"
-                        checked={formData.agreeToTerms}
-                        onChange={handleInputChange}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                    />
-                </div>
-                <div className="ml-3 text-sm">
-                    <label htmlFor="terms" className="text-gray-600 dark:text-gray-400">
-                        I agree to the <a href="#" className="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>
-                    </label>
-                    {errors.agreeToTerms && (
-                        <p className="text-red-500 text-sm mt-1">{errors.agreeToTerms}</p>
-                    )}
-                </div>
-            </div>
-
-            {errors.payment && (
-                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-                    <div className="flex space-x-3">
-                        <X className="text-red-500 w-5 h-5 flex-shrink-0" />
-                        <p className="text-sm text-red-700 dark:text-red-400">
-                            {errors.payment}
-                        </p>
-                    </div>
-                </div>
-            )}
-
-            {!inCartView && renderOrderSummary()}
-        </div>
-    );
 
     const renderComplete = () => (
         <div className="space-y-6 text-center">
@@ -576,9 +302,14 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                 <h3 className="text-lg font-medium text-secondary mb-4">Order Details</h3>
 
                 <div className="space-y-3">
+                <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Receipt Id</span>
+                        <span className="font-medium text-secondary">{paymentInvoice.receiptNo}</span>
+                    </div>
+
                     <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Order ID</span>
-                        <span className="font-medium text-secondary">#ORD-{Math.floor(Math.random() * 10000)}</span>
+                        <span className="font-medium text-secondary">{paymentInvoice.orderId}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
@@ -587,9 +318,14 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                     </div>
 
                     <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Payment Id</span>
+                        <span className="font-medium text-secondary">{paymentInvoice.paymentId}</span>
+                    </div>
+
+                    <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Payment Method</span>
                         <span className="font-medium text-secondary">
-                            {paymentMethod === 'card' ? 'Credit Card' : 'UPI'}
+                            {paymentInvoice.paymentMethod}
                         </span>
                     </div>
 
@@ -654,27 +390,9 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         <div className="px-6 pb-6">
             {!isComplete && (
                 <div className="flex justify-between items-center mb-6">
-                    <div className="flex space-x-2">
-                        <div className={`flex items-center justify-center w-8 h-8 rounded-full ${currentStep >= 1
-                            ? 'bg-theme text-contrast'
-                            : 'bg-secondary text-secondary'
-                            }`}>
-                            <span className="text-sm font-medium">1</span>
-                        </div>
-                        <div className={`h-1 w-8 mt-4 ${currentStep > 1
-                            ? 'bg-theme'
-                            : 'bg-secondary'
-                            }`} />
-                        <div className={`flex items-center justify-center w-8 h-8 rounded-full ${currentStep >= 2
-                            ? 'bg-theme text-contrast'
-                            : 'bg-secondary text-secondary'
-                            }`}>
-                            <span className="text-sm font-medium">2</span>
-                        </div>
-                    </div>
                     <div className="text-sm text-secondary">
-                        {currentStep === 1 && 'Personal Information'}
-                        {currentStep === 2 && 'Payment Details'}
+                        'Personal Information & Payment Details'
+                    
                     </div>
                 </div>
             )}
@@ -682,8 +400,8 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
             {inCartView && !isComplete && renderOrderSummary()}
 
             <div className="mt-6">
-                {currentStep === 1 && renderStep1()}
-                {currentStep === 2 && renderStep2()}
+                { renderStep1()}
+                {/* {currentStep === 2 && renderStep2()} */}
                 {isComplete && renderComplete()}
 
                 {!isComplete && (
@@ -704,32 +422,16 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                                     <span>Processing...</span>
                                 </>
                             ) : (
-                                <>
-                                    {currentStep === 1 ? (
+                                
                                         <>
                                             {/* <span>Continue to Payment</span>
                                             <ChevronRight className="w-5 h-5" /> */}
                                               <Lock className="w-5 h-5" />
                                               <span>Pay Now ₹{finalTotal.toFixed(2)}</span>
                                         </>
-                                    ) : (
-                                        <>
-                                            <Lock className="w-5 h-5" />
-                                            <span>Pay Now ₹{finalTotal.toFixed(2)}</span>
-                                        </>
-                                    )}
-                                </>
+                                    
                             )}
                         </motion.button>
-
-                        {currentStep === 2 && (
-                            <button
-                                onClick={() => setCurrentStep(1)}
-                                className="w-full text-gray-600 dark:text-gray-400 py-2 mt-2 text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                            >
-                                Back to information
-                            </button>
-                        )}
                     </div>
                 )}
             </div>

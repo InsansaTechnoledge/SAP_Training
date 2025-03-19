@@ -56,7 +56,11 @@ export const verifyPayment=async(req,res)=>{
             payment.paymentMethod=paymentDetails.method;
             await payment.save();
             console.log("Payment verified successfully");
-            res.status(200).json({message:"Payment verified successfully"});
+            res.status(200).json({message:"Payment verified successfully",payment:{
+                paymentMethod:paymentDetails.method,
+                status:paymentDetails.status,
+                transactionId:razorpay_payment_id,
+            orderId:razorpay_order_id}});
         }else{
             response.status(400).json({message:"Payment verification failed"});
             console.error("Payment verification failed");
