@@ -6,7 +6,7 @@ const PaymentSchema = new mongoose.Schema({
         required: true
     },
     receipt:{
-        type: Number,
+        type: String,
         required: true
     },
     courseId: {
@@ -25,8 +25,7 @@ const PaymentSchema = new mongoose.Schema({
         required: true
     },
     paymentMethod: {
-        type: String,
-        required: true
+        type: String
     },
     currency:{
         type: String,
@@ -38,7 +37,6 @@ const PaymentSchema = new mongoose.Schema({
     },
     transactionId: {
         type: String,
-        required: true
     },
     status: {
         type: String,

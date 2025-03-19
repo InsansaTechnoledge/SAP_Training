@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
     CreditCard,
     CheckCircle,
@@ -16,6 +16,8 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 import axios from 'axios';
+import { Paynow } from '../Components/paymentFunction';
+import {useUser} from '../Context/UserContext';
 
 const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -23,18 +25,13 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         fullName: '',
         email: '',
         phone: '',
-        address: '',
-        cardNumber: '',
-        cardExpiry: '',
-        cardCvv: '',
-        nameOnCard: '',
-        agreeToTerms: false
     });
     const [paymentMethod, setPaymentMethod] = useState('card');
     const [errors, setErrors] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
     const navigate = useNavigate();
+    const {user}=useUser();
 
     const {
         cart,
@@ -150,18 +147,58 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+    const loadScript = (src) => {
+        return new Promise((resolve) => {
+          const script = document.createElement('script')
+          script.src = src
+          script.onload = () => {
+            resolve(true)
+          }
+          script.onerror = () => {
+            resolve(false)
+          }
+          document.body.appendChild(script)
+        })
+      }
+      useEffect(() => {
+        loadScript('https://checkout.razorpay.com/v1/checkout.js')
+      }, [])
 
-    const handleContinue = () => {
-        if (currentStep === 1) {
-            if (validateStep1()) {
-                // setCurrentStep(2);
-                //here i have to add the payment method step
-            }
-        } else if (currentStep === 2) {
-            if (validateStep2()) {
-                processPayment();
-            }
+    const handleContinue = async () => {
+        // if (currentStep === 1) {
+        //     if (validateStep1()) {
+        //         setCurrentStep(2);
+        //         //here i have to add the payment method step
+        //     }
+        // } else if (currentStep === 2) {
+        //     if (validateStep2()) {
+        //         processPayment();
+        //     }
+        // }
+
+          const generateReceiptNumber = () => {
+    const now = new Date();
+    const formattedDate = now.toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
+    const formattedTime = now.toTimeString().slice(0, 8).replace(/:/g, ""); // HHMMSS
+    return `${formattedDate}${formattedTime}${user._id}`;
+  };
+        formData.amount = checkoutData.finalTotal;
+        formData.currency = 'INR';
+        formData.receipt=generateReceiptNumber();
+        formData.courseId=1;
+        formData.userId=user._id;
+        console.log(formData);
+
+        try{
+        const result =await Paynow(formData);
+        console.log(result);
+        alert(result.message);
+        }catch(error){
+            console.error("Payment Error:", error);
+            alert(error.message || "Payment failed");
         }
+
+
     };
 
     const processPayment = async () => {
@@ -670,8 +707,10 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                                 <>
                                     {currentStep === 1 ? (
                                         <>
-                                            <span>Continue to Payment</span>
-                                            <ChevronRight className="w-5 h-5" />
+                                            {/* <span>Continue to Payment</span>
+                                            <ChevronRight className="w-5 h-5" /> */}
+                                              <Lock className="w-5 h-5" />
+                                              <span>Pay Now ₹{finalTotal.toFixed(2)}</span>
                                         </>
                                     ) : (
                                         <>
