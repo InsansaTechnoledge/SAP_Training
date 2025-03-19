@@ -52,11 +52,18 @@ const Navigation = () => {
     }
    },[user])
 
+   useEffect(()=>{
+    
+    isDarkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
+
+   },[isDarkMode]);
+
     useEffect(() => {
         // Dark mode setup
+        document.documentElement.classList.remove('dark');
         const dark = localStorage.getItem('darkTheme');
-        dark === 'true' ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
-        setIsDarkMode(dark === 'true');
+        // dark === 'true' ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
+        setIsDarkMode(dark == 'true');
 
         // Check if mobile view
         const checkMobileView = () => {
