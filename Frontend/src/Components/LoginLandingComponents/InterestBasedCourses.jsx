@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { useWishlist } from '../../Context/WishlistContext';
 import { useCart } from '../../Context/CartContext';
 
-const InterestBasedCourses = () => {
+const InterestBasedCourses = ({key, course}) => {
     const { addToCart } = useCart();
     const { wishlist, addToWishlist } = useWishlist();
     const navigate = useNavigate();
-    const isInWishlist = (courseTitle) => wishlist.some(item => item.title === courseTitle);
+    const isInWishlist = (course) => wishlist.some(item => course.title === item.title);
     return (
         <>
             <div
@@ -22,11 +22,11 @@ const InterestBasedCourses = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     <button
-                        // onClick={() => addToWishlist(course)}
+                        onClick={() => addToWishlist(course)}
                         className="absolute top-4 right-4 p-2 bg-secondary rounded-full"
                     >
                         <Heart className={`w-5 h-5 
-                            ${isInWishlist('title') ? 
+                            ${isInWishlist(course) ? 
                             'text-red-500 fill-current' : 
                             'text-secondary'}`} />
                     </button>
