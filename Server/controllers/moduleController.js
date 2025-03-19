@@ -13,6 +13,9 @@ export const getModulesByCourseId = async (req, res) => {
 
         console.log(course.moduleId);
         const modules = course.moduleId;
+        if (!modules) {
+            modules = [];
+        }
         res.status(200).json(modules);
     }
     catch (err) {

@@ -14,13 +14,13 @@ import ABAPimage from '../assets/ABAP.jpg'
 
 const LoginLanding = () => {
     const { user } = useUser();
-    const [showInterestForm, setShowInterestForm] = useState(false);
+    const [showInterestForm, setShowInterestForm] = useState(true);
 
-    // useEffect(() => {
-    //     if (user) {
-    //         setShowInterestForm(!user.profession);
-    //     }
-    // }, [user])
+    useEffect(() => {
+        if (user) {
+            setShowInterestForm(!user.profession);
+        }
+    }, [user])
 
     if (showInterestForm) {
         return (

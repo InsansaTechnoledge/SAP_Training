@@ -1,6 +1,6 @@
 import razorPayConfig from "../config/razorPayConfig.js";
-import  {validateWebhookSignature} from "../utils/razorPayUtils";
-import PaymentModel from "../models/PaymentModel.js";
+import  {validateWebhookSignature} from "razorpay/dist/utils/razorpay-utils.js";
+import PaymentModel from "../models/paymentModel.js";
 import { response } from "express";
 
 const razorpay=await razorPayConfig();
@@ -9,14 +9,17 @@ export const createOrder=async(req,res)=>{
     try{
         const {date,receipt,courseId,moduleId,userId,currency,amount}=req.body;
         const option={
-            amount:amount*100,
+            amount:Number.parseInt(amount*100),
             currency,
             receipt,
             payment_capture:1
         };
+        console.log("Creating order");
+        console.log("Order option",option);
         const order=await razorpay.orders.create(option);
+        console.log("Order created",order);
         const payment=new PaymentModel({
-            date,
+            date:Date.now(),
             receipt,
             courseId,
             moduleId,
@@ -29,12 +32,12 @@ export const createOrder=async(req,res)=>{
         });
         await payment.save();
         console.log("Order created successfully");
-        res.status(200).json({order});
+        res.status(200).json(order);
 
     }catch(error){
         console.error("Error in creating order. Error : ",error);
-        res.status(error.response.status).json("Error in creating order");
-    }
+        res.status(401).json("Error in creating order");
+    }//have to see the error code
 };
 
 export const verifyPayment=async(req,res)=>{
@@ -47,21 +50,24 @@ export const verifyPayment=async(req,res)=>{
         console.log("isValidateSignature",isValidateSignature);
         if(isValidateSignature){
             const paymentDetails=await razorpay.payments.fetch(razorpay_payment_id);
-            const payment=await Payment
-            Model.findOne({orderId:razorpay_order_id});
+            const payment=await PaymentModel.findOne({orderId:razorpay_order_id});
             payment.status=paymentDetails.status;
             payment.transactionId=razorpay_payment_id;
             payment.paymentMethod=paymentDetails.method;
             await payment.save();
             console.log("Payment verified successfully");
-            res.status(200).json({status:'ok'},{message:"Payment verified successfully"});
+            res.status(200).json({message:"Payment verified successfully",payment:{
+                paymentMethod:paymentDetails.method,
+                status:paymentDetails.status,
+                transactionId:razorpay_payment_id,
+            orderId:razorpay_order_id}});
         }else{
-            response.status(400).json({status:'error'},{message:"Payment verification failed"});
+            response.status(400).json({message:"Payment verification failed"});
             console.error("Payment verification failed");
         }
         
     }catch(error){
         console.error("Error in verifying payment. Error : ",error);
-        res.status(error.response.status).json({status:'error'},{message:"Payment verification failed"});
+        res.status(error.response.status).json({message:"Payment verification failed"});
     }
 };
