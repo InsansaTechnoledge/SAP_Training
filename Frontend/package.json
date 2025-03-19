@@ -19,6 +19,7 @@
     "lucide-react": "^0.474.0",
     "o": "^2.3.2",
     "react": "^19.0.0",
+    "react-calendar": "^5.1.0",
     "react-dom": "^19.0.0",
     "react-parallax-tilt": "^1.7.279",
     "react-router-dom": "^7.1.5",

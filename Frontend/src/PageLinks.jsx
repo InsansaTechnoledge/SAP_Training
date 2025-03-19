@@ -17,6 +17,7 @@ import { useUser } from './Context/UserContext';
 import axios from 'axios';
 import { API_BASE_URL } from './config';
 import LoginLanding from './Pages/LoginLanding';
+import EventPage from './Pages/EventPage';
 const PageLinks = () => {
     const { user, setUser } = useUser();
 
@@ -59,6 +60,7 @@ const PageLinks = () => {
                 <Navigation />
                 <Routes>
                     <Route path="/" element={user ? <LoginLanding /> : <LandingPage />} />
+                    <Route path='/events' element={<EventPage />} />
                     <Route path="/course" element={<ExamPage />} />
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/video" element={<VideoPage />} />

@@ -28,9 +28,9 @@ const Navigation = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { wishlist, setIsWishlistOpen, isWishlistOpen } = useWishlist();
     const location = useLocation();
-    const {user, setUser} = useUser();
+    const { user, setUser } = useUser();
     const [activeTab, setActiveTab] = useState('login');
-    const [fixedNavbarIn, setFixedNavbarIn] = useState(['/video', '/quiz', '/dashboard', '/shop', '/game']);
+    const [fixedNavbarIn, setFixedNavbarIn] = useState(['/video', '/quiz', '/dashboard', '/shop', '/game', '/events']);
 
     const navigate = useNavigate();
 
@@ -39,28 +39,26 @@ const Navigation = () => {
         setScrolled(isScrolled);
     };
 
-   useEffect(()=>{
-    if(user){
-        setFixedNavbarIn([
-            ...fixedNavbarIn,
-            '/'
-        ])
-    }
-    else{
-        // alert("JU");
-        setFixedNavbarIn(fixedNavbarIn.filter(nav => nav!=='/'));
-    }
-   },[user])
+    useEffect(() => {
+        if (user) {
+            setFixedNavbarIn([
+                ...fixedNavbarIn,
+                '/'
+            ])
+        }
+        else {
+            // alert("JU");
+            setFixedNavbarIn(fixedNavbarIn.filter(nav => nav !== '/'));
+        }
+    }, [user])
 
-   useEffect(()=>{
-    
-    isDarkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
-
-   },[isDarkMode]);
+    useEffect(() => {
+        document.documentElement.classList.remove('dark');
+        isDarkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
+    }, [isDarkMode]);
 
     useEffect(() => {
         // Dark mode setup
-        document.documentElement.classList.remove('dark');
         const dark = localStorage.getItem('darkTheme');
         // dark === 'true' ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
         setIsDarkMode(dark == 'true');
@@ -79,7 +77,7 @@ const Navigation = () => {
     }, [user]);
 
     useEffect(() => {
-        
+
 
         if (!fixedNavbarIn.includes(location.pathname)) {
             setScrolled(false);
@@ -124,7 +122,7 @@ const Navigation = () => {
         setIsUserMenuOpen(false);
         setIsMenuOpen(false); // Close mobile menu after login
     };
-    
+
     const handleSignup = () => {
         // setuser &&(true);
         setActiveTab('signup');
@@ -138,18 +136,18 @@ const Navigation = () => {
         setIsUserMenuOpen(false);
         setIsMenuOpen(false); // Close mobile menu after logout
 
-        try{
+        try {
 
             const response = await axios.get(`${API_BASE_URL}/api/v1/auth/logout`, {
                 withCredentials: true
             });
 
-            if(response.status===200){
+            if (response.status === 200) {
                 console.log(response.data.message);
                 setUser(null);
             }
         }
-        catch(err){
+        catch (err) {
             console.log(err);
             alert(err.response.data.message);
         }
@@ -178,10 +176,10 @@ const Navigation = () => {
         <>
             {
                 isModalOpen
-                ?
-                <AuthForm activeTab={activeTab} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
-                :
-                null
+                    ?
+                    <AuthForm activeTab={activeTab} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+                    :
+                    null
             }
             <nav className={`fixed top-0 left-0 right-0 transition-all duration-300 z-40 
                 ${scrolled
@@ -206,7 +204,7 @@ const Navigation = () => {
                                         : 'text-white'}`} />
                             </div>
                             <div className="flex flex-col">
-                                
+
                                 <span
                                     onClick={() => navigate("/")}
                                     className="text-xl sm:text-2xl font-bold text-white cursor-pointer">
@@ -226,6 +224,7 @@ const Navigation = () => {
                             <a href="#" className="text-white hover:text-blue-50 transition-colors">Courses</a>
                             <a href="#" className="text-white hover:text-blue-50 transition-colors">Resources</a>
                             <a href="#" className="text-white hover:text-blue-50 transition-colors">Pricing</a>
+                            <button onClick={() => navigate('/events')} className="text-white hover:text-blue-50 transition-colors">Events</button>
                         </div>
 
                         {/* Actions Section - Simplified for Mobile */}
@@ -360,8 +359,8 @@ const Navigation = () => {
                                                     Login
                                                 </button>
                                                 <button
-                                                onClick={handleSignup}
-                                                className="flex items-center px-4 py-2 text-blue-900 hover:bg-blue-50">
+                                                    onClick={handleSignup}
+                                                    className="flex items-center px-4 py-2 text-blue-900 hover:bg-blue-50">
                                                     <UserPlus className="w-4 h-4 mr-2" />
                                                     Sign Up
                                                 </button>

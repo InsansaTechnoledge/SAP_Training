@@ -13,7 +13,7 @@ const InterestBasedCourses = ({key, course}) => {
     return (
         <>
             <div
-                className="relative bg-secondary rounded-2xl shadow-md shadow-gray-500 hover:shadow-lg transition-all duration-300 overflow-hidden"
+                className="relative bg-secondary rounded-2xl shadow-md shadow-gray-50 hover:shadow-lg transition-all duration-300 overflow-hidden"
             >
                 <div className="relative">
                     <img
