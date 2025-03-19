@@ -22,7 +22,7 @@ const PurchasedCourse = () => {
   };
 
   return (
-    <button
+    <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className='flex flex-col rounded-lg bg-card p-3 shadow-lg h-fit'>
@@ -69,7 +69,7 @@ const PurchasedCourse = () => {
         </div>
         {/* <button className='bg-blue-600 text-white w-fit h-fit my-auto p-2 rounded-lg'>View course</button> */}
       </div>
-    </button>
+    </div>
   )
 }
 

@@ -34,6 +34,11 @@ const Navigation = () => {
 
     const navigate = useNavigate();
 
+    const handleScroll = () => {
+        const isScrolled = window.scrollY > 50;
+        setScrolled(isScrolled);
+    };
+
    useEffect(()=>{
     if(user){
         setFixedNavbarIn([
@@ -42,15 +47,23 @@ const Navigation = () => {
         ])
     }
     else{
+        // alert("JU");
         setFixedNavbarIn(fixedNavbarIn.filter(nav => nav!=='/'));
     }
    },[user])
 
+   useEffect(()=>{
+    
+    isDarkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
+
+   },[isDarkMode]);
+
     useEffect(() => {
         // Dark mode setup
+        document.documentElement.classList.remove('dark');
         const dark = localStorage.getItem('darkTheme');
-        dark === 'true' ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
-        setIsDarkMode(dark === 'true');
+        // dark === 'true' ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
+        setIsDarkMode(dark == 'true');
 
         // Check if mobile view
         const checkMobileView = () => {
@@ -66,10 +79,7 @@ const Navigation = () => {
     }, [user]);
 
     useEffect(() => {
-        const handleScroll = () => {
-            const isScrolled = window.scrollY > 50;
-            setScrolled(isScrolled);
-        };
+        
 
         if (!fixedNavbarIn.includes(location.pathname)) {
             setScrolled(false);
@@ -78,7 +88,7 @@ const Navigation = () => {
         } else {
             setScrolled(true);
         }
-    }, [location, user]);
+    }, [location, user, fixedNavbarIn]);
 
     useEffect(() => {
         if (isMenuOpen || isSearchOpen) {
