@@ -36,6 +36,7 @@ const Navigation = () => {
     const hideNavbarIn = ['/payment-success'];
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     
+    const [hideNavbar, setHidNavbar] = useState(false);
     // New notification-related states
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
@@ -144,17 +145,19 @@ const Navigation = () => {
         return () => window.removeEventListener('resize', checkMobileView);
     }, [user]);
 
-    // if(hideNavbarIn.includes(location.pathname)){
-    //     return null;
-    // }
+    
 
     useEffect(() => {
-
-        if (!fixedNavbarIn.includes(location.pathname)) {
+        if(hideNavbarIn.includes(location.pathname)){
+            setHidNavbar(true);
+        }
+        else if (!fixedNavbarIn.includes(location.pathname)) {
+            setHidNavbar(false)
             setScrolled(false);
             window.addEventListener('scroll', handleScroll);
             return () => window.removeEventListener('scroll', handleScroll);
         } else {
+            setHidNavbar(false)
             setScrolled(true);
         }
     }, [location, user, fixedNavbarIn]);
@@ -309,6 +312,10 @@ const Navigation = () => {
             return `${diffInDays} days ago`;
         }
     };
+
+    if(hideNavbar){
+        return null;
+    }
 
     return (
         <>
