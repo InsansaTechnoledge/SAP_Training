@@ -11,6 +11,7 @@ import LoginInterestForm from '../Components/LoginLandingComponents/LoginInteres
 import AIimage from '../assets/AI.jpg'
 import CCimage from '../assets/CC.jpg'
 import ABAPimage from '../assets/ABAP.jpg'
+import BadgesComponent from '../Components/BadgesComponent';
 
 const LoginLanding = () => {
     const { user } = useUser();
@@ -80,7 +81,7 @@ const LoginLanding = () => {
         <>
             <div className='px-6 md:px-12 lg:px-24 xl:px-36 pb-10 bg-theme-gradient pt-24'>
                 <div className='grid grid-cols-4 gap-5'>
-                    <div className='flex flex-col col-span-3'>
+                    <div className='flex flex-col col-span-4'>
                         <div className='p-3 bg-gradient-blue flex flex-col md:flex-row justify-center text-center mb-5 rounded-xl'>
                             <div className='flex flex-col content-center my-auto'>
                                 <h1 className='font-bold text-5xl mb-5  my-auto text-left text-secondary'>
@@ -122,31 +123,12 @@ const LoginLanding = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='bg-card-amber h-full border-4 border-amber-500  w-full rounded-xl p-2 space-y-8'>
-                        <div className='flex space-x-2'>
-                            <Award className='font-bold text-secondary my-auto w-8 h-8'/>
-                            <h1 className='text-3xl font-bold text-secondary text-center'>
-                                My collections
-                            </h1>
 
-                        </div>
-                        <div className='grid grid-cols-4 text-secondary gap-8 p-2'>
-                            <Trophy className='w-full h-full'/>
-                            <Trophy className='w-full h-full'/>
-                            <Trophy className='w-full h-full'/>
-                            <Trophy className='w-full h-full'/>
-                            <Trophy className='w-full h-full text-gray'/>
-                            <Trophy className='w-full h-full'/>
-                            <Trophy className='w-full h-full'/>
-                            <Trophy className='w-full h-full text-gray'/>
-                            <Trophy className='w-full h-full text-gray'/>
-                            <Trophy className='w-full h-full'/>
-                            <Trophy className='w-full h-full'/>
-                            <Trophy className='w-full h-full text-gray'/>
-                            <Trophy className='w-full h-full'/>
-                            <Trophy className='w-full h-full'/>
-                        </div>
+                    {/* badges component */}
+                    <div className='col-span-4'>
+                    <BadgesComponent />
                     </div>
+                    
                 </div>
                 <div className='gap-8'>
                     <div className=''>
