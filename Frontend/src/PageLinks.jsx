@@ -48,15 +48,15 @@ const PageLinks = () => {
     return (
         <>
             <Router>
-                {
+                {/* {
                     !user || (user && user.profession)
                     ?
                     <Navigation />
                     :
                     null
-                }
+                } */}
                 
-                {/* <Navigation /> */}
+                <Navigation />
                 <Routes>
                     <Route path="/" element={user ? <LoginLanding /> : <LandingPage />} />
                     <Route path='/events' element={<EventPage />} />
