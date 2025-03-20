@@ -90,17 +90,9 @@ const LoginInterestForm = (props) => {
     return (
       <button
         onClick={() => handleInterestedCategoriesChange(category.id)}
-<<<<<<< HEAD
-        className={`text-center flex-grow text-secondary ${interestedCategories.includes(category.id) ? 'bg-card-blue ' : 'bg-secondary'} border-contrast p-2 rounded-full hover:cursor-pointer`}>
-        {category.name}
-      </div>
-    );
-  };
-=======
         className={`text-center flex-grow text-secondary ${interestedCategories.includes(category.id) ? 'bg-card-blue ' : 'bg-secondary'} border-contrast p-2 rounded-full hover:cursor-pointer`}>{category.name}</button>
     )
   }
->>>>>>> 15cff27d196d15b119509ddac88095027b36a1d9
 
   return (
     <form 
