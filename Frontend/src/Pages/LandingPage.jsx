@@ -11,6 +11,7 @@ import AnimatedFooter from '../Components/Footer';
 import ShopBanner from '../Components/ShopBanner';
 import Curve from '../assets/curve_line.svg'
 import Pricing from '../Components/Pricing';
+import EventBannerLanding from '../Components/EventBannerLanding';
 
 const LandingPage = () => {
     // const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,6 +31,8 @@ const LandingPage = () => {
             {/* <Courses/> */}
 
             <ShopBanner/>
+
+            <EventBannerLanding/>
 
             <LearningExp />
 

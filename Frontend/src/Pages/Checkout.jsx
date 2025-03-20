@@ -8,6 +8,7 @@ import {
     User,
     Mail,
     Phone,
+
     Lock,
 
 } from 'lucide-react';
@@ -226,6 +227,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary w-5 h-5" />
                     <input
                         type="text"
+                        disabled={isComplete}
                         name="fullName"
                         value={formData.fullName}
                         onChange={handleInputChange}
@@ -246,6 +248,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                 <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary w-5 h-5" />
                     <input
+                        disabled={isComplete}
                         type="email"
                         name="email"
                         value={formData.email}
@@ -267,6 +270,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                 <div className="relative">
                     <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary w-5 h-5" />
                     <input
+                        disabled={isComplete}
                         type="tel"
                         name="phone"
                         value={formData.phone}
@@ -288,54 +292,54 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
 
 
     const renderComplete = () => (
-        <div className="space-y-6 text-center">
+        <div className="space-y-6 text-center mt-10">
             <div className="flex flex-col items-center">
                 <div className="relative">
                     <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-green-600 rounded-full opacity-75 blur"></div>
-                    <div className="relative bg-white dark:bg-gray-900 p-4 rounded-full">
+                    <div className="relative bg-card p-4 rounded-full">
                         <CheckCircle className="w-16 h-16 text-green-500" />
                     </div>
                 </div>
 
                 <h2 className="text-2xl font-bold text-secondary mt-6">Payment Successful!</h2>
-                <p className="text-gray-600 dark:text-gray-400 mt-2">
+                <p className="text-gray mt-2">
                     Your courses are now ready to access
                 </p>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+            <div className="bg-card rounded-lg p-6">
                 <h3 className="text-lg font-medium text-secondary mb-4">Order Details</h3>
 
                 <div className="space-y-3">
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Receipt Id</span>
+                        <span className="text-gray">Receipt Id</span>
                         <span className="font-medium text-secondary">{paymentInvoice.receiptNo}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Order ID</span>
+                        <span className="text-gray">Order ID</span>
                         <span className="font-medium text-secondary">{paymentInvoice.orderId}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Date</span>
+                        <span className="text-gray">Date</span>
                         <span className="font-medium text-secondary">{new Date().toLocaleDateString()}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Payment Id</span>
+                        <span className="text-gray">Payment Id</span>
                         <span className="font-medium text-secondary">{paymentInvoice.paymentId}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Payment Method</span>
+                        <span className="text-gray">Payment Method</span>
                         <span className="font-medium text-secondary">
                             {paymentInvoice.paymentMethod}
                         </span>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Amount Paid</span>
+                        <span className="text-gray">Amount Paid</span>
                         <span className="font-medium text-green-600">₹{finalTotal.toFixed(2)}</span>
                     </div>
                 </div>
@@ -346,21 +350,21 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
 
                 <div className="space-y-3">
                     {cart.map((item) => (
-                        <div key={item.title} className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg p-4 flex justify-between items-center">
+                        <div key={item.title} className="bg-card border-contrast  rounded-lg p-4 flex justify-between items-center">
                             <div className="flex items-center space-x-3">
-                                <div className="bg-blue-100 dark:bg-blue-900/50 p-2 rounded-lg">
-                                    <Gift className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                <div className="bg-card-blue p-2 rounded-lg">
+                                    <Gift className="w-5 h-5 text-blue" />
                                 </div>
                                 <div>
                                     <h4 className="font-medium text-secondary">{item.title}</h4>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    <p className="text-sm text-gray">
                                         Access until: Lifetime
                                     </p>
                                 </div>
                             </div>
                             <button
                                 onClick={() => (navigate(`/course?id=${item.$id}`))}
-                                className="bg-blue-100 dark:bg-blue-900/20 hover:bg-blue-200 dark:hover:bg-blue-900/30 text-blue-600 text-sm px-3 py-1 rounded-full transition-colors hover:cursor-pointer"
+                                className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full transition-colors hover:cursor-pointer"
                             >
                                 Start Learning
                             </button>
@@ -383,7 +387,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => window.location.href = "/courses"}
-                    className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-secondary py-3 rounded-xl font-medium transition-colors"
+                    className="w-full bg-card text-secondary border-contrast py-3 rounded-xl font-medium transition-colors"
                 >
                     Browse More Courses
                 </motion.button>
