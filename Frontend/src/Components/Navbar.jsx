@@ -32,17 +32,13 @@ const Navigation = () => {
     const location = useLocation();
     const { user, setUser } = useUser();
     const [activeTab, setActiveTab] = useState('login');
-<<<<<<< HEAD
-    const [fixedNavbarIn, setFixedNavbarIn] = useState(['/video', '/quiz', '/dashboard', '/shop', '/game']);
+    const [fixedNavbarIn, setFixedNavbarIn] = useState(['/video', '/quiz', '/dashboard', '/shop', '/game','/events']);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     
     // New notification-related states
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
-=======
-    const [fixedNavbarIn, setFixedNavbarIn] = useState(['/video', '/quiz', '/dashboard', '/shop', '/game', '/events']);
->>>>>>> 15cff27d196d15b119509ddac88095027b36a1d9
 
     const navigate = useNavigate();
 
@@ -619,15 +615,9 @@ const Navigation = () => {
                                                     Login
                                                 </button>
                                                 <button
-<<<<<<< HEAD
-                                                onClick={handleSignup}
-                                                className="flex items-center px-4 py-3 text-blue-900 hover:bg-blue-50">
-                                                    <UserPlus className="w-4 h-4 mr-3 text-blue-700" />
-=======
                                                     onClick={handleSignup}
                                                     className="flex items-center px-4 py-2 text-blue-900 hover:bg-blue-50">
                                                     <UserPlus className="w-4 h-4 mr-2" />
->>>>>>> 15cff27d196d15b119509ddac88095027b36a1d9
                                                     Sign Up
                                                 </button>
                                             </>
