@@ -1,23 +1,22 @@
 //change the css at final render
-import React, { useState,useEffect } from 'react';
+//confirmation email and invoice is incomplete
+import React, { useState, useEffect } from 'react';
 import {
     CheckCircle,
-    
     Shield,
     Gift,
     User,
     Mail,
     Phone,
-    
     Lock,
-    
+
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 import axios from 'axios';
 import { Paynow } from '../Components/paymentFunction';
-import {useUser} from '../Context/UserContext';
+import { useUser } from '../Context/UserContext';
 
 const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     const [formData, setFormData] = useState({
@@ -30,13 +29,13 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
     const navigate = useNavigate();
-    const {user}=useUser();
-    const [paymentInvoice,setPaymentInvoice]=useState({
-        paymentMethod:'',
-        orderId:'',
-        paymentId:'',
-        receiptNo:'',
-});
+    const { user } = useUser();
+    const [paymentInvoice, setPaymentInvoice] = useState({
+        paymentMethod: '',
+        orderId: '',
+        paymentId: '',
+        receiptNo: '',
+    });
 
     const {
         cart,
@@ -89,84 +88,90 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         return Object.keys(newErrors).length === 0;
     };
 
-   
+
     const loadScript = (src) => {
         return new Promise((resolve) => {
-          const script = document.createElement('script')
-          script.src = src
-          script.onload = () => {
-            resolve(true)
-          }
-          script.onerror = () => {
-            resolve(false)
-          }
-          document.body.appendChild(script)
+            const script = document.createElement('script')
+            script.src = src
+            script.onload = () => {
+                resolve(true)
+            }
+            script.onerror = () => {
+                resolve(false)
+            }
+            document.body.appendChild(script)
         })
-      }
-      useEffect(() => {
+    }
+    useEffect(() => {
         loadScript('https://checkout.razorpay.com/v1/checkout.js')
-      }, [])
+    }, [])
 
     const handleContinue = async () => {
-if(validateStep1()){
-          const generateReceiptNumber = () => {
-    const now = new Date();
-    const formattedDate = now.toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
-    const formattedTime = now.toTimeString().slice(0, 8).replace(/:/g, ""); // HHMMSS
-    return `${formattedDate}${formattedTime}${user._id}`;
-  };
-        formData.amount = checkoutData.finalTotal;
-        formData.currency = 'INR';
-        formData.receipt=generateReceiptNumber();
-        formData.courseId=1;
-        formData.userId=user._id;
-        console.log(formData);
+        if (validateStep1()) {
+            const generateReceiptNumber = () => {
+                const now = new Date();
+                const formattedDate = now.toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
+                const formattedTime = now.toTimeString().slice(0, 8).replace(/:/g, ""); // HHMMSS
+                return `${formattedDate}${formattedTime}${user._id}`;
+            };
+            formData.amount = checkoutData.finalTotal;
+            formData.currency = 'INR';
+            formData.receipt = generateReceiptNumber();
+            formData.courseId = 1;
+            formData.userId = user._id;
+            console.log(formData);
 
-        try{
-        const result =await Paynow(formData);//what to do for the result
-        console.log(result);
-        paymentInvoice.paymentId=result.payment.transactionId;
-        paymentInvoice.orderId=result.payment.orderId;
-        paymentInvoice.paymentMethod=result.payment.paymentMethod;
-        paymentInvoice.receiptNo=formData.receipt;
-        
-        alert(result.message);
+            try {
+                const result = await Paynow(formData);//what to do for the result
+                console.log(result);
+                if(result.status===200){
+                    paymentInvoice.paymentId = result.payment.transactionId;
+                    paymentInvoice.orderId = result.payment.orderId;
+                    paymentInvoice.paymentMethod = result.payment.paymentMethod;
+                    paymentInvoice.receiptNo = formData.receipt;
+    
+                    // alert(result.message);
+    
+                    //email sending here 
+                    const emailResponse=await axios.post(`${API_BASE_URL}/api/v1/email/paymentMail`,{formdata,paymentInvoice})
+    
+                    setIsComplete(true);
+                    var purchasedModules = localStorage.getItem('unlockedModules');
+                    console.log(checkoutData.cart);
+                    const responses = await Promise.all(
+                        checkoutData.cart.map(course =>
+                            axios.get(`${API_BASE_URL}/api/v1/modules?id=${course.$id}`) // Replace with your actual API endpoint
+                        )
+                    );
+                    console.log(responses);
+                    var newModules = [];
+                    responses.map(response => {
+                        const moduleIds = response.data.map(mod => mod.$id);
+                        newModules = [...newModules, ...moduleIds];
+                    })
+    
+                    console.log(newModules);
+                    if (!purchasedModules) {
+                        localStorage.setItem('unlockedModules', newModules);
+                    }
+                    else {
+                        purchasedModules = purchasedModules.split(',');
+                        localStorage.setItem('unlockedModules', [...purchasedModules, ...newModules]);
+                    }
+    
+                }
 
-        setIsComplete(true);
-            var purchasedModules = localStorage.getItem('unlockedModules');
-            console.log(checkoutData.cart);
-            const responses = await Promise.all(
-                checkoutData.cart.map(course => 
-                    axios.get(`${API_BASE_URL}/api/v1/modules?id=${course.$id}`) // Replace with your actual API endpoint
-                )
-            );
-            console.log(responses);
-            var newModules = [];
-            responses.map(response => {
-                const moduleIds = response.data.map(mod => mod.$id);
-                newModules = [...newModules,...moduleIds];
-            })
 
-            console.log(newModules);
-            if(!purchasedModules){
-                localStorage.setItem('unlockedModules', newModules);
+            } catch (error) {
+                console.error("Payment Error:", error);
+                setErrors({
+                    payment: 'Payment processing failed. Please try again.'
+                });
+            } finally {
+                setIsProcessing(false);
             }
-            else{
-                purchasedModules = purchasedModules.split(',');
-                localStorage.setItem('unlockedModules',[...purchasedModules,...newModules]);
-            }
 
-
-        }catch(error){
-            console.error("Payment Error:", error);
-            setErrors({
-                payment: 'Payment processing failed. Please try again.'
-            });
-        }finally {
-            setIsProcessing(false);
         }
-
-    }
     };
 
 
@@ -302,7 +307,7 @@ if(validateStep1()){
                 <h3 className="text-lg font-medium text-secondary mb-4">Order Details</h3>
 
                 <div className="space-y-3">
-                <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Receipt Id</span>
                         <span className="font-medium text-secondary">{paymentInvoice.receiptNo}</span>
                     </div>
@@ -354,7 +359,7 @@ if(validateStep1()){
                                 </div>
                             </div>
                             <button
-                                onClick={()=>(navigate(`/course?id=${item.$id}`))}
+                                onClick={() => (navigate(`/course?id=${item.$id}`))}
                                 className="bg-blue-100 dark:bg-blue-900/20 hover:bg-blue-200 dark:hover:bg-blue-900/30 text-blue-600 text-sm px-3 py-1 rounded-full transition-colors hover:cursor-pointer"
                             >
                                 Start Learning
@@ -392,7 +397,7 @@ if(validateStep1()){
                 <div className="flex justify-between items-center mb-6">
                     <div className="text-sm text-secondary">
                         'Personal Information & Payment Details'
-                    
+
                     </div>
                 </div>
             )}
@@ -400,7 +405,7 @@ if(validateStep1()){
             {inCartView && !isComplete && renderOrderSummary()}
 
             <div className="mt-6">
-                { renderStep1()}
+                {renderStep1()}
                 {/* {currentStep === 2 && renderStep2()} */}
                 {isComplete && renderComplete()}
 
@@ -422,14 +427,14 @@ if(validateStep1()){
                                     <span>Processing...</span>
                                 </>
                             ) : (
-                                
-                                        <>
-                                            {/* <span>Continue to Payment</span>
+
+                                <>
+                                    {/* <span>Continue to Payment</span>
                                             <ChevronRight className="w-5 h-5" /> */}
-                                              <Lock className="w-5 h-5" />
-                                              <span>Pay Now ₹{finalTotal.toFixed(2)}</span>
-                                        </>
-                                    
+                                    <Lock className="w-5 h-5" />
+                                    <span>Pay Now ₹{finalTotal.toFixed(2)}</span>
+                                </>
+
                             )}
                         </motion.button>
                     </div>
