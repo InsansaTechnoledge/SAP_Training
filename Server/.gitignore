@@ -1,14 +1,6 @@
 node_modules/
 .env
-<<<<<<< HEAD
-.env.development.local
-.env.production.local
-config/.env
-config/.env.*.local
-config/env.*
-=======
 .env.*
 config/.env.*.local
 config/.env.*
 config/.env
->>>>>>> f10f8a6e9c28dee3e5410c7bc4322557fa82bc15

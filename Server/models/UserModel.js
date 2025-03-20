@@ -91,7 +91,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
     }
         
-    
 
 });
 
