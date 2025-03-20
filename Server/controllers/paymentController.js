@@ -2,6 +2,7 @@ import razorPayConfig from "../config/razorPayConfig.js";
 import  {validateWebhookSignature} from "razorpay/dist/utils/razorpay-utils.js";
 import PaymentModel from "../models/paymentModel.js";
 import { response } from "express";
+import { getCourseFunction } from "./courseController.js";
 
 const razorpay=await razorPayConfig();
 
@@ -21,7 +22,7 @@ export const createOrder=async(req,res)=>{
         const payment=new PaymentModel({
             date:Date.now(),
             receipt,
-            courseId,
+            courseId: courseId,
             moduleId,
             userId,
             orderId:order.id,
@@ -57,6 +58,7 @@ export const verifyPayment=async(req,res)=>{
             await payment.save();
             console.log("Payment verified successfully");
             res.status(200).json({message:"Payment verified successfully",payment:{
+                _id:payment._id,
                 paymentMethod:paymentDetails.method,
                 status:paymentDetails.status,
                 transactionId:razorpay_payment_id,
@@ -71,3 +73,33 @@ export const verifyPayment=async(req,res)=>{
         res.status(error.response.status).json({message:"Payment verification failed"});
     }
 };
+
+export const getPayment = async (req,res) => {
+    try{
+        const {paymentId, userId} = req.body;
+        const payment = await PaymentModel.findById(paymentId);
+        if(!payment){
+            return res.status(400).json({message: "Payment data not found"});
+        }
+
+        if(payment.userId!=userId){
+            return res.status(400).json({message: "Unauthorized Payment Data"})
+        }
+
+        const coursePromises = payment.courseId.map(courseId => getCourseFunction(courseId));
+        const courses = await Promise.all(coursePromises);
+
+        const paymentData = {
+            ...payment._doc,
+            courses: courses
+        }
+
+
+        return res.status(200).json({message: "Payment Data Fetched Successfully", payment: paymentData});
+    }
+    catch(err){
+        console.log(err);
+        return res.status(400).json({message: "Payment data not found"});
+
+    }
+}

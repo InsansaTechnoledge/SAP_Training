@@ -18,6 +18,7 @@ import axios from 'axios';
 import { API_BASE_URL } from './config';
 import LoginLanding from './Pages/LoginLanding';
 import EventPage from './Pages/EventPage';
+import PaymentSuccess from './Components/Payment/PaymentSuccess';
 const PageLinks = () => {
     const { user, setUser } = useUser();
 
@@ -59,6 +60,7 @@ const PageLinks = () => {
                 <Navigation />
                 <Routes>
                     <Route path="/" element={user ? <LoginLanding /> : <LandingPage />} />
+                    <Route path='/payment-success' element={ <PaymentSuccess /> } />
                     <Route path='/events' element={<EventPage />} />
                     <Route path="/course" element={<ExamPage />} />
                     <Route path="/wishlist" element={<Wishlist />} />
