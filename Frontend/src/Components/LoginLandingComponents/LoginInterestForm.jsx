@@ -10,7 +10,7 @@ const LoginInterestForm = (props) => {
     experience: '',
   });
   const { setUser } = useUser();
- 
+
   const professions = [
     'Software Engineer',
     'Data Scientist',
@@ -45,11 +45,11 @@ const LoginInterestForm = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(formData.profession === '' || formData.profession === 'Select option' || formData.experience === '' || formData.experience === 'Select option' || (formData.profession === 'Other' && formData.otherProfession.trim() === '')){
+    if (formData.profession === '' || formData.profession === 'Select option' || formData.experience === '' || formData.experience === 'Select option' || (formData.profession === 'Other' && formData.otherProfession.trim() === '')) {
       alert("Please fill valid data");
       return;
     }
-    
+
     formData.interests = interestedCategories;
 
     const interestData = {
@@ -95,7 +95,7 @@ const LoginInterestForm = (props) => {
   }
 
   return (
-    <form 
+    <form
       onSubmit={handleSubmit}
       className="bg-theme-gradient pt-8 md:pt-16 min-h-screen px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 relative">
       <div className="flex flex-col lg:flex-row w-full max-w-6xl mx-auto gap-8">
@@ -105,7 +105,7 @@ const LoginInterestForm = (props) => {
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">Tell us about your interests</h1>
             <h2 className="text-secondary text-base sm:text-lg mt-2">Help us personalize your experience by sharing your profession and interests</h2>
           </div>
-          
+
           <div className="flex flex-col space-y-2 md:space-y-3">
             <label
               htmlFor="profession"
@@ -125,7 +125,7 @@ const LoginInterestForm = (props) => {
               ))}
             </select>
           </div>
-          
+
           {formData.profession === 'Other' && (
             <div className="flex flex-col space-y-2 md:space-y-3">
               <label
@@ -176,13 +176,13 @@ const LoginInterestForm = (props) => {
             </div>
           </div>
         </div>
-        
+
         {/* Image Container */}
         <div className="hidden lg:block w-1/2">
           <img src={interestForm} className="h-full w-full object-contain" alt="Interest Form" />
         </div>
       </div>
-      
+
       {/* Submit Button */}
       <button
         type="submit"
