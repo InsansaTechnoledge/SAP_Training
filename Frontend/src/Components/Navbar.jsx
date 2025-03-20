@@ -32,15 +32,19 @@ const Navigation = () => {
     const location = useLocation();
     const { user, setUser } = useUser();
     const [activeTab, setActiveTab] = useState('login');
-    const [fixedNavbarIn, setFixedNavbarIn] = useState(['/video', '/quiz', '/dashboard', '/shop', '/game','/events']);
+    const [fixedNavbarIn, setFixedNavbarIn] = useState(['/video', '/quiz', '/dashboard', '/shop', '/game','/events', '/payment-success']);
+    const hideNavbarIn = ['/payment-success'];
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     
+    const [hideNavbar, setHidNavbar] = useState(false);
     // New notification-related states
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
 
     const navigate = useNavigate();
+
+
 
     // Sample notifications data - replace with API call in production
     useEffect(() => {
@@ -141,14 +145,19 @@ const Navigation = () => {
         return () => window.removeEventListener('resize', checkMobileView);
     }, [user]);
 
+    
+
     useEffect(() => {
-
-
-        if (!fixedNavbarIn.includes(location.pathname)) {
+        if(hideNavbarIn.includes(location.pathname)){
+            setHidNavbar(true);
+        }
+        else if (!fixedNavbarIn.includes(location.pathname)) {
+            setHidNavbar(false)
             setScrolled(false);
             window.addEventListener('scroll', handleScroll);
             return () => window.removeEventListener('scroll', handleScroll);
         } else {
+            setHidNavbar(false)
             setScrolled(true);
         }
     }, [location, user, fixedNavbarIn]);
@@ -303,6 +312,10 @@ const Navigation = () => {
             return `${diffInDays} days ago`;
         }
     };
+
+    if(hideNavbar){
+        return null;
+    }
 
     return (
         <>
