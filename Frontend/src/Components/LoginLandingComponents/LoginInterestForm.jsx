@@ -103,9 +103,9 @@ const LoginInterestForm = (props) => {
 
   const InterestChip = ({ category }) => {
     return (
-      <div
+      <button
         onClick={() => handleInterestedCategoriesChange(category.id)}
-        className={`text-center flex-grow text-secondary ${interestedCategories.includes(category.id) ? 'bg-card-blue ' : 'bg-secondary'} border-contrast p-2 rounded-full hover:cursor-pointer`}>{category.name}</div>
+        className={`text-center flex-grow text-secondary ${interestedCategories.includes(category.id) ? 'bg-card-blue ' : 'bg-secondary'} border-contrast p-2 rounded-full hover:cursor-pointer`}>{category.name}</button>
     )
   }
 
