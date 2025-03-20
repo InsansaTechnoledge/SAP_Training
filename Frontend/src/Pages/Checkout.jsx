@@ -1,23 +1,23 @@
 //change the css at final render
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     CheckCircle,
-    
+
     Shield,
     Gift,
     User,
     Mail,
     Phone,
-    
+
     Lock,
-    
+
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 import axios from 'axios';
 import { Paynow } from '../Components/paymentFunction';
-import {useUser} from '../Context/UserContext';
+import { useUser } from '../Context/UserContext';
 
 const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     const [formData, setFormData] = useState({
@@ -30,13 +30,13 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
     const navigate = useNavigate();
-    const {user}=useUser();
-    const [paymentInvoice,setPaymentInvoice]=useState({
-        paymentMethod:'',
-        orderId:'',
-        paymentId:'',
-        receiptNo:'',
-});
+    const { user } = useUser();
+    const [paymentInvoice, setPaymentInvoice] = useState({
+        paymentMethod: '',
+        orderId: '',
+        paymentId: '',
+        receiptNo: '',
+    });
 
     const {
         cart,
@@ -89,84 +89,84 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         return Object.keys(newErrors).length === 0;
     };
 
-   
+
     const loadScript = (src) => {
         return new Promise((resolve) => {
-          const script = document.createElement('script')
-          script.src = src
-          script.onload = () => {
-            resolve(true)
-          }
-          script.onerror = () => {
-            resolve(false)
-          }
-          document.body.appendChild(script)
+            const script = document.createElement('script')
+            script.src = src
+            script.onload = () => {
+                resolve(true)
+            }
+            script.onerror = () => {
+                resolve(false)
+            }
+            document.body.appendChild(script)
         })
-      }
-      useEffect(() => {
+    }
+    useEffect(() => {
         loadScript('https://checkout.razorpay.com/v1/checkout.js')
-      }, [])
+    }, [])
 
     const handleContinue = async () => {
-if(validateStep1()){
-          const generateReceiptNumber = () => {
-    const now = new Date();
-    const formattedDate = now.toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
-    const formattedTime = now.toTimeString().slice(0, 8).replace(/:/g, ""); // HHMMSS
-    return `${formattedDate}${formattedTime}${user._id}`;
-  };
-        formData.amount = checkoutData.finalTotal;
-        formData.currency = 'INR';
-        formData.receipt=generateReceiptNumber();
-        formData.courseId=1;
-        formData.userId=user._id;
-        console.log(formData);
+        if (validateStep1()) {
+            const generateReceiptNumber = () => {
+                const now = new Date();
+                const formattedDate = now.toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
+                const formattedTime = now.toTimeString().slice(0, 8).replace(/:/g, ""); // HHMMSS
+                return `${formattedDate}${formattedTime}${user._id}`;
+            };
+            formData.amount = checkoutData.finalTotal;
+            formData.currency = 'INR';
+            formData.receipt = generateReceiptNumber();
+            formData.courseId = 1;
+            formData.userId = user._id;
+            console.log(formData);
 
-        try{
-        const result =await Paynow(formData);//what to do for the result
-        console.log(result);
-        paymentInvoice.paymentId=result.payment.transactionId;
-        paymentInvoice.orderId=result.payment.orderId;
-        paymentInvoice.paymentMethod=result.payment.paymentMethod;
-        paymentInvoice.receiptNo=formData.receipt;
-        
-        alert(result.message);
+            try {
+                const result = await Paynow(formData);//what to do for the result
+                console.log(result);
+                paymentInvoice.paymentId = result.payment.transactionId;
+                paymentInvoice.orderId = result.payment.orderId;
+                paymentInvoice.paymentMethod = result.payment.paymentMethod;
+                paymentInvoice.receiptNo = formData.receipt;
 
-        setIsComplete(true);
-            var purchasedModules = localStorage.getItem('unlockedModules');
-            console.log(checkoutData.cart);
-            const responses = await Promise.all(
-                checkoutData.cart.map(course => 
-                    axios.get(`${API_BASE_URL}/api/v1/modules?id=${course.$id}`) // Replace with your actual API endpoint
-                )
-            );
-            console.log(responses);
-            var newModules = [];
-            responses.map(response => {
-                const moduleIds = response.data.map(mod => mod.$id);
-                newModules = [...newModules,...moduleIds];
-            })
+                alert(result.message);
 
-            console.log(newModules);
-            if(!purchasedModules){
-                localStorage.setItem('unlockedModules', newModules);
+                setIsComplete(true);
+                var purchasedModules = localStorage.getItem('unlockedModules');
+                console.log(checkoutData.cart);
+                const responses = await Promise.all(
+                    checkoutData.cart.map(course =>
+                        axios.get(`${API_BASE_URL}/api/v1/modules?id=${course.$id}`) // Replace with your actual API endpoint
+                    )
+                );
+                console.log(responses);
+                var newModules = [];
+                responses.map(response => {
+                    const moduleIds = response.data.map(mod => mod.$id);
+                    newModules = [...newModules, ...moduleIds];
+                })
+
+                console.log(newModules);
+                if (!purchasedModules) {
+                    localStorage.setItem('unlockedModules', newModules);
+                }
+                else {
+                    purchasedModules = purchasedModules.split(',');
+                    localStorage.setItem('unlockedModules', [...purchasedModules, ...newModules]);
+                }
+
+
+            } catch (error) {
+                console.error("Payment Error:", error);
+                setErrors({
+                    payment: 'Payment processing failed. Please try again.'
+                });
+            } finally {
+                setIsProcessing(false);
             }
-            else{
-                purchasedModules = purchasedModules.split(',');
-                localStorage.setItem('unlockedModules',[...purchasedModules,...newModules]);
-            }
 
-
-        }catch(error){
-            console.error("Payment Error:", error);
-            setErrors({
-                payment: 'Payment processing failed. Please try again.'
-            });
-        }finally {
-            setIsProcessing(false);
         }
-
-    }
     };
 
 
@@ -221,6 +221,7 @@ if(validateStep1()){
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary w-5 h-5" />
                     <input
                         type="text"
+                        disabled={isComplete}
                         name="fullName"
                         value={formData.fullName}
                         onChange={handleInputChange}
@@ -241,6 +242,7 @@ if(validateStep1()){
                 <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary w-5 h-5" />
                     <input
+                        disabled={isComplete}
                         type="email"
                         name="email"
                         value={formData.email}
@@ -262,6 +264,7 @@ if(validateStep1()){
                 <div className="relative">
                     <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary w-5 h-5" />
                     <input
+                        disabled={isComplete}
                         type="tel"
                         name="phone"
                         value={formData.phone}
@@ -283,54 +286,54 @@ if(validateStep1()){
 
 
     const renderComplete = () => (
-        <div className="space-y-6 text-center">
+        <div className="space-y-6 text-center mt-10">
             <div className="flex flex-col items-center">
                 <div className="relative">
                     <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-green-600 rounded-full opacity-75 blur"></div>
-                    <div className="relative bg-white dark:bg-gray-900 p-4 rounded-full">
+                    <div className="relative bg-card p-4 rounded-full">
                         <CheckCircle className="w-16 h-16 text-green-500" />
                     </div>
                 </div>
 
                 <h2 className="text-2xl font-bold text-secondary mt-6">Payment Successful!</h2>
-                <p className="text-gray-600 dark:text-gray-400 mt-2">
+                <p className="text-gray mt-2">
                     Your courses are now ready to access
                 </p>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+            <div className="bg-card rounded-lg p-6">
                 <h3 className="text-lg font-medium text-secondary mb-4">Order Details</h3>
 
                 <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Receipt Id</span>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-gray">Receipt Id</span>
                         <span className="font-medium text-secondary">{paymentInvoice.receiptNo}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Order ID</span>
+                        <span className="text-gray">Order ID</span>
                         <span className="font-medium text-secondary">{paymentInvoice.orderId}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Date</span>
+                        <span className="text-gray">Date</span>
                         <span className="font-medium text-secondary">{new Date().toLocaleDateString()}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Payment Id</span>
+                        <span className="text-gray">Payment Id</span>
                         <span className="font-medium text-secondary">{paymentInvoice.paymentId}</span>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Payment Method</span>
+                        <span className="text-gray">Payment Method</span>
                         <span className="font-medium text-secondary">
                             {paymentInvoice.paymentMethod}
                         </span>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Amount Paid</span>
+                        <span className="text-gray">Amount Paid</span>
                         <span className="font-medium text-green-600">₹{finalTotal.toFixed(2)}</span>
                     </div>
                 </div>
@@ -341,21 +344,21 @@ if(validateStep1()){
 
                 <div className="space-y-3">
                     {cart.map((item) => (
-                        <div key={item.title} className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg p-4 flex justify-between items-center">
+                        <div key={item.title} className="bg-card border-contrast  rounded-lg p-4 flex justify-between items-center">
                             <div className="flex items-center space-x-3">
-                                <div className="bg-blue-100 dark:bg-blue-900/50 p-2 rounded-lg">
-                                    <Gift className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                <div className="bg-card-blue p-2 rounded-lg">
+                                    <Gift className="w-5 h-5 text-blue" />
                                 </div>
                                 <div>
                                     <h4 className="font-medium text-secondary">{item.title}</h4>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    <p className="text-sm text-gray">
                                         Access until: Lifetime
                                     </p>
                                 </div>
                             </div>
                             <button
-                                onClick={()=>(navigate(`/course?id=${item.$id}`))}
-                                className="bg-blue-100 dark:bg-blue-900/20 hover:bg-blue-200 dark:hover:bg-blue-900/30 text-blue-600 text-sm px-3 py-1 rounded-full transition-colors hover:cursor-pointer"
+                                onClick={() => (navigate(`/course?id=${item.$id}`))}
+                                className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full transition-colors hover:cursor-pointer"
                             >
                                 Start Learning
                             </button>
@@ -378,7 +381,7 @@ if(validateStep1()){
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => window.location.href = "/courses"}
-                    className="w-full bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-secondary py-3 rounded-xl font-medium transition-colors"
+                    className="w-full bg-card text-secondary border-contrast py-3 rounded-xl font-medium transition-colors"
                 >
                     Browse More Courses
                 </motion.button>
@@ -392,7 +395,7 @@ if(validateStep1()){
                 <div className="flex justify-between items-center mb-6">
                     <div className="text-sm text-secondary">
                         'Personal Information & Payment Details'
-                    
+
                     </div>
                 </div>
             )}
@@ -400,7 +403,7 @@ if(validateStep1()){
             {inCartView && !isComplete && renderOrderSummary()}
 
             <div className="mt-6">
-                { renderStep1()}
+                {renderStep1()}
                 {/* {currentStep === 2 && renderStep2()} */}
                 {isComplete && renderComplete()}
 
@@ -422,14 +425,14 @@ if(validateStep1()){
                                     <span>Processing...</span>
                                 </>
                             ) : (
-                                
-                                        <>
-                                            {/* <span>Continue to Payment</span>
+
+                                <>
+                                    {/* <span>Continue to Payment</span>
                                             <ChevronRight className="w-5 h-5" /> */}
-                                              <Lock className="w-5 h-5" />
-                                              <span>Pay Now ₹{finalTotal.toFixed(2)}</span>
-                                        </>
-                                    
+                                    <Lock className="w-5 h-5" />
+                                    <span>Pay Now ₹{finalTotal.toFixed(2)}</span>
+                                </>
+
                             )}
                         </motion.button>
                     </div>
