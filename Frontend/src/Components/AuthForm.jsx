@@ -360,6 +360,7 @@ const AuthForm = (props) => {
                 whileTap={{ scale: 0.98 }}
                 disabled={isGoogleLoading}
                 onClick={handleGoogleLogin}
+                type='button'
                 className="w-full px-4 py-3 flex items-center justify-center space-x-2 text-secondary bg-secondary rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 shadow-sm hover:shadow-md relative overflow-hidden"
             >
                 <motion.div
@@ -461,7 +462,7 @@ const AuthForm = (props) => {
                 variants={itemVariants}
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                type="button"
+                type="submit"
                 onClick={() => handleAuth(type)}
                 className="w-full px-4 py-3 mt-6 flex items-center justify-center space-x-2 text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
