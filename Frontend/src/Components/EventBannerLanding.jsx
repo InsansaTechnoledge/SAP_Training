@@ -57,7 +57,7 @@ const EventsPromo = () => {
   }, [featuredEvents.length]);
 
   return (
-    <div className="bg-blue-50 py-16 px-4 sm:px-6 lg:px-8">
+    <div className="bg-theme-gradient py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Main section with two columns */}
         <div className="flex flex-col lg:flex-row gap-12 items-center">
@@ -65,11 +65,11 @@ const EventsPromo = () => {
           {/* Left Column - Why Participate */}
           <div className="w-full lg:w-1/2">
             <div className="text-center lg:text-left mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-blue-800 mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-blue mb-4">
                 Why Participate in Our Events?
               </h2>
-              <div className="h-1 w-24 bg-blue-600 mb-6 mx-auto lg:mx-0"></div>
-              <p className="text-blue-700 text-lg mb-8">
+              <div className="h-1 w-24 bg-blue mb-6 mx-auto lg:mx-0"></div>
+              <p className="text-secondary text-lg mb-8">
                 Our tech events are designed to inspire innovation, foster collaboration, and accelerate your professional growth.
               </p>
             </div>
@@ -78,22 +78,22 @@ const EventsPromo = () => {
               {benefitsList.map((benefit, index) => (
                 <div key={index} className="flex items-start">
                   <div className="flex-shrink-0 mt-1">
-                    <div className="bg-blue-600 rounded-full p-1">
+                    <div className="bg-blue rounded-full p-1">
                       <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
                       </svg>
                     </div>
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-xl font-semibold text-blue-800">{benefit.title}</h3>
-                    <p className="mt-1 text-blue-600">{benefit.description}</p>
+                    <h3 className="text-xl font-bold text-blue">{benefit.title}</h3>
+                    <p className="mt-1 text-secondary">{benefit.description}</p>
                   </div>
                 </div>
               ))}
             </div>
             
             <div className="mt-8">
-              <button className="bg-blue-800 hover:bg-blue-900 text-white py-3 px-6 rounded-lg font-medium shadow-md transition-all duration-300 inline-flex items-center">
+              <button className="bg-blue-600 text-white py-3 px-6 rounded-lg font-medium shadow-md transition-all duration-300 inline-flex items-center">
                 Learn More About Our Events
                 <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -105,9 +105,9 @@ const EventsPromo = () => {
              <Tilt className="w-1/2 lg:w-1/2">
           {/* Right Column - Events Promo with Tilt Effect */}
           <div className=" transform hover:scale-105 transition-transform duration-500 rotate-2">
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="bg-card rounded-xl shadow-lg overflow-hidden">
               {/* Enhanced Header */}
-              <div className="text-center p-6 bg-gradient-to-r from-blue-700 to-blue-500">
+              <div className="text-center p-6 bg-blue">
                 <div className="mb-3 relative">
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-blue-900 text-xs px-4 py-1 rounded-full uppercase tracking-wider font-bold">
                     Don't Miss Out
@@ -155,17 +155,17 @@ const EventsPromo = () => {
                       <button 
                         key={index}
                         onClick={() => setActiveEvent(index)}
-                        className={`w-3 h-3 rounded-full ${activeEvent === index ? 'bg-blue-600' : 'bg-blue-200'}`}
+                        className={`w-3 h-3 rounded-full ${activeEvent === index ? 'bg-blue' : 'bg-blue-200'}`}
                         aria-label={`View event ${index + 1}`}
                       />
                     ))}
                   </div>
-                  <span className="text-xs text-blue-500 font-medium">
+                  <span className="text-xs text-blue font-medium">
                     {activeEvent + 1} of {featuredEvents.length}
                   </span>
                 </div>
                 
-                <button className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-300 text-sm">
+                <button className="w-full py-3 bg-blue text-white font-medium rounded-lg transition-colors duration-300 text-sm">
                   Register Now
                 </button>
               </div>
