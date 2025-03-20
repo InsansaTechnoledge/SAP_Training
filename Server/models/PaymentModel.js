@@ -10,10 +10,10 @@ const PaymentSchema = new mongoose.Schema({
         required: true
     },
     courseId: {
-        type: String, 
+        type: [String], 
     },
     moduleId: {
-        type: String,
+        type: [String],
     },
     userId:{
         type:mongoose.Schema.Types.ObjectId,
