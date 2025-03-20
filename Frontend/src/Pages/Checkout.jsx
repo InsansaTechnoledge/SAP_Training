@@ -1,8 +1,8 @@
 //change the css at final render
+//confirmation email and invoice is incomplete
 import React, { useState, useEffect } from 'react';
 import {
     CheckCircle,
-
     Shield,
     Gift,
     User,
@@ -130,35 +130,41 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
             try {
                 const result = await Paynow(formData);//what to do for the result
                 console.log(result);
-                paymentInvoice.paymentId = result.payment.transactionId;
-                paymentInvoice.orderId = result.payment.orderId;
-                paymentInvoice.paymentMethod = result.payment.paymentMethod;
-                paymentInvoice.receiptNo = formData.receipt;
-
-                alert(result.message);
-
-                setIsComplete(true);
-                var purchasedModules = localStorage.getItem('unlockedModules');
-                console.log(checkoutData.cart);
-                const responses = await Promise.all(
-                    checkoutData.cart.map(course =>
-                        axios.get(`${API_BASE_URL}/api/v1/modules?id=${course.$id}`) // Replace with your actual API endpoint
-                    )
-                );
-                console.log(responses);
-                var newModules = [];
-                responses.map(response => {
-                    const moduleIds = response.data.map(mod => mod.$id);
-                    newModules = [...newModules, ...moduleIds];
-                })
-
-                console.log(newModules);
-                if (!purchasedModules) {
-                    localStorage.setItem('unlockedModules', newModules);
-                }
-                else {
-                    purchasedModules = purchasedModules.split(',');
-                    localStorage.setItem('unlockedModules', [...purchasedModules, ...newModules]);
+                if(result.status===200){
+                    paymentInvoice.paymentId = result.payment.transactionId;
+                    paymentInvoice.orderId = result.payment.orderId;
+                    paymentInvoice.paymentMethod = result.payment.paymentMethod;
+                    paymentInvoice.receiptNo = formData.receipt;
+    
+                    // alert(result.message);
+    
+                    //email sending here 
+                    const emailResponse=await axios.post(`${API_BASE_URL}/api/v1/email/paymentMail`,{formdata,paymentInvoice})
+    
+                    setIsComplete(true);
+                    var purchasedModules = localStorage.getItem('unlockedModules');
+                    console.log(checkoutData.cart);
+                    const responses = await Promise.all(
+                        checkoutData.cart.map(course =>
+                            axios.get(`${API_BASE_URL}/api/v1/modules?id=${course.$id}`) // Replace with your actual API endpoint
+                        )
+                    );
+                    console.log(responses);
+                    var newModules = [];
+                    responses.map(response => {
+                        const moduleIds = response.data.map(mod => mod.$id);
+                        newModules = [...newModules, ...moduleIds];
+                    })
+    
+                    console.log(newModules);
+                    if (!purchasedModules) {
+                        localStorage.setItem('unlockedModules', newModules);
+                    }
+                    else {
+                        purchasedModules = purchasedModules.split(',');
+                        localStorage.setItem('unlockedModules', [...purchasedModules, ...newModules]);
+                    }
+    
                 }
 
 
