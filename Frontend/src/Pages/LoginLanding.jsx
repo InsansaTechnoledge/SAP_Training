@@ -11,7 +11,8 @@ import LoginInterestForm from '../Components/LoginLandingComponents/LoginInteres
 import AIimage from '../assets/AI.jpg'
 import CCimage from '../assets/CC.jpg'
 import ABAPimage from '../assets/ABAP.jpg'
-import BadgesComponent from '../Components/BadgesComponent';
+import BadgesComponent from '../Components/LoginLandingComponents/BadgesComponent';
+import EventBanner from '../Components/LoginLandingComponents/EventBanner';
 
 const LoginLanding = () => {
     const { user } = useUser();
@@ -126,6 +127,8 @@ const LoginLanding = () => {
 
                     {/* badges component */}
                     <div className='col-span-4'>
+                    <h2 className='mt-8 mb-5 text-3xl font-bold text-secondary'>{user.name}'s Badges </h2>
+
                     <BadgesComponent />
                     </div>
                     
@@ -158,6 +161,15 @@ const LoginLanding = () => {
 
                                 </div>
                             </div>
+
+                            {/** events log in banner  */}
+                            <div>
+                            <h2 className='mt-8 mb-5 text-3xl font-bold text-secondary'>
+                                   Events
+                                </h2>
+                                <EventBanner />
+                            </div>
+
                             <div>
                                 <h2 className='mt-8 mb-5 text-3xl font-bold text-secondary'>
                                     My certificates

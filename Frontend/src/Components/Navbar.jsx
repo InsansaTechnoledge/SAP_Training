@@ -580,7 +580,7 @@ const Navigation = () => {
                                                     </div>
                                                 </div>
                                                 
-                                                <a href="#profile" className="flex items-center px-4 py-3 text-blue-900 hover:bg-blue-50">
+                                                <a href="/profile" className="flex items-center px-4 py-3 text-blue-900 hover:bg-blue-50">
                                                     <User className="w-4 h-4 mr-3 text-blue-700" />
                                                     Profile
                                                 </a>
@@ -711,7 +711,7 @@ const Navigation = () => {
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-2">
-                                        <a href="#profile" className="flex items-center justify-center p-2 bg-blue-50 rounded-lg text-blue-700 text-sm">
+                                        <a href="/profile" className="flex items-center justify-center p-2 bg-blue-50 rounded-lg text-blue-700 text-sm">
                                             <User className="w-4 h-4 mr-1" />
                                             Profile
                                         </a>

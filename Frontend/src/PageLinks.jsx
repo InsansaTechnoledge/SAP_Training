@@ -18,6 +18,7 @@ import axios from 'axios';
 import { API_BASE_URL } from './config';
 import LoginLanding from './Pages/LoginLanding';
 import EventPage from './Pages/EventPage';
+import UserProfileDashboard from './Components/ProfilePage/UserSide/userProfileDashboard';
 const PageLinks = () => {
     const { user, setUser } = useUser();
 
@@ -67,6 +68,7 @@ const PageLinks = () => {
                     <Route path="/shop" element={<CourseShop />} />
                     <Route path="/payment" element={<Checkout />} />
                     <Route path="/dashboard" element={<UserDashboard />} />
+                    <Route path="/profile" element={<UserProfileDashboard />} />
                     <Route path="/game" element={<GameDashboard />} />
                     <Route path="/game2" element={<RealisticShooterGame />} />
                     <Route path="/books" element={<StudyMaterialsShop />} />

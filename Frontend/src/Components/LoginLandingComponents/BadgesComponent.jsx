@@ -183,7 +183,7 @@ const BadgesComponent = () => {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-3 ">
         {categoryStats.map(({ category, earned, total }) => (
           <div key={category} className="relative">
             <div 
