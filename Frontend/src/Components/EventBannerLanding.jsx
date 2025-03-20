@@ -102,7 +102,7 @@ const EventsPromo = () => {
             </div>
           </div>
           
-             <Tilt className="w-full lg:w-1/2">
+             <Tilt className="w-1/2 lg:w-1/2">
           {/* Right Column - Events Promo with Tilt Effect */}
           <div className=" transform hover:scale-105 transition-transform duration-500 rotate-2">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
