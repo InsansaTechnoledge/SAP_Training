@@ -78,7 +78,18 @@ const UserSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Achievement"
         }
-    ]
+    ],
+    profession: {
+        type: String,
+    },
+    interest: [
+        {
+            type: String
+        }
+    ],
+    experience: {
+        type: String,
+    }
         
 
 });

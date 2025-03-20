@@ -1,14 +1,14 @@
 import express from 'express';
 import { checkAuth, googleAuth, googleCallback, googleProfile, loginUser, logout, registerUser } from '../controllers/authController.js';
 
-const app = express.Router();
+const  router= express.Router();
 
-app.post('/register', registerUser);
-app.post('/login', loginUser);
-app.get('/checkAuth', checkAuth);
-app.get('/logout', logout);
-app.get('/google', googleAuth);
-app.get('/google/callback', googleCallback);
-app.get('/profile', googleProfile);
+router.post('/register', registerUser);
+router.post('/login', loginUser);
+router.get('/checkAuth', checkAuth);
+router.get('/logout', logout);
+router.get('/google', googleAuth);
+router.get('/google/callback', googleCallback);
+router.get('/profile', googleProfile);
 
-export default app;
+export default router;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useUser } from '../Context/UserContext'
 import loginLanding from '../assets/loginLanding.png'
-import { Book, Clock, Medal, Brain, Cloud, Database } from 'lucide-react';
+import { Book, Clock, Medal, Brain, Cloud, Database, Badge, BadgePlusIcon, BadgeCent, LucideCheckCircle2, Award, Trophy } from 'lucide-react';
 import ContinueWatching from '../Components/LoginLandingComponents/ContinueWatching';
 import InterestBasedCourses from '../Components/LoginLandingComponents/InterestBasedCourses';
 import ExploreCategories from '../Components/LoginLandingComponents/ExploreCategories';
@@ -14,13 +14,13 @@ import ABAPimage from '../assets/ABAP.jpg'
 
 const LoginLanding = () => {
     const { user } = useUser();
-    const [showInterestForm, setShowInterestForm] = useState(true);
+    const [showInterestForm, setShowInterestForm] = useState(false);
 
-    useEffect(() => {
-        if (user) {
-            setShowInterestForm(!user.profession);
-        }
-    }, [user])
+    // useEffect(() => {
+    //     if (user) {
+    //         setShowInterestForm(!user.profession);
+    //     }
+    // }, [user])
 
     if (showInterestForm) {
         return (
@@ -79,20 +79,20 @@ const LoginLanding = () => {
     return (
         <>
             <div className='px-6 md:px-12 lg:px-24 xl:px-36 pb-10 bg-theme-gradient pt-24'>
-                <div className='p-3 bg-gradient-blue flex flex-col md:flex-row justify-center text-center mb-5 rounded-xl'>
-                    <div className='flex flex-col content-center my-auto'>
-                        <h1 className='font-bold text-5xl mb-5  my-auto text-left text-secondary'>
-                            Hey {user.name} 👋,
-                        </h1>
-                        <h3 className='text-left text-secondary'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla earum repellat deserunt sit aliquid laborum. </h3>
-                    </div>
-                    <img
-                        className='w-full sm:w-xs mx-auto'
-                        src={loginLanding} />
-                </div>
-                <div className='gap-8'>
-                    <div className=''>
-                        <div className='grid md:grid-cols-3 gap-8 '>
+                <div className='grid grid-cols-4 gap-5'>
+                    <div className='flex flex-col col-span-3'>
+                        <div className='p-3 bg-gradient-blue flex flex-col md:flex-row justify-center text-center mb-5 rounded-xl'>
+                            <div className='flex flex-col content-center my-auto'>
+                                <h1 className='font-bold text-5xl mb-5  my-auto text-left text-secondary'>
+                                    Hey {user.name} 👋,
+                                </h1>
+                                <h3 className='text-left text-secondary'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla earum repellat deserunt sit aliquid laborum. </h3>
+                            </div>
+                            <img
+                                className='w-full sm:w-xs mx-auto'
+                                src={loginLanding} />
+                        </div>
+                        <div className='grow grid md:grid-cols-3 gap-8 '>
                             <div className='p-5 rounded-lg text-lg bg-card-amber'>
                                 <div className='flex gap-2 font-medium mb-3 text-secondary'>
                                     <Book className='text-secondary' /> Courses purchased
@@ -121,6 +121,35 @@ const LoginLanding = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div className='bg-card-amber h-full border-4 border-amber-500  w-full rounded-xl p-2 space-y-8'>
+                        <div className='flex space-x-2'>
+                            <Award className='font-bold text-secondary my-auto w-8 h-8'/>
+                            <h1 className='text-3xl font-bold text-secondary text-center'>
+                                My collections
+                            </h1>
+
+                        </div>
+                        <div className='grid grid-cols-4 text-secondary gap-8 p-2'>
+                            <Trophy className='w-full h-full'/>
+                            <Trophy className='w-full h-full'/>
+                            <Trophy className='w-full h-full'/>
+                            <Trophy className='w-full h-full'/>
+                            <Trophy className='w-full h-full text-gray'/>
+                            <Trophy className='w-full h-full'/>
+                            <Trophy className='w-full h-full'/>
+                            <Trophy className='w-full h-full text-gray'/>
+                            <Trophy className='w-full h-full text-gray'/>
+                            <Trophy className='w-full h-full'/>
+                            <Trophy className='w-full h-full'/>
+                            <Trophy className='w-full h-full text-gray'/>
+                            <Trophy className='w-full h-full'/>
+                            <Trophy className='w-full h-full'/>
+                        </div>
+                    </div>
+                </div>
+                <div className='gap-8'>
+                    <div className=''>
 
                         <h2 className='mt-8 mb-5 text-3xl font-bold text-secondary'>Continue watching</h2>
                         <div className='grid lg:grid-cols-2 gap-8 p-5'>
@@ -161,8 +190,8 @@ const LoginLanding = () => {
 
                         <h2 className='mt-8 mb-5 text-3xl font-bold text-secondary'>Courses based on your interest</h2>
                         <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
-                            {interestBasedCourses.map((course)=>(
-                                <InterestBasedCourses key={course.$id} course={course}/>
+                            {interestBasedCourses.map((course) => (
+                                <InterestBasedCourses key={course.$id} course={course} />
                             ))
                             }
                             {/* <InterestBasedCourses /> */}
