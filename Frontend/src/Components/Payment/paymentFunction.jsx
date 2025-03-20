@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_BASE_URL,RAZORPAY_KEY_ID } from '../config';
+import { API_BASE_URL,RAZORPAY_KEY_ID } from '../../config';
 export const Paynow=async(paymentData)=>{
     try{
         console.log("Payment data",paymentData);
@@ -40,7 +40,7 @@ export const Paynow=async(paymentData)=>{
                     }
                     else{
                         
-                        reject ({status:response.status,message:"Payment failed"});
+                        resolve ({status:response.status,message:"Payment failed"});
                     }
                 }catch(error){
                     console.error("Error verifying payment:", error);
@@ -58,7 +58,7 @@ export const Paynow=async(paymentData)=>{
                 modal: {
                     ondismiss: function () {
                         console.log("Razorpay window closed by user.");
-                        reject(new Error("Payment process was closed by the user"));
+                        resolve({status:400,message:"Payment process was closed by the user"});
                     }
                 }
             };

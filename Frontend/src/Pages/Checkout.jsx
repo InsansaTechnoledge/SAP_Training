@@ -16,8 +16,10 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 import axios from 'axios';
-import { Paynow } from '../Components/paymentFunction';
+import { Paynow } from '../Components/Payment/paymentFunction';
 import { useUser } from '../Context/UserContext';
+import { useCart } from '../Context/CartContext';
+import PaymentFailedAlert from '../Components/Payment/PaymentFailedAlert';
 
 const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     const [formData, setFormData] = useState({
@@ -37,6 +39,10 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         paymentId: '',
         receiptNo: '',
     });
+
+    const {setIsCartOpen} = useCart();
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState();
 
     const {
         cart,
@@ -123,7 +129,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
             formData.amount = checkoutData.finalTotal;
             formData.currency = 'INR';
             formData.receipt = generateReceiptNumber();
-            formData.courseId = 1;
+            formData.courseId = cart.map(item => item.$id);
             formData.userId = user._id;
             console.log(formData);
 
@@ -136,11 +142,11 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                     paymentInvoice.paymentMethod = result.payment.paymentMethod;
                     paymentInvoice.receiptNo = formData.receipt;
     
-                    // alert(result.message);
+                    alert(result.message);
     
                     //email sending here 
-                    const emailResponse=await axios.post(`${API_BASE_URL}/api/v1/email/paymentMail`,{formdata,paymentInvoice})
-    
+                    // const emailResponse=await axios.post(`${API_BASE_URL}/api/v1/email/paymentMail`,{formData,paymentInvoice})
+                    
                     setIsComplete(true);
                     var purchasedModules = localStorage.getItem('unlockedModules');
                     console.log(checkoutData.cart);
@@ -164,7 +170,14 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                         purchasedModules = purchasedModules.split(',');
                         localStorage.setItem('unlockedModules', [...purchasedModules, ...newModules]);
                     }
+
+                    navigate(`/payment-success?paymentId=${result.payment._id}`);
+                    
     
+                }
+                else{
+                    setAlertMessage(result.message);
+                    setAlertVisible(true);
                 }
 
 
@@ -296,112 +309,120 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
 
 
 
-    const renderComplete = () => (
-        <div className="space-y-6 text-center mt-10">
-            <div className="flex flex-col items-center">
-                <div className="relative">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-green-600 rounded-full opacity-75 blur"></div>
-                    <div className="relative bg-card p-4 rounded-full">
-                        <CheckCircle className="w-16 h-16 text-green-500" />
-                    </div>
-                </div>
+    // const renderComplete = () => (
+    //     <div className="space-y-6 text-center mt-10">
+    //         <div className="flex flex-col items-center">
+    //             <div className="relative">
+    //                 <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-green-600 rounded-full opacity-75 blur"></div>
+    //                 <div className="relative bg-card p-4 rounded-full">
+    //                     <CheckCircle className="w-16 h-16 text-green-500" />
+    //                 </div>
+    //             </div>
 
-                <h2 className="text-2xl font-bold text-secondary mt-6">Payment Successful!</h2>
-                <p className="text-gray mt-2">
-                    Your courses are now ready to access
-                </p>
-            </div>
+    //             <h2 className="text-2xl font-bold text-secondary mt-6">Payment Successful!</h2>
+    //             <p className="text-gray mt-2">
+    //                 Your courses are now ready to access
+    //             </p>
+    //         </div>
 
-            <div className="bg-card rounded-lg p-6">
-                <h3 className="text-lg font-medium text-secondary mb-4">Order Details</h3>
+    //         <div className="bg-card rounded-lg p-6">
+    //             <h3 className="text-lg font-medium text-secondary mb-4">Order Details</h3>
 
-                <div className="space-y-3">
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray">Receipt Id</span>
-                        <span className="font-medium text-secondary">{paymentInvoice.receiptNo}</span>
-                    </div>
+    //             <div className="space-y-3">
+    //                 <div className="flex justify-between text-sm">
+    //                     <span className="text-gray">Receipt Id</span>
+    //                     <span className="font-medium text-secondary">{paymentInvoice.receiptNo}</span>
+    //                 </div>
 
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray">Order ID</span>
-                        <span className="font-medium text-secondary">{paymentInvoice.orderId}</span>
-                    </div>
+    //                 <div className="flex justify-between text-sm">
+    //                     <span className="text-gray">Order ID</span>
+    //                     <span className="font-medium text-secondary">{paymentInvoice.orderId}</span>
+    //                 </div>
 
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray">Date</span>
-                        <span className="font-medium text-secondary">{new Date().toLocaleDateString()}</span>
-                    </div>
+    //                 <div className="flex justify-between text-sm">
+    //                     <span className="text-gray">Date</span>
+    //                     <span className="font-medium text-secondary">{new Date().toLocaleDateString()}</span>
+    //                 </div>
 
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray">Payment Id</span>
-                        <span className="font-medium text-secondary">{paymentInvoice.paymentId}</span>
-                    </div>
+    //                 <div className="flex justify-between text-sm">
+    //                     <span className="text-gray">Payment Id</span>
+    //                     <span className="font-medium text-secondary">{paymentInvoice.paymentId}</span>
+    //                 </div>
 
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray">Payment Method</span>
-                        <span className="font-medium text-secondary">
-                            {paymentInvoice.paymentMethod}
-                        </span>
-                    </div>
+    //                 <div className="flex justify-between text-sm">
+    //                     <span className="text-gray">Payment Method</span>
+    //                     <span className="font-medium text-secondary">
+    //                         {paymentInvoice.paymentMethod}
+    //                     </span>
+    //                 </div>
 
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray">Amount Paid</span>
-                        <span className="font-medium text-green-600">₹{finalTotal.toFixed(2)}</span>
-                    </div>
-                </div>
-            </div>
+    //                 <div className="flex justify-between text-sm">
+    //                     <span className="text-gray">Amount Paid</span>
+    //                     <span className="font-medium text-green-600">₹{finalTotal.toFixed(2)}</span>
+    //                 </div>
+    //             </div>
+    //         </div>
 
-            <div className="space-y-3">
-                <h3 className="text-lg font-medium text-secondary">Your Courses</h3>
+    //         <div className="space-y-3">
+    //             <h3 className="text-lg font-medium text-secondary">Your Courses</h3>
 
-                <div className="space-y-3">
-                    {cart.map((item) => (
-                        <div key={item.title} className="bg-card border-contrast  rounded-lg p-4 flex justify-between items-center">
-                            <div className="flex items-center space-x-3">
-                                <div className="bg-card-blue p-2 rounded-lg">
-                                    <Gift className="w-5 h-5 text-blue" />
-                                </div>
-                                <div>
-                                    <h4 className="font-medium text-secondary">{item.title}</h4>
-                                    <p className="text-sm text-gray">
-                                        Access until: Lifetime
-                                    </p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => (navigate(`/course?id=${item.$id}`))}
-                                className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full transition-colors hover:cursor-pointer"
-                            >
-                                Start Learning
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            </div>
+    //             <div className="space-y-3">
+    //                 {cart.map((item) => (
+    //                     <div key={item.title} className="bg-card border-contrast  rounded-lg p-4 flex justify-between items-center">
+    //                         <div className="flex items-center space-x-3">
+    //                             <div className="bg-card-blue p-2 rounded-lg">
+    //                                 <Gift className="w-5 h-5 text-blue" />
+    //                             </div>
+    //                             <div>
+    //                                 <h4 className="font-medium text-secondary">{item.title}</h4>
+    //                                 <p className="text-sm text-gray">
+    //                                     Access until: Lifetime
+    //                                 </p>
+    //                             </div>
+    //                         </div>
+    //                         <button
+    //                             onClick={() => (navigate(`/course?id=${item.$id}`))}
+    //                             className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full transition-colors hover:cursor-pointer"
+    //                         >
+    //                             Start Learning
+    //                         </button>
+    //                     </div>
+    //                 ))}
+    //             </div>
+    //         </div>
 
-            <div className="mt-6 space-y-3">
-                <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => window.location.href = "/dashboard"}
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-xl font-medium transition-colors"
-                >
-                    Go to Dashboard
-                </motion.button>
+    //         <div className="mt-6 space-y-3">
+    //             <motion.button
+    //                 whileHover={{ scale: 1.02 }}
+    //                 whileTap={{ scale: 0.98 }}
+    //                 onClick={() => window.location.href = "/dashboard"}
+    //                 className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-xl font-medium transition-colors"
+    //             >
+    //                 Go to Dashboard
+    //             </motion.button>
 
-                <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => window.location.href = "/courses"}
-                    className="w-full bg-card text-secondary border-contrast py-3 rounded-xl font-medium transition-colors"
-                >
-                    Browse More Courses
-                </motion.button>
-            </div>
-        </div>
-    );
+    //             <motion.button
+    //                 whileHover={{ scale: 1.02 }}
+    //                 whileTap={{ scale: 0.98 }}
+    //                 onClick={() => window.location.href = "/courses"}
+    //                 className="w-full bg-card text-secondary border-contrast py-3 rounded-xl font-medium transition-colors"
+    //             >
+    //                 Browse More Courses
+    //             </motion.button>
+    //         </div>
+    //     </div>
+    // );
 
+    
     return (
         <div className="px-6 pb-6">
+            {
+                alertVisible
+                ?
+                <PaymentFailedAlert setAlertVisible={setAlertVisible} alertMessage={alertMessage} />
+                :
+                null
+            }
             {!isComplete && (
                 <div className="flex justify-between items-center mb-6">
                     <div className="text-sm text-secondary">
@@ -416,7 +437,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
             <div className="mt-6">
                 {renderStep1()}
                 {/* {currentStep === 2 && renderStep2()} */}
-                {isComplete && renderComplete()}
+                {/* {isComplete && renderComplete()} */}
 
                 {!isComplete && (
                     <div className="mt-6">

@@ -33,6 +33,7 @@ const Navigation = () => {
     const { user, setUser } = useUser();
     const [activeTab, setActiveTab] = useState('login');
     const [fixedNavbarIn, setFixedNavbarIn] = useState(['/video', '/quiz', '/dashboard', '/shop', '/game','/events', '/payment-success']);
+    const hideNavbarIn = ['/payment-success'];
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     
     // New notification-related states
@@ -41,6 +42,8 @@ const Navigation = () => {
     const [unreadCount, setUnreadCount] = useState(0);
 
     const navigate = useNavigate();
+
+
 
     // Sample notifications data - replace with API call in production
     useEffect(() => {
@@ -141,8 +144,11 @@ const Navigation = () => {
         return () => window.removeEventListener('resize', checkMobileView);
     }, [user]);
 
-    useEffect(() => {
+    // if(hideNavbarIn.includes(location.pathname)){
+    //     return null;
+    // }
 
+    useEffect(() => {
 
         if (!fixedNavbarIn.includes(location.pathname)) {
             setScrolled(false);
