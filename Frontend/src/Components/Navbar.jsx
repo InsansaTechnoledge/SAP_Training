@@ -32,7 +32,7 @@ const Navigation = () => {
     const location = useLocation();
     const { user, setUser } = useUser();
     const [activeTab, setActiveTab] = useState('login');
-    const [fixedNavbarIn, setFixedNavbarIn] = useState(['/video', '/quiz', '/dashboard', '/shop', '/game','/events']);
+    const [fixedNavbarIn, setFixedNavbarIn] = useState(['/video', '/quiz', '/dashboard', '/shop', '/game','/events', '/payment-success']);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     
     // New notification-related states

@@ -48,6 +48,11 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         finalTotal
     } = checkoutData;
 
+    // useEffect(()=>{
+    //     if(isComplete){
+    //         navigate(`/payment-success?paymentId=${}`);
+    //     }
+    // },[isComplete])
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
