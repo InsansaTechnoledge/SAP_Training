@@ -27,7 +27,6 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         email: '',
         phone: '',
     });
-    // const [paymentMethod, setPaymentMethod] = useState('card');
     const [errors, setErrors] = useState({});
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
@@ -40,12 +39,9 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         receiptNo: '',
     });
 
-    const {setIsCartOpen} = useCart();
-    const [alertVisible, setAlertVisible] = useState(false);
     const [alertMessage, setAlertMessage] = useState();
 
     const {
-        cart,
         subtotal,
         gst,
         promoDiscount,
@@ -53,6 +49,13 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
         launchDiscount,
         finalTotal
     } = checkoutData;
+
+    // Map the cart array separately
+    const cart = checkoutData.cart.map(item => ({
+        $id: item.$id,
+        title: item.title,
+        price: item.price
+    }));
 
     // useEffect(()=>{
     //     if(isComplete){
@@ -136,22 +139,29 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
             try {
                 const result = await Paynow(formData);//what to do for the result
                 console.log(result);
-                if(result.status===200){
-                    paymentInvoice.paymentId = result.payment.transactionId;
-                    paymentInvoice.orderId = result.payment.orderId;
-                    paymentInvoice.paymentMethod = result.payment.paymentMethod;
-                    paymentInvoice.receiptNo = formData.receipt;
-    
+          
+                if (result.status === 200) {
+
                     alert(result.message);
-    
+
+                    const emailData = {
+                        "formData": formData,
+                        "payment": result.payment,
+                        "checkoutData": cart
+                    }
+
+
+
+
                     //email sending here 
-                    // const emailResponse=await axios.post(`${API_BASE_URL}/api/v1/email/paymentMail`,{formData,paymentInvoice})
-                    
+                    const emailResponse = await axios.post(`${API_BASE_URL}/api/v1/email/paymentMail`, emailData);
+                    console.log(emailResponse);
+
+
                     setIsComplete(true);
                     var purchasedModules = localStorage.getItem('unlockedModules');
-                    console.log(checkoutData.cart);
                     const responses = await Promise.all(
-                        checkoutData.cart.map(course =>
+                        cart.map(course =>
                             axios.get(`${API_BASE_URL}/api/v1/modules?id=${course.$id}`) // Replace with your actual API endpoint
                         )
                     );
@@ -161,7 +171,7 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                         const moduleIds = response.data.map(mod => mod.$id);
                         newModules = [...newModules, ...moduleIds];
                     })
-    
+
                     console.log(newModules);
                     if (!purchasedModules) {
                         localStorage.setItem('unlockedModules', newModules);
@@ -172,20 +182,21 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
                     }
 
                     navigate(`/payment-success?paymentId=${result.payment._id}`);
-                    
-    
+
+
                 }
-                else{
+                else {
                     setAlertMessage(result.message);
-                    setAlertVisible(true);
                 }
 
 
             } catch (error) {
                 console.error("Payment Error:", error);
-                setErrors({
-                    payment: 'Payment processing failed. Please try again.'
-                });
+                setAlertMessage(
+                    'Payment processing failed. Please try again.'
+                );
+
+
             } finally {
                 setIsProcessing(false);
             }
@@ -308,120 +319,14 @@ const Checkout = ({ checkoutData, inCartView = false, goBackToCart }) => {
     );
 
 
-
-    // const renderComplete = () => (
-    //     <div className="space-y-6 text-center mt-10">
-    //         <div className="flex flex-col items-center">
-    //             <div className="relative">
-    //                 <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-green-600 rounded-full opacity-75 blur"></div>
-    //                 <div className="relative bg-card p-4 rounded-full">
-    //                     <CheckCircle className="w-16 h-16 text-green-500" />
-    //                 </div>
-    //             </div>
-
-    //             <h2 className="text-2xl font-bold text-secondary mt-6">Payment Successful!</h2>
-    //             <p className="text-gray mt-2">
-    //                 Your courses are now ready to access
-    //             </p>
-    //         </div>
-
-    //         <div className="bg-card rounded-lg p-6">
-    //             <h3 className="text-lg font-medium text-secondary mb-4">Order Details</h3>
-
-    //             <div className="space-y-3">
-    //                 <div className="flex justify-between text-sm">
-    //                     <span className="text-gray">Receipt Id</span>
-    //                     <span className="font-medium text-secondary">{paymentInvoice.receiptNo}</span>
-    //                 </div>
-
-    //                 <div className="flex justify-between text-sm">
-    //                     <span className="text-gray">Order ID</span>
-    //                     <span className="font-medium text-secondary">{paymentInvoice.orderId}</span>
-    //                 </div>
-
-    //                 <div className="flex justify-between text-sm">
-    //                     <span className="text-gray">Date</span>
-    //                     <span className="font-medium text-secondary">{new Date().toLocaleDateString()}</span>
-    //                 </div>
-
-    //                 <div className="flex justify-between text-sm">
-    //                     <span className="text-gray">Payment Id</span>
-    //                     <span className="font-medium text-secondary">{paymentInvoice.paymentId}</span>
-    //                 </div>
-
-    //                 <div className="flex justify-between text-sm">
-    //                     <span className="text-gray">Payment Method</span>
-    //                     <span className="font-medium text-secondary">
-    //                         {paymentInvoice.paymentMethod}
-    //                     </span>
-    //                 </div>
-
-    //                 <div className="flex justify-between text-sm">
-    //                     <span className="text-gray">Amount Paid</span>
-    //                     <span className="font-medium text-green-600">₹{finalTotal.toFixed(2)}</span>
-    //                 </div>
-    //             </div>
-    //         </div>
-
-    //         <div className="space-y-3">
-    //             <h3 className="text-lg font-medium text-secondary">Your Courses</h3>
-
-    //             <div className="space-y-3">
-    //                 {cart.map((item) => (
-    //                     <div key={item.title} className="bg-card border-contrast  rounded-lg p-4 flex justify-between items-center">
-    //                         <div className="flex items-center space-x-3">
-    //                             <div className="bg-card-blue p-2 rounded-lg">
-    //                                 <Gift className="w-5 h-5 text-blue" />
-    //                             </div>
-    //                             <div>
-    //                                 <h4 className="font-medium text-secondary">{item.title}</h4>
-    //                                 <p className="text-sm text-gray">
-    //                                     Access until: Lifetime
-    //                                 </p>
-    //                             </div>
-    //                         </div>
-    //                         <button
-    //                             onClick={() => (navigate(`/course?id=${item.$id}`))}
-    //                             className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full transition-colors hover:cursor-pointer"
-    //                         >
-    //                             Start Learning
-    //                         </button>
-    //                     </div>
-    //                 ))}
-    //             </div>
-    //         </div>
-
-    //         <div className="mt-6 space-y-3">
-    //             <motion.button
-    //                 whileHover={{ scale: 1.02 }}
-    //                 whileTap={{ scale: 0.98 }}
-    //                 onClick={() => window.location.href = "/dashboard"}
-    //                 className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-xl font-medium transition-colors"
-    //             >
-    //                 Go to Dashboard
-    //             </motion.button>
-
-    //             <motion.button
-    //                 whileHover={{ scale: 1.02 }}
-    //                 whileTap={{ scale: 0.98 }}
-    //                 onClick={() => window.location.href = "/courses"}
-    //                 className="w-full bg-card text-secondary border-contrast py-3 rounded-xl font-medium transition-colors"
-    //             >
-    //                 Browse More Courses
-    //             </motion.button>
-    //         </div>
-    //     </div>
-    // );
-
-    
     return (
         <div className="px-6 pb-6">
             {
-                alertVisible
-                ?
-                <PaymentFailedAlert setAlertVisible={setAlertVisible} alertMessage={alertMessage} />
-                :
-                null
+                alertMessage
+                    ?
+                    <PaymentFailedAlert setAlertMessage={setAlertMessage} alertMessage={alertMessage} />
+                    :
+                    null
             }
             {!isComplete && (
                 <div className="flex justify-between items-center mb-6">

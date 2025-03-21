@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-
+import puppeteer from 'puppeteer';
 export const transporter=nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -39,7 +39,7 @@ const createInvoice=async(formData,payment,checkoutData)=>{
                     <h2>Invoice</h2>
                     <p><strong>Customer:</strong> ${formData.fullName}</p>
                     <p><strong>Email:</strong> ${formData.email}</p>
-                    <p><strong>Course:</strong> ${checkoutData.cart.map((item)=>(
+                    <p><strong>Course:</strong> ${checkoutData.map((item)=>(
                         `<p>${item.title}</p>`
                     ))}</p>
                     <p><strong>Invoice ID:</strong> ${formData.receipt}</p>
@@ -60,6 +60,7 @@ const createInvoice=async(formData,payment,checkoutData)=>{
 };
 export const sendPaymentMail=async(req,res)=>{
     const {formData,payment,checkoutData}=req.body;
+    console.log("😏");
     try{
         const mailOptions = {
             from: process.env.EMAIL,
@@ -85,12 +86,16 @@ export const sendPaymentMail=async(req,res)=>{
             attachments: [
                 {
                     filename: "invoice.pdf",
-                    content: createInvoice(formData,payment,checkoutData),  // Attach the dynamically generated PDF invoice
+                    content: await createInvoice(formData,payment,checkoutData),  // Attach the dynamically generated PDF invoice
                     contentType: "application/pdf",
                 },
             ],
         };
+        await transporter.sendMail(mailOptions);
         res.status(200).json({message:"Email sent successfully"});
-    }catch(error){}
+    }catch(error){
+        console.error('Error sending mail',error);
+        res.status(500).json({message:"Error sending mail"});
+    }
 
 }
