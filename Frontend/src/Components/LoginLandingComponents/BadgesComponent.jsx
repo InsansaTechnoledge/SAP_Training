@@ -170,16 +170,16 @@ const BadgesComponent = () => {
   };
 
   return (
-    <div ref={containerRef} className="bg-white rounded-xl p-4 shadow-md border border-slate-100">
+    <div ref={containerRef} className="bg-card rounded-xl p-4 shadow-md ">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
 
-          <h1 className="text-lg font-bold text-slate-800">Badges</h1>
+          <h1 className="text-lg font-bold text-secondary">Badges</h1>
         </div>
-        <div className="flex items-center gap-1 bg-slate-100 px-3 py-1 rounded-full text-xs font-medium">
-          <span className="text-indigo-600">{badges.filter(badge => badge.earned).length}</span>
-          <span className="text-slate-400">/</span>
-          <span className="text-slate-500">{badges.length}</span>
+        <div className="flex items-center gap-1 bg-blue px-3 py-1 rounded-full text-xs font-medium">
+          <span className="text-white">{badges.filter(badge => badge.earned).length}</span>
+          <span className="text-white">/</span>
+          <span className="text-white">{badges.length}</span>
         </div>
       </div>
 
@@ -188,15 +188,15 @@ const BadgesComponent = () => {
           <div key={category} className="relative">
             <div 
               onClick={() => toggleCategory(category)}
-              className="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors duration-200"
+              className="flex items-center justify-between p-3 bg-theme-gradient rounded-lg cursor-pointer transition-colors duration-200"
             >
               <div className="flex items-center gap-3">
                 <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
-                <span className="font-medium text-sm text-slate-700">{category}</span>
+                <span className="font-medium text-sm text-secondary">{category}</span>
                 <div className="bg-white text-xs px-2 py-0.5 rounded-full shadow-sm border border-slate-100">
-                  <span className="text-indigo-600">{earned}</span>
-                  <span className="text-slate-400">/</span>
-                  <span className="text-slate-500">{total}</span>
+                  <span className="text-black">{earned}</span>
+                  <span className="text-black">/</span>
+                  <span className="text-black">{total}</span>
                 </div>
               </div>
               <div className="text-slate-500">
@@ -206,7 +206,7 @@ const BadgesComponent = () => {
             
             {/* Expandable badge grid */}
             <div 
-              className={`grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 mt-2 overflow-hidden transition-all duration-300 ease-in-out ${
+              className={`grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 mt-2 transition-all duration-300 ease-in-out ${
                 expandedCategory === category ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
@@ -219,8 +219,8 @@ const BadgesComponent = () => {
                   <div 
                     className={`flex flex-col items-center justify-center p-2 rounded-lg ${
                       badge.earned 
-                        ? "bg-white shadow-sm border border-slate-100" 
-                        : "bg-slate-50 border border-slate-200 opacity-50"
+                        ? "bg-theme-gradient shadow-sm " 
+                        : "bg-theme-gradient shadow-sm  opacity-60"
                     }`}
                   >
                     <div className="relative mb-1">
@@ -233,16 +233,14 @@ const BadgesComponent = () => {
                         }`}
                       />
                     </div>
-                    <span className={`text-center text-xs font-medium truncate w-full ${
-                      badge.earned ? "text-slate-700" : "text-slate-500"
-                    }`}>
+                    <span className={`text-center text-xs text-secondary font-medium truncate w-full text-secondary`}>
                       {badge.name}
                     </span>
                   </div>
                   
                   {/* Smart positioning tooltip */}
                   <div 
-                    className={`absolute opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-10 left-1/2 transform -translate-x-1/2 ${
+                    className={`absolute opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 left-1/2 transform -translate-x-1/2 ${
                       tooltipPosition.id === badge.id && tooltipPosition.position === 'bottom'
                         ? 'top-full mt-1'
                         : 'bottom-full mb-1'
@@ -262,7 +260,7 @@ const BadgesComponent = () => {
       <div className="flex justify-center mt-4">
         <button 
           onClick={() => expandedCategory ? setExpandedCategory(null) : setExpandedCategory(categoryStats[0].category)}
-          className="flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
+          className="flex items-center gap-1 text-xs text-blue transition-colors duration-200"
         >
           {expandedCategory ? (
             <>
