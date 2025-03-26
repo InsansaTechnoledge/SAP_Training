@@ -6,4 +6,6 @@ if(nodeEnv !== "production"){
 }
 
 // console.log(process.env);
-export const {PORT, MONGO_URI} = process.env;
+export const {PORT, MONGO_URI, SESSION_KEY} = process.env;
+
+export default nodeEnv
