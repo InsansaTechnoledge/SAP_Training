@@ -1,12 +1,18 @@
 import express from 'express';
-import { registerUser , loginUser, logoutUser} from '../Controllers/auth.controller.js';
+import { registerUser , loginUser, logoutUser, googleCallback, googleProfile, googleAuth, checkAuth} from '../Controllers/auth.controller.js';
 import { authenticateMiddleware } from '../Middleware/passport.middleware.js';
 
 const router = express.Router();
 
 router.post('/register' , registerUser)
 router.post('/login-user' ,authenticateMiddleware, loginUser)
-router.post('/logout-user' , logoutUser)
+router.get('/logout-user' , logoutUser)
+router.get('/googlelogin-user' , googleAuth)
+router.get('/callback', googleCallback)
+router.get('/profile', googleProfile)
+router.get('/check-auth', checkAuth)
+
+
 
 
 

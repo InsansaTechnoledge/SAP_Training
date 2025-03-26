@@ -14,6 +14,14 @@ const ExpressApp = express();
 ExpressApp.use(express.json());
 ExpressApp.use(express.urlencoded({ extended: true }));
 
+
+ExpressApp.use(cors({
+    origin : "*",
+    credentials: true
+}))
+
+ExpressApp.use(cookieParser());
+
 ExpressApp.use(
     session({
         secret: SESSION_KEY, // Change this to a strong secret
